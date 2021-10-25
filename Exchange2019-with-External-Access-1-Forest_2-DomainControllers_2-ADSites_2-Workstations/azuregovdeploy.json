@@ -639,8 +639,8 @@
     "WIN10OUPath": "[concat('OU=Windows 10,OU=Workstations,',variables('BaseDN'))]",
     "WIN7OUPath": "[concat('OU=Windows 7,OU=Workstations,',variables('BaseDN'))]",    
     "SRV22OUPath": "[concat('OU=Servers2022,OU=Servers,',variables('BaseDN'))]",
-    "SRV19OUPath": "[concat('OU=Server2019,OU=Servers,',variables('BaseDN'))]",
-    "SRV16OUPath": "[concat('OU=Server2016,OU=Servers,',variables('BaseDN'))]",        
+    "SRV19OUPath": "[concat('OU=Servers2019,OU=Servers,',variables('BaseDN'))]",
+    "SRV16OUPath": "[concat('OU=Servers2016,OU=Servers,',variables('BaseDN'))]",        
     "DB1Name": "[concat(parameters('NamingConvention'),'-19-db01')]",
     "DB2Name": "[concat(parameters('NamingConvention'),'-19-db02')]" ,             
     "DAG19Name": "[concat(parameters('NamingConvention'),'-19-dag01')]",
@@ -3112,7 +3112,7 @@
       }
     },      
     {
-      "type": "Microsoft.Resources/deployments",
+      "type": "Micrgosoft.Resources/deployments",
       "apiVersion": "2019-10-01",
       "name": "configexchange2",
       "dependsOn": [
@@ -3644,7 +3644,9 @@
       "apiVersion": "2019-10-01",
       "name": "DomainJoinWK1VM-11",
       "dependsOn": [
-        "DeployWK1VM-11"
+        "DeployWK1VM-11",
+        "DeployWK1VM-10",
+        "DeployWK1VM-7"
       ],      
       "properties": {
           "mode": "Incremental",
@@ -3683,7 +3685,9 @@
       "apiVersion": "2019-10-01",
       "name": "DomainJoinWK1VM-10",
       "dependsOn": [
-        "DeployWK1VM-10"
+        "DeployWK1VM-11",
+        "DeployWK1VM-10",
+        "DeployWK1VM-7"
       ],      
       "properties": {
           "mode": "Incremental",
@@ -3722,6 +3726,8 @@
       "apiVersion": "2019-10-01",
       "name": "DomainJoinWK1VM-7",
       "dependsOn": [
+        "DeployWK1VM-11",
+        "DeployWK1VM-10",
         "DeployWK1VM-7"
       ],      
       "properties": {
@@ -3950,7 +3956,9 @@
       "apiVersion": "2019-10-01",
       "name": "DomainJoinWK2VM-11",
       "dependsOn": [
-        "DeployWK2VM-11"
+        "DeployWK2VM-11",
+        "DeployWK2VM-10",
+        "DeployWK2VM-7"                
       ],      
       "properties": {
           "mode": "Incremental",
@@ -3989,7 +3997,9 @@
       "apiVersion": "2019-10-01",
       "name": "DomainJoinWK2VM-10",
       "dependsOn": [
-        "DeployWK2VM-10"
+        "DeployWK2VM-11",
+        "DeployWK2VM-10",
+        "DeployWK2VM-7"                
       ],      
       "properties": {
           "mode": "Incremental",
@@ -4028,7 +4038,9 @@
       "apiVersion": "2019-10-01",
       "name": "DomainJoinWK2VM-7",
       "dependsOn": [
-        "DeployWK2VM-7"
+        "DeployWK2VM-11",
+        "DeployWK2VM-10",
+        "DeployWK2VM-7"                
       ],      
       "properties": {
           "mode": "Incremental",
