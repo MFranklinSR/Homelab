@@ -2876,7 +2876,9 @@
       "apiVersion": "2019-10-01",
       "name": "grantextrustedsub1",
       "dependsOn": [
-        "DomainJoinFS1",        
+        "DomainJoinFS1-22",        
+        "DomainJoinFS1-19",        
+        "DomainJoinFS1-16",                        
         "prepareadexchange19"
       ],      
       "properties": {
@@ -2912,7 +2914,9 @@
       "apiVersion": "2019-10-01",
       "name": "grantextrustedsub2",
       "dependsOn": [
-        "DomainJoinFS2",
+        "DomainJoinFS2-22",
+        "DomainJoinFS2-19",
+        "DomainJoinFS2-16",                
         "prepareadexchange19"
       ],      
       "properties": {
