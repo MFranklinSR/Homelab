@@ -1441,7 +1441,16 @@
               },                                                                                                            
               "adminPassword": {
                 "value": "[parameters('adminPassword')]"
-              },                                                                                                                                        
+              },               
+              "TimeZone": {
+                  "value": "[parameters('TimeZone')]"
+              },               
+              "AutoShutdownTime": {
+                  "value": "[parameters('AutoShutdownTime')]"
+              },              
+              "AutoShutdownEmail": {
+                  "value": "[parameters('AutoShutdownEmail')]"
+              },                                                                                                                                                                                                                                                                                           
               "location": {
                   "value": "[resourceGroup().location]"
               }
