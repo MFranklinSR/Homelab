@@ -19,17 +19,17 @@
             "metadata": {
                 "description": "Time Zone"
             }
-        },            
-        "AutoShutdownTime": {
-            "type": "string",
-          "metadata": {
-            "description": "Time to Shutdown VM"
-          }
         },
         "AutoShutdownEnabled": {
             "type": "string",
           "metadata": {
             "description": "Enable or Disable Auto-Shutdown"
+          }
+        },                    
+        "AutoShutdownTime": {
+            "type": "string",
+          "metadata": {
+            "description": "Time to Shutdown VM"
           }
         },                    
         "AutoShutdownEmail": {

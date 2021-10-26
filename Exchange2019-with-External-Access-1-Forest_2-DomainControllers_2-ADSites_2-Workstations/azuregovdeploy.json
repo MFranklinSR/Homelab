@@ -3517,7 +3517,7 @@
                   "value": "Windows-11"
               },
               "OSVersion": {
-                "value": "[parameters('WK1OSVersion')]"
+                "value": "win11-21h2-pro"
               },              
               "LicenseType": {
                 "value": "[parameters('WindowsClientLicenseType')]"
@@ -3583,7 +3583,7 @@
                   "value": "Windows-10"
               },
               "OSVersion": {
-                "value": "[parameters('WK1OSVersion')]"
+                "value": "21h1-pro"
               },              
               "LicenseType": {
                 "value": "[parameters('WindowsClientLicenseType')]"
@@ -3649,7 +3649,7 @@
                   "value": "Windows-7"
               },
               "OSVersion": {
-                "value": "[parameters('WK1OSVersion')]"
+                "value": "win7-enterprise"
               },              
               "LicenseType": {
                 "value": "[parameters('WindowsClientLicenseType')]"
