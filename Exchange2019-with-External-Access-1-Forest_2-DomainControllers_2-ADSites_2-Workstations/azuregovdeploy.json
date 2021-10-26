@@ -155,14 +155,27 @@
           "description": "Time Zone"
       }
     },
+    "AutoShutdownEnabled": {
+      "type": "string",
+      "defaultValue": "No",
+      "allowedValues": [
+        "Yes",
+        "No"
+      ],      
+      "metadata": {
+          "description": "Enabled Auto Shutdown.  !!!If Enabled, AutoShutdownEmail MUST be added!!!!"
+      }
+    },    
     "AutoShutdownTime": {
       "type": "string",
+      "defaultValue": "2000",
       "metadata": {
           "description": "24-Hour Clock Time for Auto-Shutdown Example: 1900 = 7PM"
       }
     },                                
     "AutoShutdownEmail": {
       "type": "string",
+      "defaultValue": "",
       "metadata": {
           "description": "Auto-Shutdown notification Email Example:  user@domain.com"
       }
@@ -646,7 +659,7 @@
     "DAG19Name": "[concat(parameters('NamingConvention'),'-19-dag01')]",
     "NSG1Name": "[concat(parameters('NamingConvention'),'-nsg01')]",
     "NSG2Name": "[concat(parameters('NamingConvention'),'-nsg02')]",
-    "FromEmail": "[concat(parameters('adminUserName'),'@',variables('InternaldomainName'))]"            
+    "FromEmail": "[concat(parameters('adminUserName'),'@',variables('ExternaldomainName'))]"            
   },  
   "resources": [
     {
@@ -810,6 +823,9 @@
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
               },               
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                            
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
@@ -1260,7 +1276,10 @@
               },
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              },
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                             
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
@@ -1444,7 +1463,10 @@
               },               
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              },
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                             
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
@@ -1559,7 +1581,10 @@
               },  
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              },
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                             
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
@@ -1890,7 +1915,10 @@
               }, 
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              }, 
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                            
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
@@ -2162,7 +2190,10 @@
               }, 
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              }, 
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                            
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
@@ -2341,7 +2372,10 @@
               }, 
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              },  
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                           
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
@@ -2526,7 +2560,10 @@
               },  
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              },
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                             
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
@@ -2705,7 +2742,10 @@
               },  
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              },
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                             
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
@@ -3112,7 +3152,7 @@
       }
     },      
     {
-      "type": "Micrgosoft.Resources/deployments",
+      "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
       "name": "configexchange2",
       "dependsOn": [
@@ -3499,7 +3539,10 @@
               }, 
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              },
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                             
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
@@ -3562,7 +3605,10 @@
               }, 
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              },
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                             
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
@@ -3625,7 +3671,10 @@
               }, 
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              },  
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                           
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
@@ -3811,7 +3860,10 @@
               },  
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              },  
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                           
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
@@ -3874,7 +3926,10 @@
               },  
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              },
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                             
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
@@ -3937,7 +3992,10 @@
               },  
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              },
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                             
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
@@ -4122,7 +4180,10 @@
               },
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              },
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                             
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
@@ -4191,7 +4252,10 @@
               },
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              },   
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                          
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
@@ -4260,7 +4324,10 @@
               }, 
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              }, 
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                            
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              

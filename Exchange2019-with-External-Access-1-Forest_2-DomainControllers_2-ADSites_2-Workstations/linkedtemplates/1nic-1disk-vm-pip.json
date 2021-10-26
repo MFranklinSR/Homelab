@@ -19,7 +19,13 @@
             "metadata": {
                 "description": "Time Zone"
             }
-        },            
+        },
+        "AutoShutdownEnabled": {
+            "type": "string",
+          "metadata": {
+            "description": "Enable or Disable Auto-Shutdown"
+          }
+        },                    
         "AutoShutdownTime": {
             "type": "string",
           "metadata": {
@@ -184,6 +190,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('AutoShutdownEnabled'),'Yes')]",
             "type": "microsoft.devtestlab/schedules",
             "apiVersion": "2018-09-15",
             "name": "[concat('shutdown-computevm-',parameters('computerName'))]",
