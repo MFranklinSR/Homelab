@@ -2,6 +2,10 @@
 {
    param
    (
+        [String]$NameServer1,
+        [String]$NameServer2,
+        [String]$NameServer3,
+        [String]$NameServer4,
         [String]$ToEmail,
         [String]$FromEmail,
         [String]$IssuingCAServerName,
@@ -32,9 +36,9 @@
                 $Att2 = "C:\Windows\System32\certsrv\CertEnroll\$using:RootCAServerName$u$using:RootCAName.crt"          
                 
                 # Build a command that will be run inside the VM.
-                Send-MailMessage -To "$using:ToEmail" -From "$using:FromEmail" -Subject "Certificates" -Body "Attached is the Issuing Certificate Authority that is needed to connect via RDP and securely connect to OWA" -SmtpServer "$using:ExchangeServerName" -Attachments "$Att1"
+                Send-MailMessage -To "$using:ToEmail" -From "$using:FromEmail" -Subject "Certificates" -Body "Attached is the Issuing Certificate Authority that is needed to connect via RDP and securely connect to OWA." -SmtpServer "$using:ExchangeServerName" -Attachments "$Att1"
                 Send-MailMessage -To "$using:ToEmail" -From "$using:FromEmail" -Subject "Certificates" -Body "Attached are the Root Certificate Authority that is needed to connect via RDP and securely connect to OWA" -SmtpServer "$using:ExchangeServerName" -Attachments "$Att2"
-
+                Send-MailMessage -To "$using:ToEmail" -From "$using:FromEmail" -Subject "Domain Name Registrar Instructions" -Body "In order to allow external email to flow to your Exchange Organization, update your Name Registrars Name Servers to the following:  $using:NameServer1 $using:NameServer2 $using:NameServer3 $using:NameServer4" -SmtpServer "$using:ExchangeServerName"
             }
             GetScript =  { @{} }
             TestScript = { $false}

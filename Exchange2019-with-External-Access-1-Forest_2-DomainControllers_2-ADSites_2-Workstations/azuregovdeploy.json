@@ -4564,9 +4564,21 @@
               "computerName": {
                   "value": "[variables('icaname')]"
               },
+              "NameServer1": {
+                  "value": "[reference('createpublicdns').outputs.NameServer1.value]"
+              },
+              "NameServer2": {
+                  "value": "[reference('createpublicdns').outputs.NameServer2.value]"
+              },                            
+              "NameServer3": {
+                  "value": "[reference('createpublicdns').outputs.NameServer3.value]"
+              },              
+              "NameServer4": {
+                  "value": "[reference('createpublicdns').outputs.NameServer4.value]"
+              },              
               "ToEmail": {
                   "value": "[parameters('ToEmail')]"
-              },
+              },              
               "FromEmail": {
                   "value": "[variables('FromEmail')]"
               },

@@ -229,5 +229,23 @@
         ]
             }
         }                                        
-    ]
+    ],
+    "outputs": {
+        "NameServer1": {
+            "type": "string",
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnszones/NS', parameters('ZoneName'))).NameServers[0]]"
+        },
+        "NameServer2": {
+            "type": "string",
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnszones/NS', parameters('ZoneName'))).NameServers[1]]"
+        },        
+        "NameServer3": {
+            "type": "string",
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnszones/NS', parameters('ZoneName'))).NameServers[2]]"
+        },        
+        "NameServer4": {
+            "type": "string",
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnszones/NS', parameters('ZoneName'))).NameServers[3]]"
+        }        
+    }
 }

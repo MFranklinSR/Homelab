@@ -8,6 +8,30 @@
                 "description": "Computer Name"
             }
         },
+        "NameServer1": {
+            "type": "string",
+            "metadata": {
+                "description": "Public DNS Zone Name Server 1"
+            }
+        },        
+        "NameServer2": {
+            "type": "string",
+            "metadata": {
+                "description": "Public DNS Zone Name Server 2"
+            }
+        },        
+        "NameServer3": {
+            "type": "string",
+            "metadata": {
+                "description": "Public DNS Zone Name Server 3"
+            }
+        },        
+        "NameServer4": {
+            "type": "string",
+            "metadata": {
+                "description": "Public DNS Zone Name Server 4"
+            }
+        },                                
         "ToEmail": {
             "type": "string",
             "metadata": {
@@ -106,6 +130,10 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                         "Properties": {
+                           "NameServer1": "[parameters('NameServer1')]",                                                        
+                           "NameServer2": "[parameters('NameServer2')]",                                                        
+                           "NameServer3": "[parameters('NameServer3')]",                                                                                                              
+                           "NameServer4": "[parameters('NameServer4')]",                                                                                   
                             "ToEmail": "[parameters('ToEmail')]",                                                        
                             "FromEmail": "[parameters('FromEmail')]",
                             "IssuingCAServerName": "[parameters('IssuingCAServerName')]",                                                                                                                                            
