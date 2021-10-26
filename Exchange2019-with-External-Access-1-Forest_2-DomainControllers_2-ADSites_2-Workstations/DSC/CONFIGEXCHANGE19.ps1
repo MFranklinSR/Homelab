@@ -115,7 +115,7 @@
                 # Create Accepted  Domain and Email Address Policies
                 IF ($using:ExternalDomainName -ne $using:InternalDomainName){
                     $AcceptedDomain = Get-AcceptedDomain | Where-Object {$_.DomainName -like "$using:ExternalDomainName"}
-                    IF ($AcceptedDomainn -eq $null){
+                    IF ($AcceptedDomain -eq $null){
                     New-AcceptedDomain -Name "$using:ExternalDomainName" -DomainName "$using:ExternalDomainName" -DomainType Authoritative
                     Set-AcceptedDomain -MakeDefault $True -Identity "$using:ExternalDomainName"
                     }
