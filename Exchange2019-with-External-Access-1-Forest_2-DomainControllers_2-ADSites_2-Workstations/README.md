@@ -96,6 +96,7 @@ Exchange
 Parameters that support changes
 - Location2. Enter a Valid Azure Region based on which Cloud (AzureCloud, AzureUSGovernment, etc...) you are using.
 - TimeZone.  Select an appropriate Time Zone.
+- AutoShutdownEnabled.  Yes = AutoShutdown Enabled, No = AutoShutdown Disabled.
 - AutoShutdownTime.  24-Hour Clock Time for Auto-Shutdown (Example: 1900 = 7PM)
 - AutoShutdownEmail.  Auto-Shutdown notification Email (Example:  user@domain.com)
 - Exchange Org Name. Enter a name that will be used for your Exchange Organization Name.
@@ -123,15 +124,15 @@ Parameters that support changes
 - RootCAKeyLength.  Key Length for Offline Root CA
 - IssuingCAHashAlgorithm.  Hash Algorithm for Issuing CA
 - IssuingCAKeyLength.  Key Length for Issuing CA
-- DC1OSVersion.  Select 2016-Datacenter (Windows 2016) or 2019-Datacenter (Windows 2019) Domain Controller 1 OS Version
-- DC2OSVersion.  Select 2016-Datacenter (Windows 2016) or 2019-Datacenter (Windows 2019) Domain Controller 2 OS Version
-- RCAOSVersion.  Select 2016-Datacenter (Windows 2016) or 2019-Datacenter (Windows 2019) Root CA OS Version
-- ICAOSVersion.  Select 2016-Datacenter (Windows 2016) or 2019-Datacenter (Windows 2019) Issuing CA OS Version
-- OCSPOSVersion.  Select 2016-Datacenter (Windows 2016) or 2019-Datacenter (Windows 2019) OCSP OS Version
-- FSOSVersion.  Select 2016-Datacenter (Windows 2016) or 2019-Datacenter (Windows 2019) File ShareWiteness OS Version
+- DC1OSVersion.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019) or 2016-Datacenter (Windows 2016) Domain Controller 1 OS Version
+- DC2OSVersion.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019) or 2016-Datacenter (Windows 2016) Domain Controller 2 OS Version
+- RCAOSVersion.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019) or 2016-Datacenter (Windows 2016) Root CA OS Version
+- ICAOSVersion.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019) or 2016-Datacenter (Windows 2016) Issuing CA OS Version
+- OCSPOSVersion.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019) or 2016-Datacenter (Windows 2016) OCSP OS Version
+- FSOSVersion.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019) or 2016-Datacenter (Windows 2016) File ShareWiteness OS Version
 - EXOSVersion.  Exchange Servers OS Version is not configurable and set to 2019-Datacenter (Windows 2019).
-- WK1OSVersion.  Workstation1 OS Version is not configurable and set to 19h1-pro (Windows 10).
-- WK2OSVersion.  Workstation2 OS Version is not configurable and set to 19h1-pro (Windows 10).
+- WK1OSVersion.  Select Windows-11, Windows-10 or Windows-7 Worksation 1 OS Version
+- WK2OSVersion.  Select Windows-11, Windows-10 or Windows-7 Worksation 1 OS Version
 - DC1VMSize.  Enter a Valid VM Size based on which Region the VM is deployed.
 - DC2VMSize.  Enter a Valid VM Size based on which Region the VM is deployed.
 - RCAVMSize.  Enter a Valid VM Size based on which Region the VM is deployed.

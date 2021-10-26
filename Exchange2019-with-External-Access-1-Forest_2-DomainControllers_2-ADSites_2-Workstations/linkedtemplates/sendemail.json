@@ -44,7 +44,7 @@
                 "description": "Certificate Authority Name"
             }
         },
-        "ExternalDomainName": {
+        "InternalDomainName": {
             "type": "string",
             "metadata": {
                 "description": "Root Domain Name FQDN"
@@ -112,7 +112,7 @@
                             "RootCAServerName": "[parameters('RootCAServerName')]",                                                                                                                                                                        
                             "IssuingCAName": "[parameters('IssuingCAName')]",
                             "RootCAName": "[parameters('RootCAName')]",                            
-                            "ExternalDomainName": "[parameters('ExternalDomainName')]",
+                            "InternalDomainName": "[parameters('InternalDomainName')]",
                             "ExchangeServerName": "[parameters('ExchangeServerName')]",                            
                             "AdminCreds": {
                                 "UserName": "[parameters('adminUsername')]",
