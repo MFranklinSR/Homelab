@@ -1007,14 +1007,14 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "configdns",
+      "name": "ConfigDNS-Int",
       "dependsOn": [
         "restartdc1"
       ],            
       "properties": {
           "mode": "Incremental",
           "templateLink": {
-              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/configdns.json', parameters('_artifactsLocationSasToken')))]",
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/configdnsint.json', parameters('_artifactsLocationSasToken')))]",
               "contentVersion": "1.0.0.0"
           },
           "parameters": {
@@ -1076,11 +1076,84 @@
       }
     },
     {
+      "condition": "[equals(variables('InternaldomainName'),variables('ExternaldomainName'))]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "ConfigDNS-Ext",
+      "dependsOn": [
+        "ConfigDNS-Ext"
+      ],            
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/configdnsext.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "computerName": {
+                  "value": "[variables('dc1name')]"
+              },     
+              "DC2Name": {
+                  "value": "[variables('dc2name')]"
+              },              
+              "NetBiosDomain": {
+                  "value": "[parameters('NetBiosDomain')]"
+              },                                         
+              "InternalDomainName": {
+                "value": "[variables('InternaldomainName')]"
+              },       
+              "ExternalDomainName": {
+                "value": "[variables('ExternaldomainName')]"
+              },              
+              "ReverseLookup1": {
+                "value": "[variables('ReverseLookup1')]"
+              },                                                                                                            
+              "ReverseLookup2": {
+                "value": "[variables('ReverseLookup2')]"
+              },                                                                                                                          
+              "dc1lastoctet": {
+                "value": "[variables('dc1lastoctet')]"
+              },                                                                                                                          
+              "dc2lastoctet": {
+                "value": "[variables('dc2lastoctet')]"
+              },                                                                                                                                        
+              "ex1IP": {
+                "value": "[variables('ex1IP')]"
+              },                                                                                                                          
+              "ex2IP": {
+                "value": "[variables('ex2IP')]"
+              }, 
+              "icaIP": {
+                "value": "[variables('icaIP')]"
+              },                                                                                                                          
+              "ocspIP": {
+                "value": "[variables('ocspIP')]"
+              }, 
+              "adminUsername": {
+                "value": "[parameters('adminUsername')]"
+              },                                                                                                            
+              "adminPassword": {
+                "value": "[parameters('adminPassword')]"
+              },                   
+              "_artifactsLocation": {
+                "value": "[parameters('_artifactsLocation')]"
+              },                                                                                                            
+              "_artifactsLocationSasToken": {
+                "value": "[parameters('_artifactsLocationSasToken')]"
+              },                                                                                                                                                                                                                                                                                                           
+              "location": {
+                  "value": "[resourceGroup().location]"
+              }
+          }
+      }
+    },    
+    {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
       "name": "createous",
       "dependsOn": [
-        "configdns"
+        "ConfigDNS-Int",
+        "ConfigDNS-Ext"
       ],            
       "properties": {
           "mode": "Incremental",
@@ -1419,7 +1492,8 @@
       "apiVersion": "2019-10-01",
       "name": "deployrootca",
       "dependsOn": [
-        "configdns"
+        "ConfigDNS-Int",
+        "ConfigDNS-Ext"
       ],      
       "properties": {
           "mode": "Incremental",

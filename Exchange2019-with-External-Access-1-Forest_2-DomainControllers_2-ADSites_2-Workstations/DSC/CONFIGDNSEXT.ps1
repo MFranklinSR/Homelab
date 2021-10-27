@@ -1,4 +1,4 @@
-﻿configuration CONFIGDNS
+﻿configuration CONFIGDNSEXT
 {
    param
    (
