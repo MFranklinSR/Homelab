@@ -647,6 +647,7 @@
     "CATemplateScriptUrl": "https://elliottf.blob.core.windows.net/github/Scripts/Create_CA_Templates.ps1",               
     "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",
     "ExternaldomainName": "[concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))]", 
+    "DNSArmTemplate": "[if(equals(variables('InternaldomainName'),concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))), 'configdnsint.json', 'configdnsext.json')]",
     "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
     "WIN11OUPath": "[concat('OU=Windows 11,OU=Workstations,',variables('BaseDN'))]",
     "WIN10OUPath": "[concat('OU=Windows 10,OU=Workstations,',variables('BaseDN'))]",
@@ -1007,14 +1008,14 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "ConfigDNS-Int",
+      "name": "configdns",
       "dependsOn": [
         "restartdc1"
       ],            
       "properties": {
           "mode": "Incremental",
           "templateLink": {
-              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/configdnsint.json', parameters('_artifactsLocationSasToken')))]",
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/',variables('DNSArmTemplate'), parameters('_artifactsLocationSasToken')))]",
               "contentVersion": "1.0.0.0"
           },
           "parameters": {
@@ -1076,84 +1077,11 @@
       }
     },
     {
-      "condition": "[equals(variables('InternaldomainName'),variables('ExternaldomainName'))]",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2019-10-01",
-      "name": "ConfigDNS-Ext",
-      "dependsOn": [
-        "ConfigDNS-Int"
-      ],            
-      "properties": {
-          "mode": "Incremental",
-          "templateLink": {
-              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/configdnsext.json', parameters('_artifactsLocationSasToken')))]",
-              "contentVersion": "1.0.0.0"
-          },
-          "parameters": {
-              "computerName": {
-                  "value": "[variables('dc1name')]"
-              },     
-              "DC2Name": {
-                  "value": "[variables('dc2name')]"
-              },              
-              "NetBiosDomain": {
-                  "value": "[parameters('NetBiosDomain')]"
-              },                                         
-              "InternalDomainName": {
-                "value": "[variables('InternaldomainName')]"
-              },       
-              "ExternalDomainName": {
-                "value": "[variables('ExternaldomainName')]"
-              },              
-              "ReverseLookup1": {
-                "value": "[variables('ReverseLookup1')]"
-              },                                                                                                            
-              "ReverseLookup2": {
-                "value": "[variables('ReverseLookup2')]"
-              },                                                                                                                          
-              "dc1lastoctet": {
-                "value": "[variables('dc1lastoctet')]"
-              },                                                                                                                          
-              "dc2lastoctet": {
-                "value": "[variables('dc2lastoctet')]"
-              },                                                                                                                                        
-              "ex1IP": {
-                "value": "[variables('ex1IP')]"
-              },                                                                                                                          
-              "ex2IP": {
-                "value": "[variables('ex2IP')]"
-              }, 
-              "icaIP": {
-                "value": "[variables('icaIP')]"
-              },                                                                                                                          
-              "ocspIP": {
-                "value": "[variables('ocspIP')]"
-              }, 
-              "adminUsername": {
-                "value": "[parameters('adminUsername')]"
-              },                                                                                                            
-              "adminPassword": {
-                "value": "[parameters('adminPassword')]"
-              },                   
-              "_artifactsLocation": {
-                "value": "[parameters('_artifactsLocation')]"
-              },                                                                                                            
-              "_artifactsLocationSasToken": {
-                "value": "[parameters('_artifactsLocationSasToken')]"
-              },                                                                                                                                                                                                                                                                                                           
-              "location": {
-                  "value": "[resourceGroup().location]"
-              }
-          }
-      }
-    },    
-    {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
       "name": "createous",
       "dependsOn": [
-        "ConfigDNS-Int",
-        "ConfigDNS-Ext"
+        "configdns"
       ],            
       "properties": {
           "mode": "Incremental",
@@ -1492,8 +1420,7 @@
       "apiVersion": "2019-10-01",
       "name": "deployrootca",
       "dependsOn": [
-        "ConfigDNS-Int",
-        "ConfigDNS-Ext"
+        "configdns"
       ],      
       "properties": {
           "mode": "Incremental",
