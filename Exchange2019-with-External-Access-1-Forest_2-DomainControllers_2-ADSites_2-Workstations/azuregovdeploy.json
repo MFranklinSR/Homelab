@@ -1081,7 +1081,7 @@
       "apiVersion": "2019-10-01",
       "name": "ConfigDNS-Ext",
       "dependsOn": [
-        "ConfigDNS-Ext"
+        "ConfigDNS-Int"
       ],            
       "properties": {
           "mode": "Incremental",
