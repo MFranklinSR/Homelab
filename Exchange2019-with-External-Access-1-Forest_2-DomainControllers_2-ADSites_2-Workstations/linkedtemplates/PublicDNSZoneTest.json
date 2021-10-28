@@ -1,0 +1,30 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ZoneName": {
+            "type": "string",
+            "metadata": {
+                "description": "DNS Zone Name"
+              }
+        }                               
+    }, 
+    "resources": [
+        {
+            "name": "[parameters('ZoneName')]",
+            "type": "Microsoft.Network/dnsZones",
+            "apiVersion": "2018-05-01",
+            "location": "global",
+            "tags": {},
+            "properties": {
+            },
+            "resources": []
+        }                                        
+    ],
+    "outputs": {
+        "NameServer1": {
+            "type": "Array",
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnszones', parameters('ZoneName'))).nameServers]"
+        }
+    }
+}

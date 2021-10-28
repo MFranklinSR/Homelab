@@ -1,0 +1,76 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "ExternalDomain": {
+        "type": "string",
+        "defaultValue": "killerhomelab",
+        "metadata": {
+            "description": "External DNS Domain"
+        }
+      },    
+      "ExternalTLD": {
+        "type": "string",
+        "defaultValue": "com",     
+        "metadata": {
+            "description": "External Top-Level Domain Name"
+        }
+      },                                                                                                                            
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+            "description": "The location of resources, such as templates and DSC modules, that the template depends on"
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+          "type": "securestring",
+          "metadata": {
+              "description": "Auto-generated token to access _artifactsLocation. Leave it blank unless you need to provide your own value."
+          },
+          "defaultValue": ""
+      }    
+    },
+    "variables": {
+      "ExternaldomainName": "[concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))]"
+    },  
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "createpublicdnsTest",
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/PublicDNSZoneTest.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "ZoneName": {
+                  "value": "[variables('ExternaldomainName')]"
+              }                                                                                                                                                              
+          }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "sendcompletionemail",
+      "dependsOn": [
+        "createpublicdns"
+      ],            
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/sendemailtest.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "NameServer1": {
+                  "value": "[reference('createpublicdns').outputs.NameServer1.value]"
+              }
+          }
+      }
+    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+  ]
+}
