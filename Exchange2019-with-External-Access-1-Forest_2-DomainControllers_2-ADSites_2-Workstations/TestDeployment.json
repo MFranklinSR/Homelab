@@ -57,7 +57,7 @@
       "apiVersion": "2019-10-01",
       "name": "sendcompletionemail",
       "dependsOn": [
-        "createpublicdns"
+        "createpublicdnsTest"
       ],            
       "properties": {
           "mode": "Incremental",
