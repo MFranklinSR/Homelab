@@ -22,13 +22,9 @@
         }                                        
     ],
     "outputs": {
-        "NameServers": {
-            "type": "Array",
-            "value": "[string(reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnszones', parameters('ZoneName'))).nameServers[0])]"
-        },
         "NameServer1": {
-            "type": "String",
-            "value": "[reference('NameServers').outputs.NameServers.value]"
-        }        
+            "type": "Array",
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnszones', parameters('ZoneName'))).nameServers[0]]"
+        }
     }
 }
