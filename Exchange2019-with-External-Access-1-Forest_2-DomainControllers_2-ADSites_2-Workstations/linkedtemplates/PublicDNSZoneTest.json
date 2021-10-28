@@ -24,7 +24,7 @@
     "outputs": {
         "NameServer1": {
             "type": "Array",
-            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnszones', parameters('ZoneName'))).nameServers]"
+            "value": "[string(reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnszones', parameters('ZoneName'))).nameServers)]"
         }
     }
 }
