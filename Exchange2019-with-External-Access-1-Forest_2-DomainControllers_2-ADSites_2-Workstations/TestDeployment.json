@@ -67,7 +67,7 @@
           },
           "parameters": {
               "NameServer1": {
-                  "value": "[reference('createpublicdns').outputs.NameServer1.value]"
+                  "value": "[reference('createpublicdnsTest').outputs.NameServer1.value]"
               }
           }
       }
