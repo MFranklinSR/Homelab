@@ -11,6 +11,14 @@
     },
 
     "resources": [
-
+        {
+            "name": "testip1",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2018-11-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publicIPAllocationMethod": "Static"
+            }
+        }
     ]
 }
