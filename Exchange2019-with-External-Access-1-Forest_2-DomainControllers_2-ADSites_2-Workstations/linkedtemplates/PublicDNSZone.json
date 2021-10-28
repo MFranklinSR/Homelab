@@ -236,19 +236,19 @@
     "outputs": {
         "NameServer1": {
             "type": "string",
-            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnszones', variables('NSRecords'))).NameServers[0]]"
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnszones/NS', parameters('ZoneName') , '/@')).Records[0].nsdname]"
         },
         "NameServer2": {
             "type": "string",
-            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnszones', variables('NSRecords'))).NameServers[1]]"
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnszones/NS', parameters('ZoneName') , '/@')).Records[1].nsdname]"
         },        
         "NameServer3": {
             "type": "string",
-            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnszones', variables('NSRecords'))).NameServers[2]]"
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnszones/NS', parameters('ZoneName') , '/@')).Records[2].nsdname]"
         },        
         "NameServer4": {
             "type": "string",
-            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnszones', variables('NSRecords'))).NameServers[3]]"
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnszones/NS', parameters('ZoneName') , '/@')).Records[3].nsdname]"
         }        
     }
 }
