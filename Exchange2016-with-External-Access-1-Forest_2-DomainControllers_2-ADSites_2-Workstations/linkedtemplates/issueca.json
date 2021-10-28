@@ -8,30 +8,24 @@
                 "description": "Computer Name"
             }
         },
-        "ToEmail": {
-            "type": "string",
+        "TimeZone": {
+            "type": "string",      
             "metadata": {
-                "description": "To Email Address"
+                "description": "Time Zone"
             }
-        },                                                
-        "FromEmail": {
+        },         
+        "NamingConvention": {
             "type": "string",
             "metadata": {
-                "description": "From Email Address"
+                "description": "Domain Naming Convention"
             }
-        },                
-        "IssuingCAServerName": {
+        },         
+        "NetBiosDomain": {
             "type": "string",
             "metadata": {
-                "description": "Issuing CA Name"
+                "description": "NetBios Domain Name"
             }
         },
-        "RootCAServerName": {
-            "type": "string",
-            "metadata": {
-                "description": "Root CA Name"
-            }
-        },        
         "IssuingCAName": {
             "type": "string",
             "metadata": {
@@ -44,18 +38,26 @@
                 "description": "Certificate Authority Name"
             }
         },
-        "InternalDomainName": {
+        "RootCAIP": {
             "type": "string",
             "metadata": {
-                "description": "Root Domain Name FQDN"
+                "description": "Root CA IP"
             }
-        },             
-        "ExchangeServerName": {
+        },     
+        "IssuingCAHashAlgorithm": {
             "type": "string",
+            "defaultValue": "",
             "metadata": {
-                "description": "Root Domain Name FQDN"
-            }
-        },                     
+                "description": "Issuing CA Algorithm"
+        }
+        },   
+        "IssuingCAKeyLength": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Issuing CA Key Length"
+        }
+        },                            
         "location": {
             "type": "string",
           "metadata": {
@@ -88,8 +90,8 @@
         }                
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/SENDEMAIL.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "SENDEMAIL.ps1\\SENDEMAIL"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/ISSUECA.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "ISSUECA.ps1\\ISSUECA"
     },
     "resources": [
         {
@@ -106,14 +108,15 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                         "Properties": {
-                            "ToEmail": "[parameters('ToEmail')]",                                                        
-                            "FromEmail": "[parameters('FromEmail')]",
-                            "IssuingCAServerName": "[parameters('IssuingCAServerName')]",                                                                                                                                            
-                            "RootCAServerName": "[parameters('RootCAServerName')]",                                                                                                                                                                        
+                            "computerName": "[parameters('computerName')]",
+                            "TimeZone": "[parameters('TimeZone')]",                            
+                            "NamingConvention": "[parameters('NamingConvention')]",                            
+                            "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                                                                               
                             "IssuingCAName": "[parameters('IssuingCAName')]",
                             "RootCAName": "[parameters('RootCAName')]",                            
-                            "InternalDomainName": "[parameters('InternalDomainName')]",
-                            "ExchangeServerName": "[parameters('ExchangeServerName')]",                            
+                            "RootCAIP": "[parameters('RootCAIP')]",     
+                            "IssuingCAHashAlgorithm": "[parameters('IssuingCAHashAlgorithm')]",                            
+                            "IssuingCAKeyLength": "[parameters('IssuingCAKeyLength')]",                                                                                                                                       
                             "AdminCreds": {
                                 "UserName": "[parameters('adminUsername')]",
                                 "Password": "PrivateSettingsRef:AdminPassword"                                                                                   

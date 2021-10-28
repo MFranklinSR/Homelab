@@ -8,60 +8,36 @@
                 "description": "Computer Name"
             }
         },
-        "ToEmail": {
-            "type": "string",
+        "TimeZone": {
+            "type": "string",      
             "metadata": {
-                "description": "To Email Address"
+                "description": "Time Zone"
             }
-        },                                                
-        "FromEmail": {
+        },           
+        "NetBiosDomain": {
             "type": "string",
             "metadata": {
-                "description": "From Email Address"
-            }
-        },                
-        "IssuingCAServerName": {
-            "type": "string",
-            "metadata": {
-                "description": "Issuing CA Name"
+                "description": "NetBios Domain Name"
             }
         },
-        "RootCAServerName": {
+        "domainName": {
             "type": "string",
-            "metadata": {
-                "description": "Root CA Name"
-            }
-        },        
-        "IssuingCAName": {
-            "type": "string",
-            "metadata": {
-                "description": "Issuing CA Name"
-            }
+          "metadata": {
+            "description": "The FQDN of the AD Domain created "
+          }
         },
-        "RootCAName": {
+        "DnsServerIP": {
             "type": "string",
-            "metadata": {
-                "description": "Certificate Authority Name"
-            }
-        },
-        "InternalDomainName": {
-            "type": "string",
-            "metadata": {
-                "description": "Root Domain Name FQDN"
-            }
-        },             
-        "ExchangeServerName": {
-            "type": "string",
-            "metadata": {
-                "description": "Root Domain Name FQDN"
-            }
-        },                     
+          "metadata": {
+            "description": "DNS Server IP "
+          }
+        },                                       
         "location": {
             "type": "string",
           "metadata": {
             "description": "Region of Resources"
           }
-        },
+        }, 
         "adminUsername": {
             "type": "string",
             "metadata": {
@@ -73,7 +49,7 @@
           "metadata": {
             "description": "The password for the Administrator account of the new VM and Domain"
           }
-        },         
+        },
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -88,8 +64,8 @@
         }                
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/SENDEMAIL.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "SENDEMAIL.ps1\\SENDEMAIL"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/OTHERDC.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "OTHERDC.ps1\\OTHERDC"
     },
     "resources": [
         {
@@ -106,17 +82,13 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                         "Properties": {
-                            "ToEmail": "[parameters('ToEmail')]",                                                        
-                            "FromEmail": "[parameters('FromEmail')]",
-                            "IssuingCAServerName": "[parameters('IssuingCAServerName')]",                                                                                                                                            
-                            "RootCAServerName": "[parameters('RootCAServerName')]",                                                                                                                                                                        
-                            "IssuingCAName": "[parameters('IssuingCAName')]",
-                            "RootCAName": "[parameters('RootCAName')]",                            
-                            "InternalDomainName": "[parameters('InternalDomainName')]",
-                            "ExchangeServerName": "[parameters('ExchangeServerName')]",                            
+                            "TimeZone": "[parameters('TimeZone')]",
+                            "DomainName": "[parameters('domainName')]",
+                            "NetBiosDomain": "[parameters('NetBiosDomain')]",
+                            "DnsServerIP": "[parameters('DnsServerIP')]",                            
                             "AdminCreds": {
                                 "UserName": "[parameters('adminUsername')]",
-                                "Password": "PrivateSettingsRef:AdminPassword"                                                                                   
+                                "Password": "PrivateSettingsRef:AdminPassword"
                             }
                         }
                 },

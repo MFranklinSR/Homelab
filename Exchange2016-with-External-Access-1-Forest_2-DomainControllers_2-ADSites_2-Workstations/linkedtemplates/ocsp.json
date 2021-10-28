@@ -8,30 +8,30 @@
                 "description": "Computer Name"
             }
         },
-        "ToEmail": {
+        "TimeZone": {
+            "type": "string",      
+            "metadata": {
+                "description": "Time Zone"
+            }
+        },              
+        "NetBiosDomain": {
             "type": "string",
             "metadata": {
-                "description": "To Email Address"
+                "description": "NetBios Domain Name"
             }
-        },                                                
-        "FromEmail": {
+        },                                        
+        "InternaldomainName": {
             "type": "string",
             "metadata": {
-                "description": "From Email Address"
-            }
-        },                
-        "IssuingCAServerName": {
-            "type": "string",
-            "metadata": {
-                "description": "Issuing CA Name"
-            }
+                "description": "The FQDN of the AD Domain created "
+          }
         },
-        "RootCAServerName": {
+        "ExternaldomainName": {
             "type": "string",
             "metadata": {
-                "description": "Root CA Name"
-            }
-        },        
+                "description": "The External FQDN of the AD Domain created "
+          }
+        },
         "IssuingCAName": {
             "type": "string",
             "metadata": {
@@ -41,21 +41,9 @@
         "RootCAName": {
             "type": "string",
             "metadata": {
-                "description": "Certificate Authority Name"
+                "description": "Root CA Name"
             }
-        },
-        "InternalDomainName": {
-            "type": "string",
-            "metadata": {
-                "description": "Root Domain Name FQDN"
-            }
-        },             
-        "ExchangeServerName": {
-            "type": "string",
-            "metadata": {
-                "description": "Root Domain Name FQDN"
-            }
-        },                     
+        },        
         "location": {
             "type": "string",
           "metadata": {
@@ -88,8 +76,8 @@
         }                
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/SENDEMAIL.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "SENDEMAIL.ps1\\SENDEMAIL"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/OCSP.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "OCSP.ps1\\OCSP"
     },
     "resources": [
         {
@@ -106,18 +94,18 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                         "Properties": {
-                            "ToEmail": "[parameters('ToEmail')]",                                                        
-                            "FromEmail": "[parameters('FromEmail')]",
-                            "IssuingCAServerName": "[parameters('IssuingCAServerName')]",                                                                                                                                            
-                            "RootCAServerName": "[parameters('RootCAServerName')]",                                                                                                                                                                        
+                            "computerName": "[parameters('computerName')]",
+                            "TimeZone": "[parameters('TimeZone')]",                                                        
+                            "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                        
+                            "InternaldomainName": "[parameters('InternaldomainName')]",                                                        
+                            "ExternaldomainName": "[parameters('ExternaldomainName')]",  
                             "IssuingCAName": "[parameters('IssuingCAName')]",
                             "RootCAName": "[parameters('RootCAName')]",                            
-                            "InternalDomainName": "[parameters('InternalDomainName')]",
-                            "ExchangeServerName": "[parameters('ExchangeServerName')]",                            
                             "AdminCreds": {
                                 "UserName": "[parameters('adminUsername')]",
                                 "Password": "PrivateSettingsRef:AdminPassword"                                                                                   
                             }
+
                         }
                 },
                 "protectedSettings": {

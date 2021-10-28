@@ -8,30 +8,18 @@
                 "description": "Computer Name"
             }
         },
-        "ToEmail": {
+        "RootCAIP": {
             "type": "string",
             "metadata": {
-                "description": "To Email Address"
+                "description": "Root CA IP"
             }
         },                                                
-        "FromEmail": {
+        "NetBiosDomain": {
             "type": "string",
             "metadata": {
-                "description": "From Email Address"
+                "description": "NetBios Domain Name"
             }
         },                
-        "IssuingCAServerName": {
-            "type": "string",
-            "metadata": {
-                "description": "Issuing CA Name"
-            }
-        },
-        "RootCAServerName": {
-            "type": "string",
-            "metadata": {
-                "description": "Root CA Name"
-            }
-        },        
         "IssuingCAName": {
             "type": "string",
             "metadata": {
@@ -44,16 +32,16 @@
                 "description": "Certificate Authority Name"
             }
         },
-        "InternalDomainName": {
+        "domainName": {
             "type": "string",
             "metadata": {
                 "description": "Root Domain Name FQDN"
             }
         },             
-        "ExchangeServerName": {
+        "CATemplateScriptUrl": {
             "type": "string",
             "metadata": {
-                "description": "Root Domain Name FQDN"
+                "description": "URL to PowerShell Script for CA Template Creation"
             }
         },                     
         "location": {
@@ -88,8 +76,8 @@
         }                
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/SENDEMAIL.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "SENDEMAIL.ps1\\SENDEMAIL"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/FINALIZECA.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "FINALIZECA.ps1\\FINALIZECA"
     },
     "resources": [
         {
@@ -106,14 +94,12 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                         "Properties": {
-                            "ToEmail": "[parameters('ToEmail')]",                                                        
-                            "FromEmail": "[parameters('FromEmail')]",
-                            "IssuingCAServerName": "[parameters('IssuingCAServerName')]",                                                                                                                                            
-                            "RootCAServerName": "[parameters('RootCAServerName')]",                                                                                                                                                                        
+                            "RootCAIP": "[parameters('RootCAIP')]",                                                        
+                            "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                        
                             "IssuingCAName": "[parameters('IssuingCAName')]",
                             "RootCAName": "[parameters('RootCAName')]",                            
-                            "InternalDomainName": "[parameters('InternalDomainName')]",
-                            "ExchangeServerName": "[parameters('ExchangeServerName')]",                            
+                            "domainName": "[parameters('domainName')]",
+                            "CATemplateScriptUrl": "[parameters('CATemplateScriptUrl')]",                            
                             "AdminCreds": {
                                 "UserName": "[parameters('adminUsername')]",
                                 "Password": "PrivateSettingsRef:AdminPassword"                                                                                   

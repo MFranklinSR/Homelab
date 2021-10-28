@@ -8,54 +8,44 @@
                 "description": "Computer Name"
             }
         },
-        "ToEmail": {
-            "type": "string",
+        "TimeZone": {
+            "type": "string",      
             "metadata": {
-                "description": "To Email Address"
+                "description": "Time Zone"
             }
-        },                                                
-        "FromEmail": {
-            "type": "string",
-            "metadata": {
-                "description": "From Email Address"
-            }
-        },                
-        "IssuingCAServerName": {
-            "type": "string",
-            "metadata": {
-                "description": "Issuing CA Name"
-            }
-        },
-        "RootCAServerName": {
-            "type": "string",
-            "metadata": {
-                "description": "Root CA Name"
-            }
-        },        
-        "IssuingCAName": {
-            "type": "string",
-            "metadata": {
-                "description": "Issuing CA Name"
-            }
-        },
+        },         
         "RootCAName": {
             "type": "string",
             "metadata": {
                 "description": "Certificate Authority Name"
             }
         },
-        "InternalDomainName": {
+        "RootCAHashAlgorithm": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Offline Root CA Algorithm"
+        }
+        },   
+        "RootCAKeyLength": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Offline Root CA Key Length"
+        }
+        },                    
+        "domainName": {
             "type": "string",
             "metadata": {
                 "description": "Root Domain Name FQDN"
             }
-        },             
-        "ExchangeServerName": {
+        },
+        "BaseDN": {
             "type": "string",
             "metadata": {
-                "description": "Root Domain Name FQDN"
+                "description": "Base Domain Distiguished Name"
             }
-        },                     
+        },
         "location": {
             "type": "string",
           "metadata": {
@@ -88,8 +78,8 @@
         }                
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/SENDEMAIL.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "SENDEMAIL.ps1\\SENDEMAIL"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/ROOTCA.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "ROOTCA.ps1\\ROOTCA"
     },
     "resources": [
         {
@@ -106,18 +96,17 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                         "Properties": {
-                            "ToEmail": "[parameters('ToEmail')]",                                                        
-                            "FromEmail": "[parameters('FromEmail')]",
-                            "IssuingCAServerName": "[parameters('IssuingCAServerName')]",                                                                                                                                            
-                            "RootCAServerName": "[parameters('RootCAServerName')]",                                                                                                                                                                        
-                            "IssuingCAName": "[parameters('IssuingCAName')]",
-                            "RootCAName": "[parameters('RootCAName')]",                            
-                            "InternalDomainName": "[parameters('InternalDomainName')]",
-                            "ExchangeServerName": "[parameters('ExchangeServerName')]",                            
+                            "TimeZone": "[parameters('TimeZone')]",
+                            "domainName": "[parameters('domainName')]",
+                            "RootCAName": "[parameters('RootCAName')]",
+                            "RootCAHashAlgorithm": "[parameters('RootCAHashAlgorithm')]",                            
+                            "RootCAKeyLength": "[parameters('RootCAKeyLength')]",                                                        
+                            "BaseDN": "[parameters('BaseDN')]",                            
                             "AdminCreds": {
                                 "UserName": "[parameters('adminUsername')]",
                                 "Password": "PrivateSettingsRef:AdminPassword"                                                                                   
                             }
+
                         }
                 },
                 "protectedSettings": {
