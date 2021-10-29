@@ -29,21 +29,9 @@
         "dc1lastoctet": {
             "type": "string",
             "metadata": {
-                "description": "DC! Last IP Octet"
+                "description": "DC1 Last IP Octet"
             }
-        },
-        "icaIP": {
-            "type": "string",
-            "metadata": {
-                "description": "Issuing CA IP"
-            }
-        },                        
-        "ocspIP": {
-            "type": "string",
-            "metadata": {
-                "description": "OCSP IP"
-            }
-        },                 
+        },                
         "location": {
             "type": "string",
           "metadata": {
@@ -99,8 +87,6 @@
                             "InternaldomainName": "[parameters('InternaldomainName')]",                                                        
                             "ReverseLookup1": "[parameters('ReverseLookup1')]",
                             "dc1lastoctet": "[parameters('dc1lastoctet')]",  
-                            "icaIP": "[parameters('icaIP')]",                                                        
-                            "ocspIP": "[parameters('ocspIP')]",                                                                                                                              
                             "AdminCreds": {
                                 "UserName": "[parameters('adminUsername')]",
                                 "Password": "PrivateSettingsRef:AdminPassword"

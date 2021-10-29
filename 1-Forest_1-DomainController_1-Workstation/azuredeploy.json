@@ -148,6 +148,17 @@
           "description": "Time Zone"
       }
     },
+    "AutoShutdownEnabled": {
+      "type": "string",
+      "defaultValue": "No",
+      "allowedValues": [
+        "Yes",
+        "No"
+      ],      
+      "metadata": {
+          "description": "Enabled Auto Shutdown.  !!!If Enabled, AutoShutdownEmail MUST be added!!!!"
+      }
+    },        
     "AutoShutdownTime": {
       "type": "string",
       "metadata": {
@@ -240,7 +251,9 @@
         "org",
         "edu",
         "gov",
-        "mil"
+        "mil",
+        "us",
+        "local"
       ],      
       "metadata": {
           "description": "Top-Level Domain Name"
@@ -334,7 +347,14 @@
     "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
     "WIN11OUPath": "[concat('OU=Windows 11,OU=Workstations,',variables('BaseDN'))]",
     "WIN10OUPath": "[concat('OU=Windows 10,OU=Workstations,',variables('BaseDN'))]",
-    "WIN7OUPath": "[concat('OU=Windows 7,OU=Workstations,',variables('BaseDN'))]"        
+    "WIN7OUPath": "[concat('OU=Windows 7,OU=Workstations,',variables('BaseDN'))]",    
+    "SRV22OUPath": "[concat('OU=Servers2022,OU=Servers,',variables('BaseDN'))]",
+    "SRV19OUPath": "[concat('OU=Servers2019,OU=Servers,',variables('BaseDN'))]",
+    "SRV16OUPath": "[concat('OU=Servers2016,OU=Servers,',variables('BaseDN'))]", 
+    "SRV12R2OUPath": "[concat('OU=Servers2012R2,OU=Servers,',variables('BaseDN'))]",     
+    "PWSEXPolGPOName":  "PowerShell-ExecutionPolicy",
+    "PWSEXPolGPOGUID": "EC04DF04-A647-4A3E-9247-51B4CB137F5F",
+    "PWSEXPolGPOSASUrl": "https://elliottf.blob.core.windows.net/github/GPOs/PowerShell-ExecutionPolicy.zip"
   },  
   "resources": [
     {
@@ -459,7 +479,10 @@
               },   
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              },  
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                                                       
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
@@ -601,7 +624,7 @@
       "properties": {
           "mode": "Incremental",
           "templateLink": {
-              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/configdns.json', parameters('_artifactsLocationSasToken')))]",
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/configdnsint.json', parameters('_artifactsLocationSasToken')))]",
               "contentVersion": "1.0.0.0"
           },
           "parameters": {
@@ -720,7 +743,10 @@
               },   
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              },   
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                            
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
@@ -783,7 +809,10 @@
               },                                                                                                                                        
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              }, 
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                             
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
@@ -846,7 +875,10 @@
               },  
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },               
+              },      
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                         
               "AutoShutdownTime": {
                   "value": "[parameters('AutoShutdownTime')]"
               },              
