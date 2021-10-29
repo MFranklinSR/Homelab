@@ -4582,8 +4582,8 @@
               "RootCAName": {
                   "value": "[parameters('RootCAName')]"
               },
-              "ExternalDomainName": {
-                  "value": "[variables('ExternaldomainName')]"
+              "InternalDomainName": {
+                  "value": "[variables('InternaldomainName')]"
               },
               "ExchangeServerName": {
                   "value": "[variables('ex1name')]"
