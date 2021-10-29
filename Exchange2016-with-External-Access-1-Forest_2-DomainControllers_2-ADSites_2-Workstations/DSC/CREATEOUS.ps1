@@ -141,6 +141,15 @@
             Ensure                          = 'Present'
             DependsOn = "[xADOrganizationalUnit]ServersOU"
         }
+
+        xADOrganizationalUnit Server2022OU
+        {
+            Name                            = "Servers2022"
+            Path                            = "OU=Servers,$BaseDN"
+            Description                     = "Server2022 OU"
+            Ensure                          = 'Present'
+            DependsOn = "[xADOrganizationalUnit]ServersOU"
+        }
       
         xADOrganizationalUnit MaintenanceServersOU
         {
@@ -164,6 +173,15 @@
             Path                            = "$BaseDN"
             Description                     = "Workstations OU"
             Ensure                          = 'Present'
+        }
+
+        xADOrganizationalUnit Windows11OU
+        {
+            Name                            = "Windows 11"
+            Path                            = "OU=Workstations,$BaseDN"
+            Description                     = "Windows 11 OU"
+            Ensure                          = 'Present'
+            DependsOn = "[xADOrganizationalUnit]WorkstationsOU"
         }
 
         xADOrganizationalUnit Windows10OU

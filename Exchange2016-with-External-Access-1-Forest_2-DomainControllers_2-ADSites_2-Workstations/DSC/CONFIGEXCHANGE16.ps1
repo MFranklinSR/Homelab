@@ -111,6 +111,21 @@
                 IF ($InternetSendConnector -eq $Null) {
                 New-SendConnector "$using:Site Internet" -AddressSpaces * -SourceTransportServers "$using:computerName"
                 }
+
+                # Create Accepted  Domain and Email Address Policies
+                IF ($using:ExternalDomainName -ne $using:InternalDomainName){
+                    $AcceptedDomain = Get-AcceptedDomain | Where-Object {$_.DomainName -like "$using:ExternalDomainName"}
+                    IF ($AcceptedDomain -eq $null){
+                    New-AcceptedDomain -Name "$using:ExternalDomainName" -DomainName "$using:ExternalDomainName" -DomainType Authoritative
+                    Set-AcceptedDomain -MakeDefault $True -Identity "$using:ExternalDomainName"
+                    }
+
+                    $EmailAddressPolicy = Get-EmailAddressPolicy | Where-Object {$_.Name -like "$using:ExternalDomainName"}
+                    IF ($EmailAddressPolicy -eq $Null) {
+                    New-EmailAddressPolicy -Name "$using:ExternalDomainName" -IncludedRecipients MailboxUsers -EnabledEmailAddressTemplates "SMTP:%s%2g@$using:ExternalDomainName"
+                    Update-EmailAddressPolicy -Identity "$using:ExternalDomainName"
+                    }
+                }
             }
             GetScript =  { @{} }
             TestScript = { $false}
