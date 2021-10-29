@@ -1,18 +1,19 @@
-﻿configuration CONFIGDNS
+﻿configuration CONFIGDNSINT
 {
    param
    (
         [String]$computerName,
         [String]$NetBiosDomain,
-        [String]$dc1lastoctet,
         [String]$InternaldomainName,
+        [String]$ExternaldomainName,
         [String]$ReverseLookup1,
+        [String]$dc1lastoctet,
         [Int]$RetryIntervalSec=420,
         [System.Management.Automation.PSCredential]$Admincreds
     )
 
     Import-DscResource -Module xDnsServer
-    Import-DscResource -Module ActiveDirectoryDsc
+    Import-DscResource -ModuleName ActiveDirectoryDsc
 
     [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($Admincreds.UserName)", $Admincreds.Password)
 
@@ -38,7 +39,7 @@
         {
             Name      = "$dc1lastoctet"
             Zone      = "$ReverseLookup1.in-addr.arpa"
-            Target    = "$computerName.$InternaldomainName"
+            Target    = "$computerName.$DomainName"
             Type      = 'Ptr'
             Ensure    = 'Present'
             DependsOn = "[xDnsServerADZone]ReverseADZone1"

@@ -43,7 +43,13 @@
             "metadata": {
                 "description": "Certificate Authority Name"
             }
-        },          
+        },
+        "InternalDomainName": {
+            "type": "string",
+            "metadata": {
+                "description": "Root Domain Name FQDN"
+            }
+        },             
         "ExchangeServerName": {
             "type": "string",
             "metadata": {
@@ -106,6 +112,7 @@
                             "RootCAServerName": "[parameters('RootCAServerName')]",                                                                                                                                                                        
                             "IssuingCAName": "[parameters('IssuingCAName')]",
                             "RootCAName": "[parameters('RootCAName')]",                            
+                            "InternalDomainName": "[parameters('InternalDomainName')]",
                             "ExchangeServerName": "[parameters('ExchangeServerName')]",                            
                             "AdminCreds": {
                                 "UserName": "[parameters('adminUsername')]",
