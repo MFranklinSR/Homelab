@@ -231,7 +231,7 @@
     },          
     "NetBiosDomain": {
       "type": "string",
-      "defaultValue": "dir",
+      "defaultValue": "killerhomelab",
       "maxLength": 15,            
       "metadata": {
           "description": "NetBios Parent Domain Name"
@@ -354,62 +354,69 @@
       }
     },        
     "DC1OSVersion": {
-        "type": "string",
-        "defaultValue": "2019-Datacenter",
-        "allowedValues": [
-          "2019-Datacenter",
-          "2016-Datacenter"
-        ],
-        "metadata": {
-            "description": "Domain Controller1 OS Version"
-        }
+      "type": "string",
+      "defaultValue": "2022-Datacenter",
+      "allowedValues": [
+        "2022-Datacenter",
+        "2019-Datacenter",
+        "2016-Datacenter",
+        "2012-R2-Datacenter"        
+      ],      
+      "metadata": {
+          "description": "Domain Controller1 OS Version"
+      }
     },
     "RCAOSVersion": {
-        "type": "string",
-        "defaultValue": "2019-Datacenter",
-        "allowedValues": [
-          "2019-Datacenter",
-          "2016-Datacenter",
-          "2012-R2-Datacenter"
-        ],
-        "metadata": {
-            "description": "Offline Root CA OS Version"
-        }
-    },   
+      "type": "string",
+      "defaultValue": "2022-Datacenter",
+      "allowedValues": [
+        "2022-Datacenter",
+        "2019-Datacenter",
+        "2016-Datacenter",
+        "2012-R2-Datacenter"        
+      ],      
+      "metadata": {
+          "description": "Offline Root CA OS Version"
+      }
+    },            
     "ICAOSVersion": {
-        "type": "string",
-        "defaultValue": "2019-Datacenter",
-        "allowedValues": [
-          "2019-Datacenter",
-          "2016-Datacenter",
-          "2012-R2-Datacenter"
-        ],
-        "metadata": {
-            "description": "Issuing CA OS Version"
-        }
-    },     
+      "type": "string",
+      "defaultValue": "2022-Datacenter",
+      "allowedValues": [
+        "2022-Datacenter",        
+        "2019-Datacenter",
+        "2016-Datacenter",
+        "2012-R2-Datacenter"        
+      ],      
+      "metadata": {
+          "description": "Issuing CA OS Version"
+      }
+    },            
     "OCSPOSVersion": {
-        "type": "string",
-        "defaultValue": "2019-Datacenter",
-        "allowedValues": [
-          "2019-Datacenter",
-          "2016-Datacenter",
-          "2012-R2-Datacenter"
-        ],
-        "metadata": {
-            "description": "OCSP OS Version"
-        }
-    },         
+      "type": "string",
+      "defaultValue": "2022-Datacenter",
+      "allowedValues": [
+        "2022-Datacenter",        
+        "2019-Datacenter",
+        "2016-Datacenter",
+        "2012-R2-Datacenter"        
+      ],      
+      "metadata": {
+          "description": "OCSP OS Version"
+      }
+    }, 
     "WK1OSVersion": {
       "type": "string",
-      "defaultValue": "19h1-pro",
+      "defaultValue": "Windows-11",
       "allowedValues": [
-        "19h1-pro"
+        "Windows-11",
+        "Windows-10",
+        "Windows-7"
       ],
       "metadata": {
           "description": "Workstation1 OS Version"
       }
-  },    
+    },            
     "DC1VMSize": {
         "type": "string",
         "defaultValue": "Standard_D2s_v3",
