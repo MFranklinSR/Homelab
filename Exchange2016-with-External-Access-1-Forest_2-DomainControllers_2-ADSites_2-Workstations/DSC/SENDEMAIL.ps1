@@ -8,7 +8,7 @@
         [String]$RootCAServerName,
         [String]$IssuingCAName,
         [String]$RootCAName,
-        [String]$ExternalDomainName,
+        [String]$InternalDomainName,
         [String]$ExchangeServerName,
         [System.Management.Automation.PSCredential]$Admincreds
     )
@@ -28,13 +28,12 @@
             SetScript =
             {
                 $u = "_"
-                $Att1 = "C:\Windows\System32\certsrv\CertEnroll\$using:IssuingCAServerName.$using:ExternalDomainName$u$using:IssuingCAName.crt"
+                $Att1 = "C:\Windows\System32\certsrv\CertEnroll\$using:IssuingCAServerName.$using:InternalDomainName$u$using:IssuingCAName.crt"
                 $Att2 = "C:\Windows\System32\certsrv\CertEnroll\$using:RootCAServerName$u$using:RootCAName.crt"          
                 
                 # Build a command that will be run inside the VM.
-                Send-MailMessage -To "$using:ToEmail" -From "$using:FromEmail" -Subject "Certificates" -Body "Attached is the Issuing Certificate Authority that is needed to connect via RDP and securely connect to OWA" -SmtpServer "$using:ExchangeServerName" -Attachments "$Att1"
+                Send-MailMessage -To "$using:ToEmail" -From "$using:FromEmail" -Subject "Certificates" -Body "Attached is the Issuing Certificate Authority that is needed to connect via RDP and securely connect to OWA." -SmtpServer "$using:ExchangeServerName" -Attachments "$Att1"
                 Send-MailMessage -To "$using:ToEmail" -From "$using:FromEmail" -Subject "Certificates" -Body "Attached are the Root Certificate Authority that is needed to connect via RDP and securely connect to OWA" -SmtpServer "$using:ExchangeServerName" -Attachments "$Att2"
-
             }
             GetScript =  { @{} }
             TestScript = { $false}
