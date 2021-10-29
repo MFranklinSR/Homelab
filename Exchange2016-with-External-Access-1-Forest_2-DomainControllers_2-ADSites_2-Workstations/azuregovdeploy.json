@@ -821,6 +821,9 @@
               "adminPassword": {
                 "value": "[parameters('adminPassword')]"
               },  
+              "TimeZone": {
+                  "value": "[parameters('TimeZone')]"
+              },              
               "AutoShutdownEnabled": {
                   "value": "[parameters('AutoShutdownEnabled')]"
               },                            
@@ -1272,6 +1275,9 @@
               "adminPassword": {
                 "value": "[parameters('adminPassword')]"
               },
+              "TimeZone": {
+                  "value": "[parameters('TimeZone')]"
+              },              
               "AutoShutdownEnabled": {
                   "value": "[parameters('AutoShutdownEnabled')]"
               },                             
@@ -1455,7 +1461,10 @@
               },                                                                                                            
               "adminPassword": {
                 "value": "[parameters('adminPassword')]"
-              },  
+              },
+              "TimeZone": {
+                  "value": "[parameters('TimeZone')]"
+              },                
               "AutoShutdownEnabled": {
                   "value": "[parameters('AutoShutdownEnabled')]"
               },                             
