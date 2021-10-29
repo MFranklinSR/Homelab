@@ -281,7 +281,9 @@
         "org",
         "edu",
         "gov",
-        "mil"
+        "mil",
+        "us",
+        "local"
       ],      
       "metadata": {
           "description": "Internal Top-Level Domain Name"
@@ -303,7 +305,8 @@
         "org",
         "edu",
         "gov",
-        "mil"
+        "mil",
+        "us"
       ],      
       "metadata": {
           "description": "External Top-Level Domain Name"

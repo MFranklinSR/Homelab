@@ -8,7 +8,7 @@
       "metadata": {
         "description": "Choose Region (Example: WestUS)"
       }
-    },  
+    },   
     "TimeZone": {
       "type": "string",
       "defaultValue": "Eastern Standard Time",
@@ -154,7 +154,7 @@
       "metadata": {
           "description": "Time Zone"
       }
-    },   
+    },
     "AutoShutdownEnabled": {
       "type": "string",
       "defaultValue": "No",
@@ -179,7 +179,7 @@
       "metadata": {
           "description": "Auto-Shutdown notification Email Example:  user@domain.com"
       }
-    },                                               
+    },                                     
     "ExchangeOrgName": {
       "type": "string",
       "defaultValue": "49ers",
@@ -187,11 +187,11 @@
         "description": "Enter an Exchange Organization Name"
       }
     },
-    "Exchange2016ISOUrl": {
+    "Exchange2019ISOUrl": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
-        "description": "Enter a valid URL that points to the Exchange 2016 CU .ISO"
+        "description": "Enter a valid URL that points to the Exchange 2019 CU .ISO"
       }
     },
     "adminUsername": {
@@ -212,7 +212,7 @@
       "metadata": {
         "description": "Enter Email Address to send completed status"
       }
-    },     
+    },         
     "WindowsServerLicenseType": {
       "type": "string",
       "defaultValue": "None",
@@ -264,7 +264,7 @@
       "metadata": {
           "description": "NetBios Domain Name"
       }
-    },   
+    },    
     "InternalDomain": {
       "type": "string",
       "defaultValue": "killerhomelab",
@@ -282,8 +282,7 @@
         "edu",
         "gov",
         "mil",
-        "us",
-        "local"
+        "us"
       ],      
       "metadata": {
           "description": "Internal Top-Level Domain Name"
@@ -306,7 +305,8 @@
         "edu",
         "gov",
         "mil",
-        "us"
+        "us",
+        "local"
       ],      
       "metadata": {
           "description": "External Top-Level Domain Name"
@@ -314,28 +314,28 @@
     },                                                  
     "vnet1ID": {
       "type": "string",
-      "defaultValue": "16.1",
+      "defaultValue": "19.1",
       "metadata": {
         "description": "VNet1 Prefix"
       }
     },    
     "vnet2ID": {
       "type": "string",
-      "defaultValue": "16.2",
+      "defaultValue": "19.2",
       "metadata": {
         "description": "VNet1 Prefix"
       }
     },    
     "ReverseLookup1": {
       "type": "string",
-      "defaultValue": "1.16",
+      "defaultValue": "1.19",
       "metadata": {
           "description": "DNS Reverse Lookup Zone1 Prefix"
       }
     },                    
     "ReverseLookup2": {
       "type": "string",
-      "defaultValue": "2.16",
+      "defaultValue": "2.19",
       "metadata": {
           "description": "DNS Reverse Lookup Zone2 Prefix"
       }
@@ -397,7 +397,7 @@
       "metadata": {
           "description": "Issuing CA Key Length"
       }
-    },                               
+    },                                            
     "DC1OSVersion": {
       "type": "string",
       "defaultValue": "2022-Datacenter",
@@ -472,9 +472,9 @@
     },                        
     "EXOSVersion": {
       "type": "string",
-      "defaultValue": "2016-Datacenter",
+      "defaultValue": "2019-Datacenter",
       "allowedValues": [
-        "2016-Datacenter"
+        "2019-Datacenter"
       ],      
       "metadata": {
           "description": "Exchange Server OS Version"
@@ -626,7 +626,7 @@
     "fs1name": "[concat(parameters('NamingConvention'),'-fs-01')]",           
     "fs1IP": "[concat(parameters('vnet1ID'),'.1.',variables('fs1lastoctet'))]",  
     "fs1lastoctet": "104",                                                              
-    "ex1name": "[concat(parameters('NamingConvention'),'-ex16-01')]",           
+    "ex1name": "[concat(parameters('NamingConvention'),'-ex19-01')]",           
     "ex1IP": "[concat(parameters('vnet1ID'),'.1.',variables('ex1lastoctet'))]",         
     "ex1lastoctet": "110",    
     "wk1name": "[concat(parameters('NamingConvention'),'-wk-01')]",           
@@ -638,7 +638,7 @@
     "fs2name": "[concat(parameters('NamingConvention'),'-fs-02')]",           
     "fs2IP": "[concat(parameters('vnet2ID'),'.1.',variables('fs2lastoctet'))]",       
     "fs2lastoctet": "104",                                                         
-    "ex2name": "[concat(parameters('NamingConvention'),'-ex16-02')]",           
+    "ex2name": "[concat(parameters('NamingConvention'),'-ex19-02')]",           
     "ex2IP": "[concat(parameters('vnet2ID'),'.1.',variables('ex2lastoctet'))]",  
     "ex2lastoctet": "110",                                    
     "wk2name": "[concat(parameters('NamingConvention'),'-wk-02')]",           
@@ -646,7 +646,7 @@
     "wk2lastoctet": "201",                
     "ReverseLookup1": "[concat('1.',parameters('ReverseLookup1'))]",    
     "ReverseLookup2": "[concat('1.',parameters('ReverseLookup2'))]",        
-    "DCDataDisk1Name": "NTDS",    
+    "DCDataDisk1Name": "NTDS",            
     "CATemplateScriptUrl": "https://elliottf.blob.core.windows.net/github/Scripts/Create_CA_Templates.ps1",               
     "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",
     "ExternaldomainName": "[concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))]", 
@@ -658,12 +658,12 @@
     "SRV22OUPath": "[concat('OU=Servers2022,OU=Servers,',variables('BaseDN'))]",
     "SRV19OUPath": "[concat('OU=Servers2019,OU=Servers,',variables('BaseDN'))]",
     "SRV16OUPath": "[concat('OU=Servers2016,OU=Servers,',variables('BaseDN'))]",        
-    "DB1Name": "[concat(parameters('NamingConvention'),'-16-db01')]",
-    "DB2Name": "[concat(parameters('NamingConvention'),'-16-db02')]" ,             
-    "DAG16Name": "[concat(parameters('NamingConvention'),'-16-dag01')]",
+    "DB1Name": "[concat(parameters('NamingConvention'),'-19-db01')]",
+    "DB2Name": "[concat(parameters('NamingConvention'),'-19-db02')]" ,             
+    "DAG19Name": "[concat(parameters('NamingConvention'),'-19-dag01')]",
     "NSG1Name": "[concat(parameters('NamingConvention'),'-nsg01')]",
     "NSG2Name": "[concat(parameters('NamingConvention'),'-nsg02')]",
-    "FromEmail": "[concat(parameters('adminUserName'),'@',variables('InternaldomainName'))]"            
+    "FromEmail": "[concat(parameters('adminUserName'),'@',variables('ExternaldomainName'))]"            
   },  
   "resources": [
     {
@@ -707,7 +707,7 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "VNet2",     
+      "name": "VNet2",   
       "properties": {
           "mode": "Incremental",
           "templateLink": {
@@ -823,10 +823,10 @@
               },                                                                                                            
               "adminPassword": {
                 "value": "[parameters('adminPassword')]"
-              },  
+              },
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },              
+              },               
               "AutoShutdownEnabled": {
                   "value": "[parameters('AutoShutdownEnabled')]"
               },                            
@@ -835,7 +835,7 @@
               },              
               "AutoShutdownEmail": {
                   "value": "[parameters('AutoShutdownEmail')]"
-              },                                                                                                                                                                                                                                                                                                          
+              },                                                                                                                                                      
               "location": {
                   "value": "[resourceGroup().location]"
               }
@@ -1280,7 +1280,7 @@
               },
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },              
+              },
               "AutoShutdownEnabled": {
                   "value": "[parameters('AutoShutdownEnabled')]"
               },                             
@@ -1464,10 +1464,10 @@
               },                                                                                                            
               "adminPassword": {
                 "value": "[parameters('adminPassword')]"
-              },
+              },               
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },                
+              },
               "AutoShutdownEnabled": {
                   "value": "[parameters('AutoShutdownEnabled')]"
               },                             
@@ -1476,7 +1476,7 @@
               },              
               "AutoShutdownEmail": {
                   "value": "[parameters('AutoShutdownEmail')]"
-              },                                                                                                                                                                                                                                                                                                                                                                                                                                               
+              },                                                                                                                                                                                                                                                                                           
               "location": {
                   "value": "[resourceGroup().location]"
               }
@@ -2144,7 +2144,7 @@
               }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
           }
       }
-    },                       
+    },                            
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
@@ -2601,7 +2601,7 @@
                   "value": "[variables('InternaldomainName')]"
               },
               "OUPath": {
-                  "value":  "[variables('SRV16OUPath')]"
+                  "value": "[variables('SRV19OUPath')]"
               },
               "domainJoinOptions": {
                   "value": 3
@@ -2617,18 +2617,18 @@
               }
           }
       }
-    },    
+    },
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "prepareexchange16s1",
+      "name": "prepareexchange19s1",
       "dependsOn": [
         "DomainJoinEX1"
       ],      
       "properties": {
           "mode": "Incremental",
           "templateLink": {
-              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/prepareexchange16.json', parameters('_artifactsLocationSasToken')))]",
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/prepareexchange19.json', parameters('_artifactsLocationSasToken')))]",
               "contentVersion": "1.0.0.0"
           },
           "parameters": {
@@ -2639,7 +2639,7 @@
                   "value": "[parameters('TimeZone')]"
               }, 
               "ExchangeSASUrl": {
-                  "value": "[parameters('Exchange2016ISOUrl')]"
+                  "value": "[parameters('Exchange2019ISOUrl')]"
               },                                 
               "NetBiosDomain": {
                   "value": "[parameters('NetBiosDomain')]"
@@ -2667,7 +2667,7 @@
       "apiVersion": "2019-10-01",
       "name": "restartex1-1",
       "dependsOn": [
-        "prepareexchange16s1"
+        "prepareexchange19s1"
       ],            
       "properties": {
           "mode": "Incremental",
@@ -2690,7 +2690,7 @@
               }
           }
       }
-    },                                                                                  
+    },                  
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
@@ -2783,7 +2783,7 @@
                   "value": "[variables('InternaldomainName')]"
               },
               "OUPath": {
-                  "value": "[variables('SRV16OUPath')]"
+                  "value": "[variables('SRV19OUPath')]"
               },
               "domainJoinOptions": {
                   "value": 3
@@ -2799,18 +2799,18 @@
               }
           }
       }
-    },    
+    },                                                 
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "prepareexchange16s2",
+      "name": "prepareexchange19s2",
       "dependsOn": [
         "DomainJoinEX2"
       ],      
       "properties": {
           "mode": "Incremental",
           "templateLink": {
-              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/prepareexchange16.json', parameters('_artifactsLocationSasToken')))]",
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/prepareexchange19.json', parameters('_artifactsLocationSasToken')))]",
               "contentVersion": "1.0.0.0"
           },
           "parameters": {
@@ -2821,7 +2821,7 @@
                   "value": "[parameters('TimeZone')]"
               },               
               "ExchangeSASUrl": {
-                  "value": "[parameters('Exchange2016ISOUrl')]"
+                  "value": "[parameters('Exchange2019ISOUrl')]"
               },                                    
               "NetBiosDomain": {
                   "value": "[parameters('NetBiosDomain')]"
@@ -2843,13 +2843,13 @@
               }                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
           }
       }
-    },   
+    },    
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
       "name": "restartex2-1",
       "dependsOn": [
-        "prepareexchange16s2"
+        "prepareexchange19s2"
       ],            
       "properties": {
           "mode": "Incremental",
@@ -2872,19 +2872,19 @@
               }
           }
       }
-    },                                                                     
+    },                                                                           
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "prepareadexchange16",
+      "name": "prepareadexchange19",
       "dependsOn": [
         "ReplicateAD",        
-        "restartex1-1"       
+        "restartex1-1"    
       ],      
       "properties": {
           "mode": "Incremental",
           "templateLink": {
-              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/prepareadexchange16.json', parameters('_artifactsLocationSasToken')))]",
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/prepareadexchange19.json', parameters('_artifactsLocationSasToken')))]",
               "contentVersion": "1.0.0.0"
           },
           "parameters": {
@@ -2932,7 +2932,7 @@
         "DomainJoinFS1-22",        
         "DomainJoinFS1-19",        
         "DomainJoinFS1-16",                        
-        "prepareadexchange16"
+        "prepareadexchange19"
       ],      
       "properties": {
           "mode": "Incremental",
@@ -2969,8 +2969,8 @@
       "dependsOn": [
         "DomainJoinFS2-22",
         "DomainJoinFS2-19",
-        "DomainJoinFS2-16", 
-        "prepareadexchange16"
+        "DomainJoinFS2-16",                
+        "prepareadexchange19"
       ],      
       "properties": {
           "mode": "Incremental",
@@ -3006,13 +3006,13 @@
       "name": "installexchange1",
       "dependsOn": [
         "DomainJoinEX1",
-        "prepareexchange16s1",
-        "prepareadexchange16"        
+        "prepareexchange19s1",
+        "prepareadexchange19"  
       ],      
       "properties": {
           "mode": "Incremental",
           "templateLink": {
-              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/exchange16.json', parameters('_artifactsLocationSasToken')))]",
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/exchange19.json', parameters('_artifactsLocationSasToken')))]",
               "contentVersion": "1.0.0.0"
           },
           "parameters": {
@@ -3056,7 +3056,7 @@
       "properties": {
           "mode": "Incremental",
           "templateLink": {
-              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/configexchange16.json', parameters('_artifactsLocationSasToken')))]",
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/configexchange19.json', parameters('_artifactsLocationSasToken')))]",
               "contentVersion": "1.0.0.0"
           },
           "parameters": {
@@ -3114,14 +3114,14 @@
       "name": "installexchange2",
       "dependsOn": [
         "DomainJoinEX2",
-        "prepareexchange16s2",        
-        "prepareadexchange16",        
+        "prepareexchange19s2",        
+        "prepareadexchange19",
         "configexchange1"
       ],      
       "properties": {
           "mode": "Incremental",
           "templateLink": {
-              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/exchange16.json', parameters('_artifactsLocationSasToken')))]",
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/exchange19.json', parameters('_artifactsLocationSasToken')))]",
               "contentVersion": "1.0.0.0"
           },
           "parameters": {
@@ -3165,7 +3165,7 @@
       "properties": {
           "mode": "Incremental",
           "templateLink": {
-              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/configexchange16.json', parameters('_artifactsLocationSasToken')))]",
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/configexchange19.json', parameters('_artifactsLocationSasToken')))]",
               "contentVersion": "1.0.0.0"
           },
           "parameters": {
@@ -3253,8 +3253,9 @@
                   "value": "[variables('fs1name')]"
               },                                                                                                                                                           
               "DAGName": {
-                  "value": "[variables('dag16name')]"
-              },                                                                                                                                                           "adminUsername": {
+                  "value": "[variables('dag19name')]"
+              },                                                                                                                                                           
+              "adminUsername": {
                 "value": "[parameters('adminUsername')]"
               },                                                                                                            
               "adminPassword": {
@@ -3308,7 +3309,7 @@
                   "value": "[variables('fs1name')]"
               },                                                                                                                                                           
               "DAGName": {
-                  "value": "[variables('dag16name')]"
+                  "value": "[variables('dag19name')]"
               },                                                                                                                                                                                                                                                                                                                                               
               "adminUsername": {
                 "value": "[parameters('adminUsername')]"
@@ -3491,7 +3492,7 @@
               }
           }
       }
-    },                                                  
+    },
     {
       "condition": "[equals(parameters('WK1OSVersion'),'Windows-11')]",      
       "type": "Microsoft.Resources/deployments",
@@ -4378,7 +4379,7 @@
       "apiVersion": "2019-10-01",
       "name": "deploynsg2",
       "dependsOn": [
-        "addex2pip"                
+        "addex2pip"
       ],      
       "properties": {
           "mode": "Incremental",
@@ -4524,16 +4525,16 @@
                   "value": "[reference('addocsppip').outputs.PublicIP.value]"             
               },                                                                                                                                      
               "OWARecord": {
-                  "value": "owa2016"
+                  "value": "owa2019"
               },
               "AutoDiscoverRecord": {
                   "value": "autodiscover"
               },
               "OutlookRecord": {
-                  "value": "outlook2016"
+                  "value": "outlook2019"
               },
               "EASRecord": {
-                  "value": "eas2016"
+                  "value": "eas2019"
               },
               "SMTP1Record": {
                   "value": "smtp1"
@@ -4569,7 +4570,7 @@
               },
               "ToEmail": {
                   "value": "[parameters('ToEmail')]"
-              },
+              },              
               "FromEmail": {
                   "value": "[variables('FromEmail')]"
               },
