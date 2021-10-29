@@ -8,18 +8,12 @@
                 "description": "Computer Name"
             }
         },
-        "DC2Name": {
-            "type": "string",
-            "metadata": {
-                "description": "Domain Controller 2 Computer Name"
-            }
-        },        
         "NetBiosDomain": {
             "type": "string",
             "metadata": {
                 "description": "NetBios Domain Name"
             }
-        },              
+        },           
         "InternaldomainName": {
             "type": "string",
           "metadata": {
@@ -31,43 +25,19 @@
           "metadata": {
             "description": "The External FQDN of the AD Domain created "
           }
-        },        
+        }, 
         "ReverseLookup1": {
             "type": "string",
             "metadata": {
                 "description": "The name of Reverse Lookup Zone 1 Network ID"
             }
-        },
-        "ReverseLookup2": {
-            "type": "string",
-            "metadata": {
-                "description": "The name of Reverse Lookup Zone 2 Network ID"
-            }
-        },        
+        },              
         "dc1lastoctet": {
             "type": "string",
             "metadata": {
-                "description": "DC1 Last IP Octet"
+                "description": "DC! Last IP Octet"
             }
-        },        
-        "dc2lastoctet": {
-            "type": "string",
-            "metadata": {
-                "description": "DC2 Last IP Octet"
-            }
-        },        
-        "ex1IP": {
-            "type": "string",
-            "metadata": {
-                "description": "Exchange Server1 IP"
-            }
-        },                        
-        "ex2IP": {
-            "type": "string",
-            "metadata": {
-                "description": "Exchange Server2 IP"
-            }
-        },                         
+        },
         "icaIP": {
             "type": "string",
             "metadata": {
@@ -79,13 +49,13 @@
             "metadata": {
                 "description": "OCSP IP"
             }
-        },                                               
+        },                 
         "location": {
             "type": "string",
           "metadata": {
             "description": "Region of Resources"
           }
-        },   
+        }, 
         "adminUsername": {
             "type": "string",
             "metadata": {
@@ -97,7 +67,7 @@
           "metadata": {
             "description": "The password for the Administrator account of the new VM and Domain"
           }
-        },           
+        },                 
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -112,8 +82,8 @@
         }                
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/CONFIGDNS.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "CONFIGDNS.ps1\\CONFIGDNS"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/CONFIGDNSEXT.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "CONFIGDNSEXT.ps1\\CONFIGDNSEXT"
     },
     "resources": [
         {
@@ -131,30 +101,25 @@
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                         "Properties": {
                             "computerName": "[parameters('computerName')]",
-                            "DC2Name": "[parameters('DC2Name')]",                            
-                            "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                        
+                            "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                                                    
                             "InternaldomainName": "[parameters('InternaldomainName')]",                                                        
                             "ExternaldomainName": "[parameters('ExternaldomainName')]",                                                                                    
                             "ReverseLookup1": "[parameters('ReverseLookup1')]",
-                            "ReverseLookup2": "[parameters('ReverseLookup2')]",                            
-                            "dc1lastoctet": "[parameters('dc1lastoctet')]",
-                            "dc2lastoctet": "[parameters('dc2lastoctet')]",              
+                            "dc1lastoctet": "[parameters('dc1lastoctet')]",  
                             "icaIP": "[parameters('icaIP')]",                                                        
                             "ocspIP": "[parameters('ocspIP')]",                                                                                                                              
-                            "ex1IP": "[parameters('ex1IP')]",                            
-                            "ex2IP": "[parameters('ex2IP')]",
                             "AdminCreds": {
                                 "UserName": "[parameters('adminUsername')]",
                                 "Password": "PrivateSettingsRef:AdminPassword"
-                            }                                                                                                                                                                  
+                            }                                                                                                                                                                                                                                                                          
                         }
-                    },
+                },
                     "protectedSettings": {                        
                         "Items": {
                             "AdminPassword": "[parameters('adminPassword')]"                            
                         }                        
-                    }
-                }
+                    }                
+            }
         }
     ]
 }
