@@ -12,7 +12,7 @@ This Templates deploys a Single Forest/Domain:
 - 1 - Offline Root Certificate Authority Server
 - 1 - Issuing Certificate Authority Server
 - 1 - Online Certificate Status Protocol Server
-- 1 - Domain Joined Windows 10 Workstation
+- 1 - Domain Joined Windows Workstation (Windows 11, Windows 10 or Windows 7)
 
 The deployment also makes the following customizations:
 - Adds Public IP Address to OCSP.
