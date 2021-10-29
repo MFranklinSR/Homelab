@@ -161,6 +161,7 @@
     },        
     "AutoShutdownTime": {
       "type": "string",
+      "defaultValue": "2000",      
       "metadata": {
           "description": "24-Hour Clock Time for Auto-Shutdown Example: 1900 = 7PM"
       }
