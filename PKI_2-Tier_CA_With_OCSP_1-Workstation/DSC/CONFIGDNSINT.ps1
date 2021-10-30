@@ -14,7 +14,7 @@
         [System.Management.Automation.PSCredential]$Admincreds
     )
 
-    Import-DscResource -Module xDnsServer
+    Import-DscResource -ModuleName DnsServerDsc
     Import-DscResource -ModuleName ActiveDirectoryDsc
 
     [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($Admincreds.UserName)", $Admincreds.Password)
@@ -28,7 +28,7 @@
             WaitTimeout = $RetryIntervalSec
         }
 
-        xDnsServerADZone ReverseADZone1
+        DnsServerADZone ReverseADZone1
         {
             Name             = "$ReverseLookup1.in-addr.arpa"
             DynamicUpdate = 'Secure'
@@ -37,32 +37,31 @@
             DependsOn = '[WaitForADDomain]DscForestWait'
         }
 
-        xDnsRecord DC1PtrRecord
+        DnsRecordPtr DC1PtrRecord
         {
-            Name      = "$dc1lastoctet"
-            Zone      = "$ReverseLookup1.in-addr.arpa"
-            Target    = "$computerName.$DomainName"
-            Type      = 'Ptr'
+            Name      = "$computerName.$DomainName"
+            ZoneName = "$ReverseLookup1.in-addr.arpa"
+            IpAddress = "$dc1lastoctet.$ReverseLookup1"
             Ensure    = 'Present'
-            DependsOn = "[xDnsServerADZone]ReverseADZone1"
+            DependsOn = "[DnsServerADZone]ReverseADZone1"           
         }
 
-        xDnsRecord crlrecord
+        DnsRecordA crlrecord
         {
             Name      = "crl"
-            Zone      = "$ExternaldomainName"
-            Target    = "$icaIP"
-            Type      = 'ARecord'
+            ZoneName  = "$ExternaldomainName"
+            IPv4Address = "$icaIP"
             Ensure    = 'Present'
+            DependsOn = '[DnsServerADZone]ExternalDomain'
         }
 
-        xDnsRecord ocsprecord
+        DnsRecordA ocsprecord
         {
             Name      = "ocsp"
-            Zone      = "$ExternaldomainName"
-            Target    = "$ocspIP"
-            Type      = 'ARecord'
+            ZoneName  = "$ExternaldomainName"
+            IPv4Address = "$ocspIP"
             Ensure    = 'Present'
+            DependsOn = '[DnsServerADZone]ExternalDomain'
         }
     }
 }

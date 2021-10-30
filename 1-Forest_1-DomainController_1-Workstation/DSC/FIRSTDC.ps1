@@ -2,7 +2,6 @@
 {
    param
    (
-
         [String]$TimeZone,        
         [String]$DomainName,
         [String]$NetBiosDomain,
@@ -12,17 +11,15 @@
         [Int]$RetryIntervalSec=30
     )
 
-    Import-DscResource -Module ActiveDirectoryDsc
-    Import-DscResource -Module xStorage
-    Import-DscResource -Module xNetworking
-    Import-DscResource -Module PSDesiredStateConfiguration
-    Import-DscResource -Module xPendingReboot
-    Import-DscResource -Module ComputerManagementDsc
-    Import-DscResource -Module xPSDesiredStateConfiguration
-    Import-DscResource -Module xDNSServer
+    Import-DscResource -ModuleName ActiveDirectoryDsc
+    Import-DscResource -ModuleName xStorage
+    Import-DscResource -ModuleName xNetworking
+    Import-DscResource -ModuleName xPendingReboot
+    Import-DscResource -ModuleName ComputerManagementDsc
+    Import-DscResource -ModuleName xPSDesiredStateConfiguration
+    Import-DscResource -ModuleName DNSServerDsc
 
     [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($Admincreds.UserName)", $Admincreds.Password)
-
     $Interface=Get-NetAdapter|Where-Object Name -Like "Ethernet*"|Select-Object -First 1
     $InterfaceAlias=$($Interface.Name)
 

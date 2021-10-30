@@ -53,9 +53,7 @@
             ZoneName = "$ReverseLookup1.in-addr.arpa"
             IpAddress = "$dc1lastoctet.$ReverseLookup1"
             Ensure    = 'Present'
-            DependsOn = "[DnsServerADZone]ReverseADZone1"
-            
-           
+            DependsOn = "[DnsServerADZone]ReverseADZone1"           
         }
 
         DnsRecordPtr DC2PtrRecord
