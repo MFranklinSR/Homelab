@@ -49,7 +49,7 @@
 
         DnsRecordPtr DC1PtrRecord
         {
-            Name      = "$computerName.$DomainName"
+            Name      = "$computerName.$InternaldomainName"
             ZoneName = "$ReverseLookup1.in-addr.arpa"
             IpAddress = "$ForwardLookup1.$dc1lastoctet"
             Ensure    = 'Present'
