@@ -11,13 +11,13 @@
         [Int]$RetryIntervalSec=30
     )
 
-    Import-DscResource -Module xStorage
-    Import-DscResource -Module xNetworking
-    Import-DscResource -Module xPSDesiredStateConfiguration
-    Import-DscResource -Module ComputerManagementDsc
-    Import-DscResource -Module ActiveDirectoryDsc
-    Import-DscResource -Module xPendingReboot
-    Import-DscResource -ModuleName xDNSServer      
+    Import-DscResource -ModuleName xStorage
+    Import-DscResource -ModuleName xNetworking
+    Import-DscResource -ModuleName xPSDesiredStateConfiguration
+    Import-DscResource -ModuleName ComputerManagementDsc
+    Import-DscResource -ModuleName ActiveDirectoryDsc
+    Import-DscResource -ModuleName xPendingReboot
+    Import-DscResource -ModuleName DNSServerDsc
 
     [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($Admincreds.UserName)", $Admincreds.Password)
 
