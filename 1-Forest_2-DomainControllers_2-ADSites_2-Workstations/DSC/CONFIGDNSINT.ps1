@@ -11,6 +11,8 @@
         [String]$domainName,
         [String]$ReverseLookup1,
         [String]$ReverseLookup2,
+        [String]$ForwardLookup1,
+        [String]$ForwardLookup2,
         [Int]$RetryIntervalSec=420,
         [System.Management.Automation.PSCredential]$Admincreds
     )
@@ -51,7 +53,7 @@
         {
             Name      = "$computerName.$DomainName"
             ZoneName = "$ReverseLookup1.in-addr.arpa"
-            IpAddress = "$dc1lastoctet"
+            IpAddress = "$ForwardLookup1.$dc1lastoctet"
             Ensure    = 'Present'
             DependsOn = "[DnsServerADZone]ReverseADZone1"           
         }
@@ -60,7 +62,7 @@
         {
             Name      = "$DC2Name.$DomainName"
             ZoneName =  "$ReverseLookup2.in-addr.arpa"
-            IpAddress =  "$dc2lastoctet"
+            IpAddress =  "$ForwardLookup2.$dc2lastoctet"
             Ensure    = 'Present'
             DependsOn = "[DnsServerADZone]ReverseADZone2"
         }
