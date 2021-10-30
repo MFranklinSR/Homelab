@@ -7,6 +7,7 @@
         [String]$InternaldomainName,
         [String]$ExternaldomainName,
         [String]$ReverseLookup1,
+        [String]$ForwardLookup1,
         [String]$dc1lastoctet,
         [Int]$RetryIntervalSec=420,
         [System.Management.Automation.PSCredential]$Admincreds
@@ -37,9 +38,9 @@
 
         DnsRecordPtr DC1PtrRecord
         {
-            Name      = "$computerName.$DomainName"
+            Name      = "$computerName.$InternaldomainName"
             ZoneName = "$ReverseLookup1.in-addr.arpa"
-            IpAddress = "$dc1lastoctet.$ReverseLookup1"
+            IpAddress = "$ForwardLookup1.$dc1lastoctet"
             Ensure    = 'Present'
             DependsOn = "[DnsServerADZone]ReverseADZone1"           
         }

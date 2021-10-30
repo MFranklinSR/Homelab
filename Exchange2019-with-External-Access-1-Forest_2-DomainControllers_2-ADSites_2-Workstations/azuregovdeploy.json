@@ -645,7 +645,9 @@
     "wk2IP": "[concat(parameters('vnet2ID'),'.2.',variables('wk2lastoctet'))]",        
     "wk2lastoctet": "201",                
     "ReverseLookup1": "[concat('1.',parameters('ReverseLookup1'))]",    
-    "ReverseLookup2": "[concat('1.',parameters('ReverseLookup2'))]",        
+    "ReverseLookup2": "[concat('1.',parameters('ReverseLookup2'))]",
+    "ForwardLookup1": "[concat(parameters('vnet1ID'),'.1')]",    
+    "ForwardLookup2": "[concat(parameters('vnet2ID'),'.1')]",                        
     "DCDataDisk1Name": "NTDS",            
     "CATemplateScriptUrl": "https://elliottf.blob.core.windows.net/github/Scripts/Create_CA_Templates.ps1",               
     "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",
@@ -1042,7 +1044,13 @@
               },                                                                                                            
               "ReverseLookup2": {
                 "value": "[variables('ReverseLookup2')]"
-              },                                                                                                                          
+              },  
+              "ForwardLookup1": {
+                "value": "[variables('ForwardLookup1')]"
+              },                                                                                                            
+              "ForwardLookup2": {
+                "value": "[variables('ForwardLookup2')]"
+              },                                                                                                                                                                                                                                                                              
               "dc1lastoctet": {
                 "value": "[variables('dc1lastoctet')]"
               },                                                                                                                          

@@ -43,7 +43,19 @@
             "metadata": {
                 "description": "The name of Reverse Lookup Zone 2 Network ID"
             }
-        },        
+        },  
+        "ForwardLookup1": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of Forward Lookup Zone 1 Network ID"
+            }
+        },
+        "ForwardLookup2": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of Forward Lookup Zone 2 Network ID"
+            }
+        },                              
         "dc1lastoctet": {
             "type": "string",
             "metadata": {
@@ -136,7 +148,9 @@
                             "InternaldomainName": "[parameters('InternaldomainName')]",                                                        
                             "ExternaldomainName": "[parameters('ExternaldomainName')]",                                                                                    
                             "ReverseLookup1": "[parameters('ReverseLookup1')]",
-                            "ReverseLookup2": "[parameters('ReverseLookup2')]",                            
+                            "ReverseLookup2": "[parameters('ReverseLookup2')]",
+                            "ForwardLookup1": "[parameters('ForwardLookup1')]",                            
+                            "ForwardLookup2": "[parameters('ForwardLookup2')]",                                                                                                                
                             "dc1lastoctet": "[parameters('dc1lastoctet')]",
                             "dc2lastoctet": "[parameters('dc2lastoctet')]",              
                             "icaIP": "[parameters('icaIP')]",                                                        

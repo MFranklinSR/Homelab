@@ -17,7 +17,7 @@
     Import-DscResource -ModuleName xPendingReboot
     Import-DscResource -ModuleName ComputerManagementDsc
     Import-DscResource -ModuleName xPSDesiredStateConfiguration
-    Import-DscResource -ModuleName xDNSServer
+    Import-DscResource -ModuleName DNSServerDsc
 
     [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($Admincreds.UserName)", $Admincreds.Password)
     $Interface=Get-NetAdapter|Where-Object Name -Like "Ethernet*"|Select-Object -First 1

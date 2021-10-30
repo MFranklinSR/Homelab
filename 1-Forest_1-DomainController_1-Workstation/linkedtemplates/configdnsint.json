@@ -25,7 +25,13 @@
             "metadata": {
                 "description": "The name of Reverse Lookup Zone 1 Network ID"
             }
-        },              
+        },  
+        "ForwardLookup1": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of Forward Lookup Zone 1 Network ID"
+            }
+        },                    
         "dc1lastoctet": {
             "type": "string",
             "metadata": {
@@ -86,6 +92,7 @@
                             "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                                                    
                             "InternaldomainName": "[parameters('InternaldomainName')]",                                                        
                             "ReverseLookup1": "[parameters('ReverseLookup1')]",
+                            "ForwardLookup1": "[parameters('ForwardLookup1')]",                                                        
                             "dc1lastoctet": "[parameters('dc1lastoctet')]",  
                             "AdminCreds": {
                                 "UserName": "[parameters('adminUsername')]",

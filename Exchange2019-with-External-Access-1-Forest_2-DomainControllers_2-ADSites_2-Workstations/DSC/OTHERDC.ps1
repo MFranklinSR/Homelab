@@ -2,7 +2,7 @@
 {
    param
     (
-        [String]$TimeZone,        
+        [String]$TimeZone,
         [String]$DomainName,
         [String]$DNSServerIP,
         [String]$NetBiosDomain,
@@ -11,13 +11,13 @@
         [Int]$RetryIntervalSec=30
     )
 
-    Import-DscResource -ModuleName ActiveDirectoryDsc
     Import-DscResource -ModuleName xStorage
     Import-DscResource -ModuleName xNetworking
-    Import-DscResource -ModuleName xPendingReboot
-    Import-DscResource -ModuleName ComputerManagementDsc
     Import-DscResource -ModuleName xPSDesiredStateConfiguration
-    Import-DscResource -ModuleName xDNSServer    
+    Import-DscResource -ModuleName ComputerManagementDsc
+    Import-DscResource -ModuleName ActiveDirectoryDsc
+    Import-DscResource -ModuleName xPendingReboot
+    Import-DscResource -ModuleName DNSServerDsc
 
     [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($Admincreds.UserName)", $Admincreds.Password)
 
@@ -81,6 +81,7 @@
             WaitTimeout = $RetryIntervalSec
             DependsOn = '[xDNSServerAddress]DnsServerAddress'
         }
+
         ADDomainController BDC
         {
             DomainName = $DomainName
