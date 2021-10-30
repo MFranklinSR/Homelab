@@ -51,7 +51,7 @@
 
         DnsRecordPtr DC1PtrRecord
         {
-            Name      = "$computerName.$DomainName"
+            Name      = "$computerName.$InternaldomainName"
             ZoneName = "$ReverseLookup1.in-addr.arpa"
             IpAddress = "$ForwardLookup1.$dc1lastoctet"
             Ensure    = 'Present'
@@ -60,7 +60,7 @@
 
         DnsRecordPtr DC2PtrRecord
         {
-            Name      = "$DC2Name.$DomainName"
+            Name      = "$DC2Name.$InternaldomainName"
             ZoneName =  "$ReverseLookup2.in-addr.arpa"
             IpAddress =  "$ForwardLookup2.$dc2lastoctet"
             Ensure    = 'Present'
