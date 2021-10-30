@@ -7,6 +7,7 @@
         [String]$InternaldomainName,
         [String]$ExternaldomainName,
         [String]$ReverseLookup1,
+        [String]$ForwardLookup1,
         [String]$dc1lastoctet,
         [String]$icaIP,
         [String]$ocspIP,
@@ -41,7 +42,7 @@
         {
             Name      = "$computerName.$DomainName"
             ZoneName = "$ReverseLookup1.in-addr.arpa"
-            IpAddress = "$dc1lastoctet.$ReverseLookup1"
+            IpAddress = "$ForwardLookup1.$dc1lastoctet"
             Ensure    = 'Present'
             DependsOn = "[DnsServerADZone]ReverseADZone1"           
         }

@@ -486,7 +486,8 @@
     "icaIP": "[concat(parameters('vnet1ID'),'.1.',variables('icalastoctet'))]",            
     "ocspname": "[concat(parameters('NamingConvention'),'-ocsp-01')]",           
     "ocspIP": "[concat(parameters('vnet1ID'),'.1.',variables('ocsplastoctet'))]",                    
-    "ReverseLookup1": "[concat('1.',parameters('ReverseLookup1'))]",    
+    "ReverseLookup1": "[concat('1.',parameters('ReverseLookup1'))]",  
+    "ForwardLookup1": "[concat(parameters('vnet1ID'),'.1')]",          
     "dc1lastoctet": "101",        
     "rcalastoctet": "99",
     "icalastoctet": "102",
@@ -798,7 +799,10 @@
               },              
               "ReverseLookup1": {
                 "value": "[variables('ReverseLookup1')]"
-              },                                                                                                                                                                                                                                      
+              },   
+              "ForwardLookup1": {
+                "value": "[variables('ForwardLookup1')]"
+              },                                                                                                                                                                                                                                                                                                                                                             
               "dc1lastoctet": {
                 "value": "[variables('dc1lastoctet')]"
               },                                                                                                                          
