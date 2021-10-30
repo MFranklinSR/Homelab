@@ -53,7 +53,6 @@
             ZoneName  = "$ExternaldomainName"
             IPv4Address = "$icaIP"
             Ensure    = 'Present'
-            DependsOn = '[DnsServerADZone]ExternalDomain'
         }
 
         DnsRecordA ocsprecord
@@ -62,7 +61,6 @@
             ZoneName  = "$ExternaldomainName"
             IPv4Address = "$ocspIP"
             Ensure    = 'Present'
-            DependsOn = '[DnsServerADZone]ExternalDomain'
         }
     }
 }
