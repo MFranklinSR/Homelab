@@ -5,12 +5,12 @@
         [String]$BaseDN
     )
 
-    Import-DscResource -Module xActiveDirectory
+    Import-DscResource -Module ActiveDirectoryDsc
 
     Node localhost
     {
 
-       xADOrganizationalUnit AccountsOU
+       ADOrganizationalUnit AccountsOU
         {
             Name                            = "Accounts"
             Path                            = "$BaseDN"
@@ -18,7 +18,7 @@
             Ensure                          = 'Present'
         }
 
-       xADOrganizationalUnit GroupsOU
+       ADOrganizationalUnit GroupsOU
         {
             Name                            = "Groups"
             Path                            = "$BaseDN"
@@ -26,7 +26,7 @@
             Ensure                          = 'Present'
         }
 
-        xADOrganizationalUnit AdminOU
+       ADOrganizationalUnit AdminOU
         {
             Name                            = "Admin"
             Path                            = "OU=Accounts,$BaseDN"
@@ -35,7 +35,7 @@
             DependsOn = "[xADOrganizationalUnit]AccountsOU"
         }
 
-        xADOrganizationalUnit AdminGroupsOU
+        ADOrganizationalUnit AdminGroupsOU
         {
             Name                            = "Admin"
             Path                            = "OU=Groups,$BaseDN"
@@ -44,7 +44,7 @@
             DependsOn = "[xADOrganizationalUnit]GroupsOU"
         }
 
-        xADOrganizationalUnit EndUserOU
+        ADOrganizationalUnit EndUserOU
         {
             Name                            = "End User"
             Path                            = "OU=Accounts,$BaseDN"
@@ -53,7 +53,7 @@
             DependsOn = "[xADOrganizationalUnit]AccountsOU"
         }
 
-        xADOrganizationalUnit EndUserGroupOU
+        ADOrganizationalUnit EndUserGroupOU
         {
             Name                            = "End User"
             Path                            = "OU=Groups,$BaseDN"
@@ -62,7 +62,7 @@
             DependsOn = "[xADOrganizationalUnit]GroupsOU"
         }
 
-        xADOrganizationalUnit Office365OU
+        ADOrganizationalUnit Office365OU
         {
             Name                            = "Office 365"
             Path                            = "OU=End User,OU=Accounts,$BaseDN"
@@ -71,7 +71,7 @@
             DependsOn = "[xADOrganizationalUnit]EndUserOU"
         }
 
-        xADOrganizationalUnit Office365GroupOU
+        ADOrganizationalUnit Office365GroupOU
         {
             Name                            = "Office 365"
             Path                            = "OU=End User,OU=Groups,$BaseDN"
@@ -80,7 +80,7 @@
             DependsOn = "[xADOrganizationalUnit]EndUserGroupOU"
         }
 
-        xADOrganizationalUnit Sub1OU
+        ADOrganizationalUnit Sub1OU
         {
             Name                            = "Sub1"
             Path                            = "OU=Office 365,OU=End User,OU=Accounts,$BaseDN"
@@ -89,7 +89,7 @@
             DependsOn = "[xADOrganizationalUnit]Office365OU"
         }
 
-        xADOrganizationalUnit NonOffice365OU
+        ADOrganizationalUnit NonOffice365OU
         {
             Name                            = "Non-Office 365"
             Path                            = "OU=End User,OU=Accounts,$BaseDN"
@@ -98,7 +98,7 @@
             DependsOn = "[xADOrganizationalUnit]EndUserOU"
         }
 
-        xADOrganizationalUnit ServiceOU
+        ADOrganizationalUnit ServiceOU
         {
             Name                            = "Service"
             Path                            = "OU=Accounts,$BaseDN"
@@ -107,7 +107,7 @@
             DependsOn = "[xADOrganizationalUnit]AccountsOU"
         }
 
-        xADOrganizationalUnit ServersOU
+        ADOrganizationalUnit ServersOU
         {
             Name                            = "Servers"
             Path                            = "$BaseDN"
@@ -115,7 +115,7 @@
             Ensure                          = 'Present'
         }
 
-        xADOrganizationalUnit Server2012R2OU
+        ADOrganizationalUnit Server2012R2OU
         {
             Name                            = "Servers2012R2"
             Path                            = "OU=Servers,$BaseDN"
@@ -124,7 +124,7 @@
             DependsOn = "[xADOrganizationalUnit]ServersOU"
         }
 
-        xADOrganizationalUnit Server2016OU
+        ADOrganizationalUnit Server2016OU
         {
             Name                            = "Servers2016"
             Path                            = "OU=Servers,$BaseDN"
@@ -133,7 +133,7 @@
             DependsOn = "[xADOrganizationalUnit]ServersOU"
         }
 
-        xADOrganizationalUnit Server2019OU
+        ADOrganizationalUnit Server2019OU
         {
             Name                            = "Servers2019"
             Path                            = "OU=Servers,$BaseDN"
@@ -142,7 +142,7 @@
             DependsOn = "[xADOrganizationalUnit]ServersOU"
         }
 
-        xADOrganizationalUnit Server2022OU
+        ADOrganizationalUnit Server2022OU
         {
             Name                            = "Servers2022"
             Path                            = "OU=Servers,$BaseDN"
@@ -151,7 +151,7 @@
             DependsOn = "[xADOrganizationalUnit]ServersOU"
         }
       
-        xADOrganizationalUnit MaintenanceServersOU
+        ADOrganizationalUnit MaintenanceServersOU
         {
             Name                            = "Maintenance Servers"
             Path                            = "$BaseDN"
@@ -159,7 +159,7 @@
             Ensure                          = 'Present'
         }
 
-        xADOrganizationalUnit MaintenanceWorkstationsOU
+        ADOrganizationalUnit MaintenanceWorkstationsOU
         {
             Name                            = "Maintenance Workstations"
             Path                            = "$BaseDN"
@@ -167,7 +167,7 @@
             Ensure                          = 'Present'
         }
 
-        xADOrganizationalUnit WorkstationsOU
+        ADOrganizationalUnit WorkstationsOU
         {
             Name                            = "Workstations"
             Path                            = "$BaseDN"
@@ -175,7 +175,7 @@
             Ensure                          = 'Present'
         }
 
-        xADOrganizationalUnit Windows11OU
+        ADOrganizationalUnit Windows11OU
         {
             Name                            = "Windows 11"
             Path                            = "OU=Workstations,$BaseDN"
@@ -184,7 +184,7 @@
             DependsOn = "[xADOrganizationalUnit]WorkstationsOU"
         }
 
-        xADOrganizationalUnit Windows10OU
+        ADOrganizationalUnit Windows10OU
         {
             Name                            = "Windows 10"
             Path                            = "OU=Workstations,$BaseDN"
@@ -193,7 +193,7 @@
             DependsOn = "[xADOrganizationalUnit]WorkstationsOU"
         }
 
-        xADOrganizationalUnit Windows7OU
+        ADOrganizationalUnit Windows7OU
         {
             Name                            = "Windows 7"
             Path                            = "OU=Workstations,$BaseDN"

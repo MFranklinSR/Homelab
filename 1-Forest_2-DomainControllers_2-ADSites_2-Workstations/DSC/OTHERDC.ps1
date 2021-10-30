@@ -16,7 +16,8 @@
     Import-DscResource -Module xPSDesiredStateConfiguration
     Import-DscResource -Module ComputerManagementDsc
     Import-DscResource -Module ActiveDirectoryDsc
-    Import-DscResource -Module xPendingReboot    
+    Import-DscResource -Module xPendingReboot
+    Import-DscResource -ModuleName xDNSServer      
 
     [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($Admincreds.UserName)", $Admincreds.Password)
 

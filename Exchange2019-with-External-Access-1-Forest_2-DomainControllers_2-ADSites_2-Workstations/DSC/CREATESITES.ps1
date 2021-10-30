@@ -9,38 +9,38 @@
         [String]$Site2Prefix
     )
 
-    Import-DscResource -Module xActiveDirectory
+    Import-DscResource -Module ActiveDirectoryDsc
 
     Node localhost
     {
 
-        xADReplicationSite Site1
+        ADReplicationSite Site1
         {
             Ensure = 'Present'
             Name   = "$NamingConvention-Site1"
         }
 
-        xADReplicationSite Site2
+        ADReplicationSite Site2
         {
             Ensure = 'Present'
             Name   = "$NamingConvention-Site2"
         }
 
-        xADReplicationSubnet Site1Subnet1
+        ADReplicationSubnet Site1Subnet1
         {
             Name     = $Site1Prefix
             Site     = "$NamingConvention-Site1"
             DependsOn = "[xADReplicationSite]Site1"
         }
 
-        xADReplicationSubnet Site2Subnet1
+        ADReplicationSubnet Site2Subnet1
         {
             Name     = $Site2Prefix
             Site     = "$NamingConvention-Site2"
             DependsOn = "[xADReplicationSite]Site2"
         }
 
-        xADReplicationSiteLink ChangeDefaultSiteCost
+        ADReplicationSiteLink ChangeDefaultSiteCost
         {
             Name                          = "DEFAULTIPSITELINK"
             SitesIncluded                 = @("$NamingConvention-Site1", "$NamingConvention-Site2", "Default-First-Site-Name")
@@ -48,7 +48,7 @@
             DependsOn = "[xADReplicationSubnet]Site2Subnet1"
         }
 
-        xADReplicationSiteLink Site1andSite2
+        ADReplicationSiteLink Site1andSite2
         {
             Name                          = "Site1-and-Site2"
             SitesIncluded                 = @("$NamingConvention-Site1", "$NamingConvention-Site2")
