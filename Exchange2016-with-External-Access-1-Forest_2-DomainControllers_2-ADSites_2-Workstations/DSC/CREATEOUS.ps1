@@ -32,7 +32,7 @@
             Path                            = "OU=Accounts,$BaseDN"
             Description                     = "Admin OU"
             Ensure                          = 'Present'
-            DependsOn = "[xADOrganizationalUnit]AccountsOU"
+            DependsOn = "[ADOrganizationalUnit]AccountsOU"
         }
 
         ADOrganizationalUnit AdminGroupsOU
@@ -41,7 +41,7 @@
             Path                            = "OU=Groups,$BaseDN"
             Description                     = "Admin Groups OU"
             Ensure                          = 'Present'
-            DependsOn = "[xADOrganizationalUnit]GroupsOU"
+            DependsOn = "[ADOrganizationalUnit]GroupsOU"
         }
 
         ADOrganizationalUnit EndUserOU
@@ -50,7 +50,7 @@
             Path                            = "OU=Accounts,$BaseDN"
             Description                     = "End User OU"
             Ensure                          = 'Present'
-            DependsOn = "[xADOrganizationalUnit]AccountsOU"
+            DependsOn = "[ADOrganizationalUnit]AccountsOU"
         }
 
         ADOrganizationalUnit EndUserGroupOU
@@ -59,7 +59,7 @@
             Path                            = "OU=Groups,$BaseDN"
             Description                     = "End User Groups OU"
             Ensure                          = 'Present'
-            DependsOn = "[xADOrganizationalUnit]GroupsOU"
+            DependsOn = "[ADOrganizationalUnit]GroupsOU"
         }
 
         ADOrganizationalUnit Office365OU
@@ -68,7 +68,7 @@
             Path                            = "OU=End User,OU=Accounts,$BaseDN"
             Description                     = "Office 365 OU"
             Ensure                          = 'Present'
-            DependsOn = "[xADOrganizationalUnit]EndUserOU"
+            DependsOn = "[ADOrganizationalUnit]EndUserOU"
         }
 
         ADOrganizationalUnit Office365GroupOU
@@ -77,7 +77,7 @@
             Path                            = "OU=End User,OU=Groups,$BaseDN"
             Description                     = "Office 365 Groups OU"
             Ensure                          = 'Present'
-            DependsOn = "[xADOrganizationalUnit]EndUserGroupOU"
+            DependsOn = "[ADOrganizationalUnit]EndUserGroupOU"
         }
 
         ADOrganizationalUnit Sub1OU
@@ -86,7 +86,7 @@
             Path                            = "OU=Office 365,OU=End User,OU=Accounts,$BaseDN"
             Description                     = "Sub1 OU"
             Ensure                          = 'Present'
-            DependsOn = "[xADOrganizationalUnit]Office365OU"
+            DependsOn = "[ADOrganizationalUnit]Office365OU"
         }
 
         ADOrganizationalUnit NonOffice365OU
@@ -95,7 +95,7 @@
             Path                            = "OU=End User,OU=Accounts,$BaseDN"
             Description                     = "Non-Office 365 OU"
             Ensure                          = 'Present'
-            DependsOn = "[xADOrganizationalUnit]EndUserOU"
+            DependsOn = "[ADOrganizationalUnit]EndUserOU"
         }
 
         ADOrganizationalUnit ServiceOU
@@ -104,7 +104,7 @@
             Path                            = "OU=Accounts,$BaseDN"
             Description                     = "Service OU"
             Ensure                          = 'Present'
-            DependsOn = "[xADOrganizationalUnit]AccountsOU"
+            DependsOn = "[ADOrganizationalUnit]AccountsOU"
         }
 
         ADOrganizationalUnit ServersOU
@@ -121,7 +121,7 @@
             Path                            = "OU=Servers,$BaseDN"
             Description                     = "Server2012R2 OU"
             Ensure                          = 'Present'
-            DependsOn = "[xADOrganizationalUnit]ServersOU"
+            DependsOn = "[ADOrganizationalUnit]ServersOU"
         }
 
         ADOrganizationalUnit Server2016OU
@@ -130,7 +130,7 @@
             Path                            = "OU=Servers,$BaseDN"
             Description                     = "Server2016 OU"
             Ensure                          = 'Present'
-            DependsOn = "[xADOrganizationalUnit]ServersOU"
+            DependsOn = "[ADOrganizationalUnit]ServersOU"
         }
 
         ADOrganizationalUnit Server2019OU
@@ -139,7 +139,7 @@
             Path                            = "OU=Servers,$BaseDN"
             Description                     = "Server2019 OU"
             Ensure                          = 'Present'
-            DependsOn = "[xADOrganizationalUnit]ServersOU"
+            DependsOn = "[ADOrganizationalUnit]ServersOU"
         }
 
         ADOrganizationalUnit Server2022OU
@@ -148,7 +148,7 @@
             Path                            = "OU=Servers,$BaseDN"
             Description                     = "Server2022 OU"
             Ensure                          = 'Present'
-            DependsOn = "[xADOrganizationalUnit]ServersOU"
+            DependsOn = "[ADOrganizationalUnit]ServersOU"
         }
       
         ADOrganizationalUnit MaintenanceServersOU
@@ -181,7 +181,7 @@
             Path                            = "OU=Workstations,$BaseDN"
             Description                     = "Windows 11 OU"
             Ensure                          = 'Present'
-            DependsOn = "[xADOrganizationalUnit]WorkstationsOU"
+            DependsOn = "[ADOrganizationalUnit]WorkstationsOU"
         }
 
         ADOrganizationalUnit Windows10OU
@@ -190,7 +190,7 @@
             Path                            = "OU=Workstations,$BaseDN"
             Description                     = "Windows 10 OU"
             Ensure                          = 'Present'
-            DependsOn = "[xADOrganizationalUnit]WorkstationsOU"
+            DependsOn = "[ADOrganizationalUnit]WorkstationsOU"
         }
 
         ADOrganizationalUnit Windows7OU
@@ -199,7 +199,7 @@
             Path                            = "OU=Workstations,$BaseDN"
             Description                     = "Workstations OU"
             Ensure                          = 'Present'
-            DependsOn = "[xADOrganizationalUnit]WorkstationsOU"
+            DependsOn = "[ADOrganizationalUnit]WorkstationsOU"
         }
 
     }

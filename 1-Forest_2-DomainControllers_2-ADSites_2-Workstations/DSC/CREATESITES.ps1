@@ -30,14 +30,14 @@
         {
             Name     = $Site1Prefix
             Site     = "$NamingConvention-Site1"
-            DependsOn = "[xADReplicationSite]Site1"
+            DependsOn = "[ADReplicationSite]Site1"
         }
 
         ADReplicationSubnet Site2Subnet1
         {
             Name     = $Site2Prefix
             Site     = "$NamingConvention-Site2"
-            DependsOn = "[xADReplicationSite]Site2"
+            DependsOn = "[ADReplicationSite]Site2"
         }
 
         ADReplicationSiteLink ChangeDefaultSiteCost
@@ -45,7 +45,7 @@
             Name                          = "DEFAULTIPSITELINK"
             SitesIncluded                 = @("$NamingConvention-Site1", "$NamingConvention-Site2", "Default-First-Site-Name")
             Cost                          = 1000
-            DependsOn = "[xADReplicationSubnet]Site2Subnet1"
+            DependsOn = "[ADReplicationSubnet]Site2Subnet1"
         }
 
         ADReplicationSiteLink Site1andSite2
@@ -55,7 +55,7 @@
             Cost                          = 100
             ReplicationFrequencyInMinutes = 15
             Ensure                        = 'Present'
-            DependsOn = "[xADReplicationSiteLink]ChangeDefaultSiteCost"
+            DependsOn = "[ADReplicationSiteLink]ChangeDefaultSiteCost"
         }
 
         Script UpdateDNSSettings
@@ -70,7 +70,7 @@
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            DependsOn = '[xADReplicationSiteLink]Site1andSite2'
+            DependsOn = '[ADReplicationSiteLink]Site1andSite2'
         }
 
     }
