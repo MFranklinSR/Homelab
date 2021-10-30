@@ -15,8 +15,8 @@
         [System.Management.Automation.PSCredential]$Admincreds
     )
 
-    Import-DscResource -Module DnsServerDsc
-    Import-DscResource -Module ActiveDirectoryDsc
+    Import-DscResource -ModuleName DnsServerDsc
+    Import-DscResource -ModuleName ActiveDirectoryDsc
 
     [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($Admincreds.UserName)", $Admincreds.Password)
 
@@ -51,7 +51,7 @@
         {
             Name      = "$computerName.$DomainName"
             ZoneName = "$ReverseLookup1.in-addr.arpa"
-            IpAddress = "$dc1lastoctet.$ReverseLookup1"
+            IpAddress = "$dc1lastoctet"
             Ensure    = 'Present'
             DependsOn = "[DnsServerADZone]ReverseADZone1"           
         }
@@ -60,7 +60,7 @@
         {
             Name      = "$DC2Name.$DomainName"
             ZoneName =  "$ReverseLookup2.in-addr.arpa"
-            IpAddress =  "$dc2lastoctet.$ReverseLookup1"
+            IpAddress =  "$dc2lastoctet"
             Ensure    = 'Present'
             DependsOn = "[DnsServerADZone]ReverseADZone2"
         }
