@@ -177,7 +177,7 @@
             ZoneName  = "$ExternaldomainName"
             IPv4Address = "$ex1IP"
             Ensure    = 'Present'
-            DependsOn = '[xDnsServerADZone]ExternalDomain'
+            DependsOn = '[DnsServerADZone]ExternalDomain'
          }
 
         DnsRecordA smtprecord2
@@ -186,7 +186,7 @@
             ZoneName   = "$ExternaldomainName"
             IPv4Address = "$ex2IP"
             Ensure    = 'Present'
-            DependsOn = '[xDnsServerADZone]ExternalDomain'
+            DependsOn = '[DnsServerADZone]ExternalDomain'
          }
     }
 }

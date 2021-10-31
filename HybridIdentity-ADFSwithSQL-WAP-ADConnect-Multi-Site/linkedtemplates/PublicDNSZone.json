@@ -1,0 +1,62 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ZoneName": {
+            "type": "string",
+            "metadata": {
+                "description": "DNS Zone Name"
+              }
+        },
+        "ADFSRecord": {
+            "type": "string",
+            "metadata": {
+                "description": "ADFS EXternal DNS Record"
+              }
+        },                                
+        "WAP1PublicIP": {
+            "type": "string",
+            "metadata": {
+                "description": "ADFS 1 EXternal Public IP"
+              }
+        },                          
+        "WAP2PublicIP": {
+            "type": "string",
+            "metadata": {
+                "description": "Exchange 2 EXternal Public IP"
+              }
+        }                 
+    },
+    "resources": [
+        {
+            "name": "[parameters('ZoneName')]",
+            "type": "Microsoft.Network/dnsZones",
+            "apiVersion": "2018-05-01",
+            "location": "global",
+            "tags": {},
+            "properties": {
+            },
+            "resources": []
+        },
+        {
+        "type": "Microsoft.Network/dnszones/a",
+        "name": "[concat(parameters('ZoneName'), '/', parameters('ADFSRecord'))]",
+        "apiVersion": "2018-05-01",
+        "location": "global",
+        "dependsOn": [
+            "[parameters('ZoneName')]"
+        ],
+        "properties": {
+            "TTL": 900,
+            "ARecords": [
+                {
+                    "ipv4Address": "[parameters('WAP1PublicIP')]"
+                },
+                {
+                    "ipv4Address": "[parameters('WAP2PublicIP')]"
+                }
+                ]
+            }
+        }
+    ]
+}
