@@ -438,7 +438,7 @@
     "ChildBaseDN": "[concat('DC=',parameters('ChildNetBiosDomain'),',',variables('ParentBaseDN'))]",    
     "ChildWIN11OUPath": "[concat('OU=Windows 11,OU=Workstations,',variables('ChildBaseDN'))]",
     "ChildWIN10OUPath": "[concat('OU=Windows 10,OU=Workstations,',variables('ChildBaseDN'))]",
-    "ChildWIN7OUPath": "[concat('OU=Windows 7,OU=Workstations,',variables('ChildBaseDN'))]",    
+    "ChildWIN7OUPath": "[concat('OU=Windows 7,OU=Workstations,',variables('ChildBaseDN'))]"   
   },  
   "resources": [
     {
