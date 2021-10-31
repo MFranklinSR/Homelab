@@ -10,6 +10,8 @@
         [String]$ExternaldomainName,
         [String]$ReverseLookup1,
         [String]$ReverseLookup2,
+        [String]$ForwardLookup1,
+        [String]$ForwardLookup2,
         [String]$dc1lastoctet,
         [String]$dc2lastoctet,
         [String]$icaIP,
@@ -20,7 +22,7 @@
         [System.Management.Automation.PSCredential]$Admincreds
     )
 
-    Import-DscResource -Module xDnsServer
+    Import-DscResource -ModuleName DnsServerDsc
     Import-DscResource -ModuleName ActiveDirectoryDsc
 
     [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($Admincreds.UserName)", $Admincreds.Password)
@@ -34,7 +36,7 @@
             WaitTimeout = $RetryIntervalSec
         }
 
-        xDnsServerADZone ReverseADZone1
+        DnsServerADZone ReverseADZone1
         {
             Name             = "$ReverseLookup1.in-addr.arpa"
             DynamicUpdate = 'Secure'
@@ -43,7 +45,7 @@
             DependsOn = '[WaitForADDomain]DscForestWait'
         }
 
-        xDnsServerADZone ReverseADZone2
+        DnsServerADZone ReverseADZone2
         {
             Name             = "$ReverseLookup2.in-addr.arpa"
             DynamicUpdate = 'Secure'
@@ -52,133 +54,119 @@
             DependsOn = '[WaitForADDomain]DscForestWait'
         }
 
-        xDnsRecord DC1PtrRecord
+        DnsRecordPtr DC1PtrRecord
         {
-            Name      = "$dc1lastoctet"
-            Zone      = "$ReverseLookup1.in-addr.arpa"
-            Target    = "$computerName.$InternaldomainName"
-            Type      = 'Ptr'
+            Name      = "$computerName.$InternaldomainName"
+            ZoneName = "$ReverseLookup1.in-addr.arpa"
+            IpAddress = "$ForwardLookup1.$dc1lastoctet"
             Ensure    = 'Present'
-            DependsOn = "[xDnsServerADZone]ReverseADZone1"
+            DependsOn = "[DnsServerADZone]ReverseADZone1"           
         }
 
-        xDnsRecord DC2PtrRecord
+        DnsRecordPtr DC2PtrRecord
         {
-            Name      = "$dc2lastoctet"
-            Zone      = "$ReverseLookup2.in-addr.arpa"
-            Target    = "$DC2Name.$InternaldomainName"
-            Type      = 'Ptr'
+            Name      = "$DC2Name.$InternaldomainName"
+            ZoneName =  "$ReverseLookup2.in-addr.arpa"
+            IpAddress =  "$ForwardLookup2.$dc2lastoctet"
             Ensure    = 'Present'
-            DependsOn = "[xDnsServerADZone]ReverseADZone2"
+            DependsOn = "[DnsServerADZone]ReverseADZone2"
         }
 
-        xDnsRecord crlrecord
+        DnsRecordA crlrecord
         {
             Name      = "crl"
-            Zone      = "$ExternaldomainName"
-            Target    = "$icaIP"
-            Type      = 'ARecord'
+            ZoneName  = "$ExternaldomainName"
+            IPv4Address = "$icaIP"
             Ensure    = 'Present'
         }
 
-        xDnsRecord ocsprecord
+        DnsRecordA ocsprecord
         {
             Name      = "ocsp"
-            Zone      = "$ExternaldomainName"
-            Target    = "$ocspIP"
-            Type      = 'ARecord'
+            ZoneName  = "$ExternaldomainName"
+            IPv4Address = "$ocspIP"
             Ensure    = 'Present'
         }
 
-        xDnsRecord owa2016record1
+        DnsRecordA owa2016record1
         {
             Name      = "owa2016"
-            Zone      = "$ExternaldomainName"
-            Target    = "$ex1IP"
-            Type      = 'ARecord'
+            ZoneName  = "$ExternaldomainName"
+            IPv4Address  = "$ex1IP"
             Ensure    = 'Present'
         }
 
-        xDnsRecord owa2016record2
+        DnsRecordA owa2016record2
         {
             Name      = "owa2016"
-            Zone      = "$ExternaldomainName"
-            Target    = "$ex2IP"
-            Type      = 'ARecord'
+            ZoneName  = "$ExternaldomainName"
+            IPv4Address  = "$ex2IP"
             Ensure    = 'Present'
         }
 
-        xDnsRecord autodiscover2016record1
+        DnsRecordA autodiscover2016record1
         {
             Name      = "autodiscover2016"
-            Zone      = "$ExternaldomainName"
-            Target    = "$ex1IP"
-            Type      = 'ARecord'
+            ZoneName  = "$ExternaldomainName"
+            IPv4Address  = "$ex1IP"
             Ensure    = 'Present'
         }
 
-        xDnsRecord autodiscover2016record2
+        DnsRecordA autodiscover2016record2
         {
             Name      = "autodiscover2016"
-            Zone      = "$ExternaldomainName"
-            Target    = "$ex2IP"
-            Type      = 'ARecord'
+            ZoneName  = "$ExternaldomainName"
+            IPv4Address  = "$ex2IP"
             Ensure    = 'Present'
         }
 
-        xDnsRecord outlook2016record1
+
+        DnsRecordA outlook2016record1
         {
             Name      = "outlook2016"
-            Zone      = "$ExternaldomainName"
-            Target    = "$ex1IP"
-            Type      = 'ARecord'
+            ZoneName  = "$ExternaldomainName"
+            IPv4Address  = "$ex1IP"
             Ensure    = 'Present'
-         }
+        }
 
-        xDnsRecord outlook2016record2
+        DnsRecordA outlook2016record2
         {
             Name      = "outlook2016"
-            Zone      = "$ExternaldomainName"
-            Target    = "$ex2IP"
-            Type      = 'ARecord'
+            ZoneName  = "$ExternaldomainName"
+            IPv4Address  = "$ex2IP"
             Ensure    = 'Present'
-         }
+        }
 
-        xDnsRecord eas2016record1
+        DnsRecordA eas2016record1
         {
             Name      = "eas2016"
-            Zone      = "$ExternaldomainName"
-            Target    = "$ex1IP"
-            Type      = 'ARecord'
+            ZoneName  = "$ExternaldomainName"
+            IPv4Address  = "$ex1IP"
             Ensure    = 'Present'
-         }
+        }
 
-        xDnsRecord eas2016record2
+        DnsRecordA eas2016record2
         {
             Name      = "eas2016"
-            Zone      = "$ExternaldomainName"
-            Target    = "$ex2IP"
-            Type      = 'ARecord'
+            ZoneName  = "$ExternaldomainName"
+            IPv4Address  = "$ex2IP"
             Ensure    = 'Present'
-         }
+        }
 
-        xDnsRecord smtprecord1
+        DnsRecordA smtprecord1
         {
             Name      = "smtp"
-            Zone      = "$ExternaldomainName"
-            Target    = "$ex1IP"
-            Type      = 'ARecord'
+            ZoneName  = "$ExternaldomainName"
+            IPv4Address = "$ex1IP"
             Ensure    = 'Present'
          }
 
-        xDnsRecord smtprecord2
+        DnsRecordA smtprecord2
         {
             Name      = "smtp"
-            Zone      = "$ExternaldomainName"
-            Target    = "$ex2IP"
-            Type      = 'ARecord'
+            ZoneName   = "$ExternaldomainName"
+            IPv4Address = "$ex2IP"
             Ensure    = 'Present'
          }
-
     }
 }
