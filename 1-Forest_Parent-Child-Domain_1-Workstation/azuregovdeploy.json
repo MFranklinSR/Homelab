@@ -997,7 +997,7 @@
       "apiVersion": "2019-10-01",
       "name": "deployDC2VM",
       "dependsOn": [
-        "PerringToSite2",
+        "PeeringToSite2",
         "PeeringToSite1"
       ],      
       "properties": {
