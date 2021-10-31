@@ -1,0 +1,69 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "SourceVNetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Set the local VNet name"
+        }
+      },
+      "TargetVNetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Set the remote VNet name"
+        }
+      },
+      "allowVirtualNetworkAccess": {
+        "type": "string",
+        "metadata": {
+          "description": "Boolean value (true or false) without quotes"
+        }
+      },
+      "allowForwardedTraffic": {
+        "type": "string",
+        "metadata": {
+          "description": "Boolean value (true or false) without quotes"
+        }
+      },
+      "allowGatewayTransit": {
+        "type": "string",
+        "metadata": {
+          "description": "Boolean value (true or false) without quotes"
+        }
+      },
+      "useRemoteGateways": {
+        "type": "string",
+        "metadata": {
+          "description": "Boolean value (true or false) without quotes"
+        }
+      },                        
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "remoteVNet": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('TargetVNetName'))]",
+      "peeringName": "[concat(parameters('SourceVNetName'), '/', parameters('SourceVNetName'), '-to-', parameters('TargetVNetName'))]"
+    },
+    "resources": [
+      {
+        "apiVersion": "2019-09-01",
+        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+        "name": "[variables('peeringName')]",
+        "location": "[parameters('location')]",
+        "properties": {
+          "allowVirtualNetworkAccess": "[parameters('allowVirtualNetworkAccess')]",
+          "allowForwardedTraffic": "[parameters('allowForwardedTraffic')]",
+          "allowGatewayTransit": "[parameters('allowGatewayTransit')]",
+          "useRemoteGateways": "[parameters('useRemoteGateways')]",
+          "remoteVirtualNetwork": {
+            "id": "[variables('remoteVNet')]"
+          }
+        }
+      }
+    ]
+  }
