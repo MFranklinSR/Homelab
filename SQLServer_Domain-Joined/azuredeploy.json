@@ -205,14 +205,14 @@
     },
     "SQLNode": {
       "type": "string",
-      "defaultValue": "",
+      "defaultValue": "01",
       "metadata": {
         "description": "SQL Node Number"
       }
     },    
     "sqllastoctet": {
       "type": "string",
-      "defaultValue": "",
+      "defaultValue": "100",
       "metadata": {
         "description": "SQL Node Last Octet"
       }
