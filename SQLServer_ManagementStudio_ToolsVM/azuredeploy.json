@@ -301,7 +301,7 @@
       "apiVersion": "2015-01-01",
       "name": "deploySQLToolsVM",
       "dependsOn": [
-        "VNet1ID"
+        "VNet1"
       ],      
       "properties": {
           "mode": "Incremental",
