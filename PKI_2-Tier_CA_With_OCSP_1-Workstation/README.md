@@ -12,7 +12,7 @@ This Templates deploys a Single Forest/Domain:
 - 1 - Offline Root Certificate Authority Server
 - 1 - Issuing Certificate Authority Server
 - 1 - Online Certificate Status Protocol Server
-- 1 - Domain Joined Windows 10 Workstation
+- 1 - Domain Joined Windows Workstation (Windows 11, Windows 10 or Windows 7)
 
 The deployment also makes the following customizations:
 - Adds Public IP Address to OCSP.
@@ -36,9 +36,11 @@ AD OU Structure:
 - --- Servers2012R2
 - --- Serverrs2016
 - --- Servers2019
+- --- Servers2022
 - -- MaintenanceServers
 - -- MaintenanceWorkstations
 - -- Workstations
+- --- Windows11
 - --- Windows10
 - --- Windows7
 
@@ -53,6 +55,9 @@ PKI
 
 Parameters that support changes
 - TimeZone.  Select an appropriate Time Zone.
+- AutoShutdownEnabled.  Yes = AutoShutdown Enabled, No = AutoShutdown Disabled.
+- AutoShutdownTime.  24-Hour Clock Time for Auto-Shutdown (Example: 1900 = 7PM)
+- AutoShutdownEmail.  Auto-Shutdown notification Email (Example:  user@domain.com)
 - Admin Username.  Enter a valid Admin Username
 - Admin Password.  Enter a valid Admin Password
 - WindowsServerLicenseType.  Choose Windows Server License Type (Example:  Windows_Server or None)
@@ -73,11 +78,14 @@ Parameters that support changes
 - RootCAKeyLength.  Key Length for Offline Root CA
 - IssuingCAHashAlgorithm.  Hash Algorithm for Issuing CA
 - IssuingCAKeyLength.  Key Length for Issuing CA
-- DC1OSVersion.  Select 2016-Datacenter (Windows 2016) or 2019-Datacenter (Windows 2019) Domain Controller 1 OS Version
-- RCAOSVersion.  Select 2016-Datacenter (Windows 2016) or 2019-Datacenter (Windows 2019) Root CA OS Version
-- ICAOSVersion.  Select 2016-Datacenter (Windows 2016) or 2019-Datacenter (Windows 2019) Issuing CA OS Version
-- OCSPOSVersion.  Select 2016-Datacenter (Windows 2016) or 2019-Datacenter (Windows 2019) OCSP OS Version
-- WK1OSVersion.  Workstation1 OS Version is not configurable and set to 19h1-pro (Windows 10).
+- AutoShutdownEnabled.  Yes = AutoShutdown Enabled, No = AutoShutdown Disabled.
+- AutoShutdownTime.  24-Hour Clock Time for Auto-Shutdown (Example: 1900 = 7PM)
+- AutoShutdownEmail.  Auto-Shutdown notification Email (Example:  user@domain.com)
+- DC1OSVersion.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019), 2016-Datacenter (Windows 2016) or 2012-R2-Datacenter (Windows 2012 R2) Domain Controller 2 OS Version
+- RCAOSVersion.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019), 2016-Datacenter (Windows 2016) or 2012-R2-Datacenter (Windows 2012 R2) Root CA OS Version
+- ICAOSVersion.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019), 2016-Datacenter (Windows 2016) or 2012-R2-Datacenter (Windows 2012 R2) Issuing CA OS Version
+- OCSPOSVersion.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019), 2016-Datacenter (Windows 2016) or 2012-R2-Datacenter (Windows 2012 R2) OCSP OS Version
+- WK1OSVersion.  Select Windows-11, Windows-10 or Windows-7 Worksation 1 OS Version
 - DC1VMSize.  Enter a Valid VM Size based on which Region the VM is deployed.
 - RCAVMSize.  Enter a Valid VM Size based on which Region the VM is deployed.
 - ICAVMSize.  Enter a Valid VM Size based on which Region the VM is deployed.

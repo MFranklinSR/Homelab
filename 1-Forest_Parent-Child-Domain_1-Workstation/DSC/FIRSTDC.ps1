@@ -2,7 +2,6 @@
 {
    param
    (
-
         [String]$TimeZone,        
         [String]$DomainName,
         [String]$NetBiosDomain,
@@ -18,10 +17,9 @@
     Import-DscResource -ModuleName xPendingReboot
     Import-DscResource -ModuleName ComputerManagementDsc
     Import-DscResource -ModuleName xPSDesiredStateConfiguration
-    Import-DscResource -ModuleName xDNSServer
+    Import-DscResource -ModuleName DNSServerDsc
 
     [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($Admincreds.UserName)", $Admincreds.Password)
-
     $Interface=Get-NetAdapter|Where-Object Name -Like "Ethernet*"|Select-Object -First 1
     $InterfaceAlias=$($Interface.Name)
 
@@ -101,7 +99,7 @@
             DependsOn = @("[WindowsFeature]ADDSInstall", "[xDisk]ADDataDisk")
         }
 
-            xDnsServerAddress DnsServerAddress
+        xDnsServerAddress DnsServerAddress
         {
             Address        = '127.0.0.1'
             InterfaceAlias = $InterfaceAlias

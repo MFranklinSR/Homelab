@@ -154,7 +154,32 @@
       "metadata": {
           "description": "Time Zone"
       }
-    },                   
+    }, 
+    "AutoShutdownEnabled": {
+      "type": "string",
+      "defaultValue": "No",
+      "allowedValues": [
+        "Yes",
+        "No"
+      ],      
+      "metadata": {
+          "description": "Enabled Auto Shutdown.  !!!If Enabled, AutoShutdownEmail MUST be added!!!!"
+      }
+    },    
+    "AutoShutdownTime": {
+      "type": "string",
+      "defaultValue": "2000",
+      "metadata": {
+          "description": "24-Hour Clock Time for Auto-Shutdown Example: 1900 = 7PM"
+      }
+    },                                
+    "AutoShutdownEmail": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+          "description": "Auto-Shutdown notification Email Example:  user@domain.com"
+      }
+    },                                                           
     "adminUsername": {
         "type": "string",
         "metadata": {
@@ -222,7 +247,7 @@
     },  
     "ParentDomain": {
       "type": "string",
-      "defaultValue": "killerhomelab",      
+      "defaultValue": "killerhomelab",
       "metadata": {
           "description": "NetBios Parent Domain Name"
       }
@@ -245,7 +270,9 @@
         "org",
         "edu",
         "gov",
-        "mil"
+        "mil",
+        "us",
+        "local"
       ],      
       "metadata": {
           "description": "Top-Level Domain Name"
@@ -280,47 +307,53 @@
       }
     },                                                        
     "DC1OSVersion": {
-        "type": "string",
-        "defaultValue": "2019-Datacenter",
-        "allowedValues": [
-          "2019-Datacenter",
-          "2016-Datacenter"
-        ],
-        "metadata": {
-            "description": "Domain Controller1 OS Version"
-        }
-    },
-    "DC2OSVersion": {
       "type": "string",
-      "defaultValue": "2019-Datacenter",
+      "defaultValue": "2022-Datacenter",
       "allowedValues": [
+        "2022-Datacenter",
         "2019-Datacenter",
         "2016-Datacenter"
-      ],
+      ],      
       "metadata": {
-          "description": "Domain Controller2 OS Version"
+          "description": "Domain Controller1 OS Version"
       }
     },    
+    "DC2OSVersion": {
+      "type": "string",
+      "defaultValue": "2022-Datacenter",
+      "allowedValues": [
+        "2022-Datacenter",
+        "2019-Datacenter",
+        "2016-Datacenter"
+      ],      
+      "metadata": {
+          "description": "Domain Controller1 OS Version"
+      }
+    },
     "WK1OSVersion": {
       "type": "string",
-      "defaultValue": "19h1-pro",
+      "defaultValue": "Windows-11",
       "allowedValues": [
-        "19h1-pro"
+        "Windows-11",
+        "Windows-10",
+        "Windows-7"
       ],
       "metadata": {
-        "description": "Workstation1 OS Version"
+          "description": "Workstation1 OS Version"
       }
-    },    
+    },            
     "WK2OSVersion": {
       "type": "string",
-      "defaultValue": "19h1-pro",
+      "defaultValue": "Windows-11",
       "allowedValues": [
-        "19h1-pro"
+        "Windows-11",
+        "Windows-10",
+        "Windows-7"
       ],
       "metadata": {
-        "description": "Workstation2 OS Version"
+          "description": "Workstation1 OS Version"
       }
-    },      
+    },
     "DC1VMSize": {
         "type": "string",
         "defaultValue": "Standard_D2s_v3",
@@ -384,7 +417,9 @@
     "dc2name": "[concat(parameters('ChildNetBiosDomain'),'-dc-01')]",           
     "dc2IP": "[concat(parameters('vnet2ID'),'.1.',variables('dc2lastoctet'))]",            
     "ReverseLookup1": "[concat('1.',parameters('ReverseLookup1'))]",    
-    "ReverseLookup2": "[concat('1.',parameters('ReverseLookup2'))]",        
+    "ReverseLookup2": "[concat('1.',parameters('ReverseLookup2'))]",  
+    "ForwardLookup1": "[concat(parameters('vnet1ID'),'.1')]",    
+    "ForwardLookup2": "[concat(parameters('vnet2ID'),'.1')]",                                  
     "dc1lastoctet": "101",        
     "dc2lastoctet": "101",        
     "wk1lastoctet": "201",            
@@ -396,10 +431,14 @@
     "DCDataDisk1Name": "NTDS",            
     "ParentDomainName": "[concat(parameters('SubDNSDomain'),parameters('ParentDomain'),'.',parameters('TLD'))]",
     "ParentBaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('ParentDomain'),',DC=',parameters('TLD'))]",
+    "ParentWIN11OUPath": "[concat('OU=Windows 11,OU=Workstations,',variables('ParentBaseDN'))]",
+    "ParentWIN10OUPath": "[concat('OU=Windows 10,OU=Workstations,',variables('ParentBaseDN'))]",
+    "ParentWIN7OUPath": "[concat('OU=Windows 7,OU=Workstations,',variables('ParentBaseDN'))]",    
     "ChildDomainName": "[concat(parameters('ChildNetBiosDomain'),'.',variables('ParentDomainName'))]",    
     "ChildBaseDN": "[concat('DC=',parameters('ChildNetBiosDomain'),',',variables('ParentBaseDN'))]",    
-    "ParentWKOUPath": "[concat('OU=Windows 10,OU=Workstations,',variables('ParentBaseDN'))]",
-    "ChildWKOUPath": "[concat('OU=Windows 10,OU=Workstations,',variables('ChildBaseDN'))]"
+    "ChildWIN11OUPath": "[concat('OU=Windows 11,OU=Workstations,',variables('ChildBaseDN'))]",
+    "ChildWIN10OUPath": "[concat('OU=Windows 10,OU=Workstations,',variables('ChildBaseDN'))]",
+    "ChildWIN7OUPath": "[concat('OU=Windows 7,OU=Workstations,',variables('ChildBaseDN'))]"   
   },  
   "resources": [
     {
@@ -541,7 +580,7 @@
               },              
               "LicenseType": {
                 "value": "[parameters('WindowsServerLicenseType')]"
-              },                 
+              },            
               "DataDisk1Name": {
                 "value": "[variables('DCDataDisk1Name')]"
               },            
@@ -554,18 +593,24 @@
               "subnetName": {
                 "value": "[variables('vnet1subnet1Name')]"
               },            
-              "vnetprefix": {
-                "value": "[variables('vnet1Prefix')]"
-              },            
-              "subnetPrefix": {
-                "value": "[variables('vnet1subnet1Prefix')]"
-              },                                                                                                            
               "adminUsername": {
                 "value": "[parameters('adminUsername')]"
               },                                                                                                            
               "adminPassword": {
                 "value": "[parameters('adminPassword')]"
-              },                                                                                                                                        
+              },
+              "TimeZone": {
+                  "value": "[parameters('TimeZone')]"
+              },               
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                            
+              "AutoShutdownTime": {
+                  "value": "[parameters('AutoShutdownTime')]"
+              },              
+              "AutoShutdownEmail": {
+                  "value": "[parameters('AutoShutdownEmail')]"
+              },                                                                                                                                                      
               "location": {
                   "value": "[resourceGroup().location]"
               }
@@ -746,43 +791,46 @@
       "properties": {
           "mode": "Incremental",
           "templateLink": {
-              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/configdns.json', parameters('_artifactsLocationSasToken')))]",
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/configdnsint.json', parameters('_artifactsLocationSasToken')))]",
               "contentVersion": "1.0.0.0"
           },
           "parameters": {
               "computerName": {
                   "value": "[variables('dc1name')]"
-              },
-              "DC1Name": {
-                  "value": "[variables('dc1name')]"
-              },      
+              },     
               "DC2Name": {
                   "value": "[variables('dc2name')]"
-              }, 
+              },              
               "NetBiosDomain": {
                   "value": "[parameters('ParentNetBiosDomain')]"
               },                                         
-              "DomainName": {
+              "InternalDomainName": {
                 "value": "[variables('ParentDomainName')]"
-              },              
+              },       
               "ReverseLookup1": {
                 "value": "[variables('ReverseLookup1')]"
-              },
+              },                                                                                                            
               "ReverseLookup2": {
                 "value": "[variables('ReverseLookup2')]"
-              },                                                                                                                          
+              },  
+              "ForwardLookup1": {
+                "value": "[variables('ForwardLookup1')]"
+              },                                                                                                            
+              "ForwardLookup2": {
+                "value": "[variables('ForwardLookup2')]"
+              },                                                                                                                                                                                                                                                                              
               "dc1lastoctet": {
                 "value": "[variables('dc1lastoctet')]"
               },                                                                                                                          
               "dc2lastoctet": {
                 "value": "[variables('dc2lastoctet')]"
-              },   
+              },                                                                                                                                        
               "adminUsername": {
                 "value": "[parameters('adminUsername')]"
               },                                                                                                            
               "adminPassword": {
                 "value": "[parameters('adminPassword')]"
-              },                                                                                                                                                    
+              },                   
               "_artifactsLocation": {
                 "value": "[parameters('_artifactsLocation')]"
               },                                                                                                            
@@ -976,7 +1024,7 @@
               },              
               "LicenseType": {
                 "value": "[parameters('WindowsServerLicenseType')]"
-              },                 
+              },            
               "DataDisk1Name": {
                 "value": "[variables('DCDataDisk1Name')]"
               },            
@@ -989,18 +1037,24 @@
               "subnetName": {
                 "value": "[variables('vnet2subnet1Name')]"
               },            
-              "vnetprefix": {
-                "value": "[variables('vnet2Prefix')]"
-              },            
-              "subnetPrefix": {
-                "value": "[variables('vnet2subnet1Prefix')]"
-              },                                                                                                            
               "adminUsername": {
                 "value": "[parameters('adminUsername')]"
               },                                                                                                            
               "adminPassword": {
                 "value": "[parameters('adminPassword')]"
-              },                                                                                                                                        
+              },
+              "TimeZone": {
+                  "value": "[parameters('TimeZone')]"
+              },
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                             
+              "AutoShutdownTime": {
+                  "value": "[parameters('AutoShutdownTime')]"
+              },              
+              "AutoShutdownEmail": {
+                  "value": "[parameters('AutoShutdownEmail')]"
+              },                                                                                                                                                      
               "location": {
                   "value": "[parameters('Location2')]"
               }
@@ -1165,9 +1219,77 @@
       }
     },
     {
+      "condition": "[equals(parameters('WK1OSVersion'),'Windows-11')]",      
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "deployWK1VM",
+      "name": "deployWK1VM-11",
+      "dependsOn": [
+        "PeeringToSite2",
+        "PeeringToSite1"
+      ],      
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "computerName": {
+                  "value": "[variables('wk1name')]"
+              },
+              "computerIP": {
+                  "value": "[variables('wk1IP')]"
+              },
+              "Publisher": {
+                  "value": "MicrosoftWindowsDesktop"
+              },
+              "Offer": {
+                  "value": "Windows-11"
+              },
+              "OSVersion": {
+                "value": "win11-21h2-pro"
+              },              
+              "LicenseType": {
+                "value": "[parameters('WindowsClientLicenseType')]"
+              },            
+              "VMSize": {
+                "value": "[parameters('WK1VMSize')]"
+              },
+              "vnetName": {
+                "value": "[variables('vnet1Name')]"
+              },            
+              "subnetName": {
+                "value": "[variables('vnet1subnet2Name')]"
+              },            
+              "adminUsername": {
+                "value": "[parameters('adminUsername')]"
+              },                                                                                                            
+              "adminPassword": {
+                "value": "[parameters('adminPassword')]"
+              }, 
+              "TimeZone": {
+                  "value": "[parameters('TimeZone')]"
+              },
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                             
+              "AutoShutdownTime": {
+                  "value": "[parameters('AutoShutdownTime')]"
+              },              
+              "AutoShutdownEmail": {
+                  "value": "[parameters('AutoShutdownEmail')]"
+              },                                                                                                                                                     
+              "location": {
+                  "value": "[resourceGroup().location]"
+              }
+          }
+      }
+    },
+    {
+      "condition": "[equals(parameters('WK1OSVersion'),'Windows-10')]",      
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "deployWK1VM-10",
       "dependsOn": [
         "PeeringToSite2",
         "PeeringToSite1"
@@ -1192,11 +1314,11 @@
                   "value": "Windows-10"
               },
               "OSVersion": {
-                "value": "[parameters('WK1OSVersion')]"
+                "value": "21h1-pro"
               },              
               "LicenseType": {
                 "value": "[parameters('WindowsClientLicenseType')]"
-              },                 
+              },            
               "VMSize": {
                 "value": "[parameters('WK1VMSize')]"
               },
@@ -1206,30 +1328,106 @@
               "subnetName": {
                 "value": "[variables('vnet1subnet2Name')]"
               },            
-              "vnetprefix": {
-                "value": "[variables('vnet1Prefix')]"
-              },            
-              "subnetPrefix": {
-                "value": "[variables('vnet1subnet2Prefix')]"
-              },                                                                                                            
               "adminUsername": {
                 "value": "[parameters('adminUsername')]"
               },                                                                                                            
               "adminPassword": {
                 "value": "[parameters('adminPassword')]"
-              },                                                                                                                                        
+              }, 
+              "TimeZone": {
+                  "value": "[parameters('TimeZone')]"
+              },
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                             
+              "AutoShutdownTime": {
+                  "value": "[parameters('AutoShutdownTime')]"
+              },              
+              "AutoShutdownEmail": {
+                  "value": "[parameters('AutoShutdownEmail')]"
+              },                                                                                                                                                     
               "location": {
                   "value": "[resourceGroup().location]"
               }
           }
       }
-    },
+    }, 
     {
+      "condition": "[equals(parameters('WK1OSVersion'),'Windows-7')]",      
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "DomainJoinWK1VM",
+      "name": "deployWK1VM-7",
       "dependsOn": [
-        "DeployWK1VM"
+        "PeeringToSite2",
+        "PeeringToSite1"
+      ],      
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "computerName": {
+                  "value": "[variables('wk1name')]"
+              },
+              "computerIP": {
+                  "value": "[variables('wk1IP')]"
+              },
+              "Publisher": {
+                  "value": "MicrosoftWindowsDesktop"
+              },
+              "Offer": {
+                  "value": "Windows-7"
+              },
+              "OSVersion": {
+                "value": "win7-enterprise"
+              },              
+              "LicenseType": {
+                "value": "[parameters('WindowsClientLicenseType')]"
+              },            
+              "VMSize": {
+                "value": "[parameters('WK1VMSize')]"
+              },
+              "vnetName": {
+                "value": "[variables('vnet1Name')]"
+              },            
+              "subnetName": {
+                "value": "[variables('vnet1subnet2Name')]"
+              },            
+              "adminUsername": {
+                "value": "[parameters('adminUsername')]"
+              },                                                                                                            
+              "adminPassword": {
+                "value": "[parameters('adminPassword')]"
+              }, 
+              "TimeZone": {
+                  "value": "[parameters('TimeZone')]"
+              },  
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                           
+              "AutoShutdownTime": {
+                  "value": "[parameters('AutoShutdownTime')]"
+              },              
+              "AutoShutdownEmail": {
+                  "value": "[parameters('AutoShutdownEmail')]"
+              },                                                                                                                                                     
+              "location": {
+                  "value": "[resourceGroup().location]"
+              }
+          }
+      }
+    },       
+    {
+      "condition": "[equals(parameters('WK1OSVersion'),'Windows-11')]",      
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "DomainJoinWK1VM-11",
+      "dependsOn": [
+        "DeployWK1VM-11",
+        "DeployWK1VM-10",
+        "DeployWK1VM-7"
       ],      
       "properties": {
           "mode": "Incremental",
@@ -1242,10 +1440,10 @@
                   "value": "[variables('wk1name')]"
               },
               "domainName": {
-                  "value": "[variables('ParentDomainName')]"
+                  "value": "[variables('ParentdomainName')]"
               },
               "OUPath": {
-                  "value": "[variables('ParentWKOUPath')]"
+                  "value": "[variables('ParentWIN11OUPath')]"
               },
               "domainJoinOptions": {
                   "value": 3
@@ -1261,11 +1459,160 @@
               }
           }
       }
-    },                                                                                                                
+    },
     {
+      "condition": "[equals(parameters('WK1OSVersion'),'Windows-10')]",      
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "deployWK2VM",
+      "name": "DomainJoinWK1VM-10",
+      "dependsOn": [
+        "DeployWK1VM-11",
+        "DeployWK1VM-10",
+        "DeployWK1VM-7"
+      ],      
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "computerName": {
+                  "value": "[variables('wk1name')]"
+              },
+              "domainName": {
+                  "value": "[variables('ParentdomainName')]"
+              },
+              "OUPath": {
+                  "value": "[variables('ParentWIN10OUPath')]"
+              },
+              "domainJoinOptions": {
+                  "value": 3
+              },
+              "adminUsername": {
+                "value": "[parameters('adminUsername')]"
+              },                                                                                                            
+              "adminPassword": {
+                "value": "[parameters('adminPassword')]"
+              },                                                                                                                                                                                                                                                                             
+              "location": {
+                  "value": "[resourceGroup().location]"
+              }
+          }
+      }
+    },    
+    {
+      "condition": "[equals(parameters('WK1OSVersion'),'Windows-7')]",      
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "DomainJoinWK1VM-7",
+      "dependsOn": [
+        "DeployWK1VM-11",
+        "DeployWK1VM-10",
+        "DeployWK1VM-7"
+      ],      
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "computerName": {
+                  "value": "[variables('wk1name')]"
+              },
+              "domainName": {
+                  "value": "[variables('ParentdomainName')]"
+              },
+              "OUPath": {
+                  "value": "[variables('ParentWIN7OUPath')]"
+              },
+              "domainJoinOptions": {
+                  "value": 3
+              },
+              "adminUsername": {
+                "value": "[parameters('adminUsername')]"
+              },                                                                                                            
+              "adminPassword": {
+                "value": "[parameters('adminPassword')]"
+              },                                                                                                                                                                                                                                                                             
+              "location": {
+                  "value": "[resourceGroup().location]"
+              }
+          }
+      }
+    },        
+    {
+      "condition": "[equals(parameters('WK2OSVersion'),'Windows-11')]",      
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "deployWK2VM-11",
+      "dependsOn": [
+        "restartchilddc1"
+      ],      
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "computerName": {
+                  "value": "[variables('wk2name')]"
+              },
+              "computerIP": {
+                  "value": "[variables('wk2IP')]"
+              },
+              "Publisher": {
+                  "value": "MicrosoftWindowsDesktop"
+              },
+              "Offer": {
+                  "value": "Windows-11"
+              },
+              "OSVersion": {
+                "value": "win11-21h2-pro"
+              },              
+              "LicenseType": {
+                "value": "[parameters('WindowsClientLicenseType')]"
+              },            
+              "VMSize": {
+                "value": "[parameters('WK2VMSize')]"
+              },
+              "vnetName": {
+                "value": "[variables('vnet2Name')]"
+              },            
+              "subnetName": {
+                "value": "[variables('vnet2subnet2Name')]"
+              },            
+              "adminUsername": {
+                "value": "[parameters('adminUsername')]"
+              },                                                                                                            
+              "adminPassword": {
+                "value": "[parameters('adminPassword')]"
+              },  
+              "TimeZone": {
+                  "value": "[parameters('TimeZone')]"
+              },  
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                           
+              "AutoShutdownTime": {
+                  "value": "[parameters('AutoShutdownTime')]"
+              },              
+              "AutoShutdownEmail": {
+                  "value": "[parameters('AutoShutdownEmail')]"
+              },                                                                                                                                                    
+              "location": {
+                  "value": "[parameters('Location2')]"
+              }
+          }
+      }
+    },
+    {
+      "condition": "[equals(parameters('WK2OSVersion'),'Windows-10')]",      
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "deployWK2VM-10",
       "dependsOn": [
         "restartchilddc1"
       ],      
@@ -1289,11 +1636,11 @@
                   "value": "Windows-10"
               },
               "OSVersion": {
-                "value": "[parameters('WK2OSVersion')]"
+                "value": "21h1-pro"
               },              
               "LicenseType": {
                 "value": "[parameters('WindowsClientLicenseType')]"
-              },                 
+              },            
               "VMSize": {
                 "value": "[parameters('WK2VMSize')]"
               },
@@ -1303,18 +1650,24 @@
               "subnetName": {
                 "value": "[variables('vnet2subnet2Name')]"
               },            
-              "vnetprefix": {
-                "value": "[variables('vnet2Prefix')]"
-              },            
-              "subnetPrefix": {
-                "value": "[variables('vnet2subnet2Prefix')]"
-              },                                                                                                            
               "adminUsername": {
                 "value": "[parameters('adminUsername')]"
               },                                                                                                            
               "adminPassword": {
                 "value": "[parameters('adminPassword')]"
-              },                                                                                                                                        
+              },  
+              "TimeZone": {
+                  "value": "[parameters('TimeZone')]"
+              },
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                             
+              "AutoShutdownTime": {
+                  "value": "[parameters('AutoShutdownTime')]"
+              },              
+              "AutoShutdownEmail": {
+                  "value": "[parameters('AutoShutdownEmail')]"
+              },                                                                                                                                                    
               "location": {
                   "value": "[parameters('Location2')]"
               }
@@ -1322,11 +1675,80 @@
       }
     },
     {
+      "condition": "[equals(parameters('WK2OSVersion'),'Windows-7')]",      
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "DomainJoinWK2VM",
+      "name": "deployWK2VM-7",
       "dependsOn": [
-        "DeployWK2VM"
+        "restartchilddc1"
+      ],      
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "computerName": {
+                  "value": "[variables('wk2name')]"
+              },
+              "computerIP": {
+                  "value": "[variables('wk2IP')]"
+              },
+              "Publisher": {
+                  "value": "MicrosoftWindowsDesktop"
+              },
+              "Offer": {
+                  "value": "Windows-7"
+              },
+              "OSVersion": {
+                "value": "win7-enterprise"
+              },              
+              "LicenseType": {
+                "value": "[parameters('WindowsClientLicenseType')]"
+              },            
+              "VMSize": {
+                "value": "[parameters('WK2VMSize')]"
+              },
+              "vnetName": {
+                "value": "[variables('vnet2Name')]"
+              },            
+              "subnetName": {
+                "value": "[variables('vnet2subnet2Name')]"
+              },            
+              "adminUsername": {
+                "value": "[parameters('adminUsername')]"
+              },                                                                                                            
+              "adminPassword": {
+                "value": "[parameters('adminPassword')]"
+              },  
+              "TimeZone": {
+                  "value": "[parameters('TimeZone')]"
+              },
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                             
+              "AutoShutdownTime": {
+                  "value": "[parameters('AutoShutdownTime')]"
+              },              
+              "AutoShutdownEmail": {
+                  "value": "[parameters('AutoShutdownEmail')]"
+              },                                                                                                                                                    
+              "location": {
+                  "value": "[parameters('Location2')]"
+              }
+          }
+      }
+    },       
+    {
+      "condition": "[equals(parameters('WK2OSVersion'),'Windows-11')]",      
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "DomainJoinWK2VM-11",
+      "dependsOn": [
+        "DeployWK2VM-11",
+        "DeployWK2VM-10",
+        "DeployWK2VM-7"                
       ],      
       "properties": {
           "mode": "Incremental",
@@ -1342,7 +1764,7 @@
                   "value": "[variables('ChilddomainName')]"
               },
               "OUPath": {
-                  "value": "[variables('ChildWKOUPath')]"
+                  "value": "[variables('ChildWIN11OUPath')]"
               },
               "domainJoinOptions": {
                   "value": 3
@@ -1358,6 +1780,88 @@
               }
           }
       }
-    }                                                                                                
+    },
+    {
+      "condition": "[equals(parameters('WK2OSVersion'),'Windows-10')]",      
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "DomainJoinWK2VM-10",
+      "dependsOn": [
+        "DeployWK2VM-11",
+        "DeployWK2VM-10",
+        "DeployWK2VM-7"                
+      ],      
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "computerName": {
+                  "value": "[variables('wk2name')]"
+              },
+              "domainName": {
+                  "value": "[variables('ChilddomainName')]"
+              },
+              "OUPath": {
+                  "value": "[variables('ChildWIN10OUPath')]"
+              },
+              "domainJoinOptions": {
+                  "value": 3
+              },
+              "adminUsername": {
+                "value": "[parameters('adminUsername')]"
+              },                                                                                                            
+              "adminPassword": {
+                "value": "[parameters('adminPassword')]"
+              },                                                                                                                                                                                                                                                                             
+              "location": {
+                  "value": "[parameters('Location2')]"
+              }
+          }
+      }
+    },    
+    {
+      "condition": "[equals(parameters('WK2OSVersion'),'Windows-7')]",      
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "DomainJoinWK2VM-7",
+      "dependsOn": [
+        "DeployWK2VM-11",
+        "DeployWK2VM-10",
+        "DeployWK2VM-7"                
+      ],      
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "computerName": {
+                  "value": "[variables('wk2name')]"
+              },
+              "domainName": {
+                  "value": "[variables('ChilddomainName')]"
+              },
+              "OUPath": {
+                  "value": "[variables('ChildWIN7OUPath')]"
+              },
+              "domainJoinOptions": {
+                  "value": 3
+              },
+              "adminUsername": {
+                "value": "[parameters('adminUsername')]"
+              },                                                                                                            
+              "adminPassword": {
+                "value": "[parameters('adminPassword')]"
+              },                                                                                                                                                                                                                                                                             
+              "location": {
+                  "value": "[parameters('Location2')]"
+              }
+          }
+      }
+    }
   ]
 }
