@@ -282,12 +282,6 @@
               "LicenseType": {
                 "value": "[parameters('WindowsServerLicenseType')]"
               },   
-              "DataDisk1Name": {
-                "value": "SQLDatabases"
-              },            
-              "DataDisk2Name": {
-                "value": "SQLLogs"
-              },                       
               "VMSize": {
                 "value": "[parameters('ToolsVMVMSize')]"
               },
