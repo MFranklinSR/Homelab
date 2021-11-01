@@ -314,28 +314,28 @@
     },                                                  
     "vnet1ID": {
       "type": "string",
-      "defaultValue": "16.1",
+      "defaultValue": "10.1",
       "metadata": {
         "description": "VNet1 Prefix"
       }
     },    
     "vnet2ID": {
       "type": "string",
-      "defaultValue": "16.2",
+      "defaultValue": "10.2",
       "metadata": {
         "description": "VNet1 Prefix"
       }
     },    
     "ReverseLookup1": {
       "type": "string",
-      "defaultValue": "1.16",
+      "defaultValue": "1.10",
       "metadata": {
           "description": "DNS Reverse Lookup Zone1 Prefix"
       }
     },                    
     "ReverseLookup2": {
       "type": "string",
-      "defaultValue": "2.16",
+      "defaultValue": "2.10",
       "metadata": {
           "description": "DNS Reverse Lookup Zone2 Prefix"
       }
