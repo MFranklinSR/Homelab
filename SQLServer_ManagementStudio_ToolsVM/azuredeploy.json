@@ -332,6 +332,9 @@
               "computerName": {
                   "value": "[variables('sqlname')]"
               },
+              "TimeZone": {
+                  "value": "[parameters('TimeZone')]"
+              },              
               "location": {
                   "value": "[resourceGroup().location]"
               },                                          
