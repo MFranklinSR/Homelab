@@ -22,7 +22,7 @@
     },          
     "SQLHost": {
       "type": "string",
-      "defaultValue": "",
+      "defaultValue": "khl-sql-01",
       "metadata": {
         "description": "Enter a SQL Server Name for ADFS to use (Example: KHL-SQL-01)"
       }
@@ -321,14 +321,14 @@
     },     
     "vnet1ID": {
       "type": "string",
-      "defaultValue": "16.1",
+      "defaultValue": "10.1",
       "metadata": {
         "description": "VNet1 Prefix"
       }
     },    
     "vnet2ID": {
       "type": "string",
-      "defaultValue": "16.2",
+      "defaultValue": "10.2",
       "metadata": {
         "description": "VNet1 Prefix"
       }
