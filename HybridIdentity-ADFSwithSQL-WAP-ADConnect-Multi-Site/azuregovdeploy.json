@@ -1458,7 +1458,7 @@
       "apiVersion": "2019-10-01",
       "name": "deploynsg1",
       "dependsOn": [
-        "configdns"       
+        "configureotherwap"       
       ],      
       "properties": {
           "mode": "Incremental",
@@ -1487,7 +1487,7 @@
       "apiVersion": "2019-10-01",
       "name": "deploynsg2",
       "dependsOn": [
-        "addex2pip"
+        "configureotherwap"
       ],      
       "properties": {
           "mode": "Incremental",
