@@ -2,7 +2,9 @@
 {
    param
    (
+        [String]$ExchangeVersion,
         [String]$SQLHost,
+        [String]$TimeZone,
         [String]$ExternalDomainName,
         [String]$NetBiosDomain,
         [String]$IssuingCAName,
@@ -32,7 +34,7 @@
         TimeZone SetTimeZone
         {
             IsSingleInstance = 'Yes'
-            TimeZone         = 'Eastern Standard Time'
+            TimeZone         = $TimeZone
         }
 
         File MachineConfig
@@ -54,6 +56,8 @@
         {
             SetScript =
             {
+                $ThumbCheck = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
+                IF ($ThumbCheck -eq $null) {
                 # Update GPO's
                 gpupdate /force
 
@@ -132,6 +136,7 @@
 
                 # Export Token Signing Certificate
                 Get-ChildItem -Path cert:\LocalMachine\my\$signthumbprint | Export-PfxCertificate -FilePath "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -Password $Password
+                }
             }
             GetScript =  { @{} }
             TestScript = { $false}
@@ -167,8 +172,8 @@
                 [string]$IssuanceTransformRules=Get-Content -Path C:\MachineConfig\IssuanceTransformRules.txt
 
                 # Create Relying Party Trusts
-                Add-ADFSRelyingPartyTrust -Name 'Outlook Web App 2019' -Enabled $true -Notes "This is a trust for https://owa2019.$using:ExternalDomainName/owa" -WSFedEndpoint "https://owa2019.$using:ExternalDomainName/owa" -Identifier "https://owa2019.$using:ExternalDomainName/owa" -IssuanceTransformRules $IssuanceTransformRules -IssuanceAuthorizationRules $IssuanceAuthorizationRules
-                Add-ADFSRelyingPartyTrust -Name 'Exchange Admin Center (EAC) 2019' -Enabled $true -Notes "This is a trust for https://owa2019.$using:ExternalDomainName/ecp" -WSFedEndpoint "https://owa2019.$using:ExternalDomainName/ecp" -Identifier "https://owa2019.$using:ExternalDomainName/ecp" -IssuanceTransformRules $IssuanceTransformRules -IssuanceAuthorizationRules $IssuanceAuthorizationRules
+                Add-ADFSRelyingPartyTrust -Name "Outlook Web App $using:ExchangeVersion" -Enabled $true -Notes "This is a trust for https://owa$using:ExchangeVersion.$using:ExternalDomainName/owa" -WSFedEndpoint "https://owa$using:ExchangeVersion.$using:ExternalDomainName/owa" -Identifier "https://owa$using:ExchangeVersion.$using:ExternalDomainName/owa" -IssuanceTransformRules $IssuanceTransformRules -IssuanceAuthorizationRules $IssuanceAuthorizationRules
+                Add-ADFSRelyingPartyTrust -Name "Exchange Admin Center (EAC) $using:ExchangeVersion" -Enabled $true -Notes "This is a trust for https://owa$using:ExchangeVersion.$using:ExternalDomainName/ecp" -WSFedEndpoint "https://owa$using:ExchangeVersion.$using:ExternalDomainName/ecp" -Identifier "https://owa$using:ExchangeVersion.$using:ExternalDomainName/ecp" -IssuanceTransformRules $IssuanceTransformRules -IssuanceAuthorizationRules $IssuanceAuthorizationRules
 
                 # Turn off Certificate Auto Certificate Rollover
                 Set-ADFSProperties -AutoCertificateRollover $False

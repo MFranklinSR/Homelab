@@ -8,6 +8,12 @@
                 "description": "Computer Name"
             }
         },
+        "TimeZone": {
+            "type": "string",      
+            "metadata": {
+                "description": "Time Zone"
+            }
+        },        
         "NetBiosDomain": {
             "type": "string",
             "metadata": {
@@ -88,6 +94,7 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                         "Properties": {
+                            "TimeZone": "[parameters('TimeZone')]",                            
                             "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                        
                             "ADFSServerIP": "[parameters('ADFSServerIP')]",                            
                             "ExternalDomainName": "[parameters('ExternalDomainName')]",                            

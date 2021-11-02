@@ -13,7 +13,13 @@
             "metadata": {
                 "description": "SQL Host Name"
             }
-        },        
+        },   
+        "TimeZone": {
+            "type": "string",      
+            "metadata": {
+                "description": "Time Zone"
+            }
+        },             
         "ExternalDomainName": {
             "type": "string",
             "metadata": {
@@ -88,6 +94,7 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                         "Properties": {
+                            "TimeZone": "[parameters('TimeZone')]",                            
                             "SQLHost": "[parameters('SQLHost')]",                            
                             "ExternalDomainName": "[parameters('ExternalDomainName')]",                            
                             "NetBiosDomain": "[parameters('NetBiosDomain')]",  

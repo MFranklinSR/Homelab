@@ -920,6 +920,9 @@
               "computerName": {
                   "value": "[variables('adfs1name')]"
               },
+              "TimeZone": {
+                  "value": "[parameters('TimeZone')]"
+              },              
               "SQLHost": {
                   "value": "[parameters('SQLHost')]"
               },              
@@ -1153,6 +1156,9 @@
               "computerName": {
                   "value": "[variables('adfs2name')]"
               },
+              "TimeZone": {
+                  "value": "[parameters('TimeZone')]"
+              },              
               "SQLHost": {
                   "value": "[parameters('SQLHost')]"
               },                 
@@ -1269,6 +1275,9 @@
               "computerName": {
                   "value": "[variables('wap1name')]"
               },
+              "TimeZone": {
+                  "value": "[parameters('TimeZone')]"
+              },              
               "NetBiosDomain": {
                   "value": "[parameters('NetBiosDomain')]"
               },                            
@@ -1382,6 +1391,9 @@
               "computerName": {
                   "value": "[variables('wap2name')]"
               },
+              "TimeZone": {
+                  "value": "[parameters('TimeZone')]"
+              },              
               "NetBiosDomain": {
                   "value": "[parameters('NetBiosDomain')]"
               },                            

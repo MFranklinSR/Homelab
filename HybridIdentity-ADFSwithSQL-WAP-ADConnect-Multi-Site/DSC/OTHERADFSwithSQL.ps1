@@ -2,7 +2,9 @@
 {
    param
    (
+        [String]$ExchangeVersion,
         [String]$SQLHost,
+        [String]$TimeZone,
         [String]$ExternalDomainName,
         [String]$NetBiosDomain,
         [String]$IssuingCAName,
@@ -33,7 +35,7 @@
         TimeZone SetTimeZone
         {
             IsSingleInstance = 'Yes'
-            TimeZone         = 'Eastern Standard Time'
+            TimeZone         = $TimeZone
         }
 
         File MachineConfig
@@ -66,6 +68,8 @@
         {
             SetScript =
             {
+                $ThumbCheck = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
+                IF ($ThumbCheck -eq $null) {
                 # Update GPO's
                 gpupdate /force
 
@@ -128,6 +132,7 @@
                 # Move Crypto Keys
                 Get-ChildItem $dest2 | Move-Item -Destination $dest1
                 Remove-Item $dest2 -Force -ErrorAction 0
+                }
             }
             GetScript =  { @{} }
             TestScript = { $false}

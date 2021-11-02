@@ -2,6 +2,7 @@ Configuration WAP
 {
    param
    (
+        [String]$TimeZone,
         [String]$NetBiosDomain,
         [String]$ADFSServerIP,
         [String]$ExternalDomainName,
@@ -46,7 +47,7 @@ Configuration WAP
         TimeZone SetTimeZone
         {
             IsSingleInstance = 'Yes'
-            TimeZone         = 'Eastern Standard Time'
+            TimeZone         = $TimeZone
         }
                 
         # Install Web Application Proxy
