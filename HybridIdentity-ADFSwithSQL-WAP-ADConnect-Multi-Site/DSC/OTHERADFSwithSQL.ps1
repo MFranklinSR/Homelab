@@ -2,7 +2,6 @@
 {
    param
    (
-        [String]$ExchangeVersion,
         [String]$SQLHost,
         [String]$TimeZone,
         [String]$ExternalDomainName,
@@ -143,6 +142,9 @@
         {
             SetScript =
             {
+                $Node2 = (Get-ADFSFarmInformation).FarmNodes[1].FQDN
+                ($Node2 -eq $null)
+                {
                 # Get Service Communication Certificate
                 $thumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
 
@@ -155,6 +157,7 @@
                 # Enable Certificate Copy
                 $firewall = Get-NetFirewallRule "FPS-SMB-In-TCP" -ErrorAction 0
                 IF ($firewall -ne $null) {Enable-NetFirewallRule -Name "FPS-SMB-In-TCP"}
+                }
             }
             GetScript =  { @{} }
             TestScript = { $false}

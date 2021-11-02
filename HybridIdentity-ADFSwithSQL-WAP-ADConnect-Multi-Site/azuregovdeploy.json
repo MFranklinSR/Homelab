@@ -922,7 +922,10 @@
               },
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },              
+              },          
+              "ExchangeVersion": {
+                  "value": "[parameters('ExchangeVersion')]"
+              },                            
               "SQLHost": {
                   "value": "[parameters('SQLHost')]"
               },              
@@ -1158,7 +1161,7 @@
               },
               "TimeZone": {
                   "value": "[parameters('TimeZone')]"
-              },              
+              },                            
               "SQLHost": {
                   "value": "[parameters('SQLHost')]"
               },                 

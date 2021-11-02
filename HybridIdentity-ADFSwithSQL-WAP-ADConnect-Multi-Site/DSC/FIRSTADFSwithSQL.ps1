@@ -147,6 +147,9 @@
         {
             SetScript =
             {
+                $FarmCheck = Get-ADFSFarmInformation -ErrorAction 0
+                ($FarmCheck -eq $null)
+                {
                 # Create Issuance Authorization Rules File
                 Set-Content -Path C:\MachineConfig\IssuanceAuthorizationRules.txt -Value '@RuleTemplate = "AllowAllAuthzRule"'
                 Add-Content -Path C:\MachineConfig\IssuanceAuthorizationRules.txt -Value '=> issue(Type = "http://schemas.microsoft.com/authorization/claims/permit",'
@@ -193,6 +196,7 @@
 
                 # Enable Test Sign-In
                 Set-AdfsProperties -EnableIdPInitiatedSignonPage $true
+                }
             }
             GetScript =  { @{} }
             TestScript = { $false}
