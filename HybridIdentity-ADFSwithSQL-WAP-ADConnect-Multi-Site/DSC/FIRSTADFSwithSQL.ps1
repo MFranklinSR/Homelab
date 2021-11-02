@@ -147,7 +147,7 @@
         {
             SetScript =
             {
-                $RulesFile = Get-ChildItem -Path C:\MachineConfig\IssuanceAuthorizationRules.txt
+                $RulesFile = Get-ChildItem -Path C:\MachineConfig\IssuanceAuthorizationRules.txt -ErrorAction 0
                 ($RulesFile -eq $null)
                 {
                 # Create Issuance Authorization Rules File
