@@ -67,8 +67,8 @@
         {
             SetScript =
             {
-                $ThumbCheck = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
-                IF ($ThumbCheck -eq $null) {
+                $ThumbCheck1 = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
+                IF ($ThumbCheck1 -eq $null) {
                 # Update GPO's
                 gpupdate /force
 
@@ -142,9 +142,8 @@
         {
             SetScript =
             {
-                $Node2 = (Get-ADFSFarmInformation).FarmNodes[1].FQDN
-                ($Node2 -eq $null)
-                {
+                $ThumbCheck1 = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
+                IF ($ThumbCheck1 -eq $null) {
                 # Get Service Communication Certificate
                 $thumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
 

@@ -56,8 +56,8 @@
         {
             SetScript =
             {
-                $ThumbCheck = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
-                IF ($ThumbCheck -eq $null) {
+                $ThumbCheck1 = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
+                IF ($ThumbCheck1 -eq $null) {
                 # Update GPO's
                 gpupdate /force
 
@@ -147,8 +147,8 @@
         {
             SetScript =
             {
-                $FarmCheck = Get-ADFSFarmInformation -ErrorAction 0
-                ($FarmCheck -eq $null)
+                $ThumbCheck2 = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
+                ($ThumbCheck2 -eq $null)
                 {
                 # Create Issuance Authorization Rules File
                 Set-Content -Path C:\MachineConfig\IssuanceAuthorizationRules.txt -Value '@RuleTemplate = "AllowAllAuthzRule"'
