@@ -20,12 +20,12 @@
                 "description": "ADFS IP"
             }
         },                          
-        "RootDomainFQDN": {
+        "ExternalDomainName": {
             "type": "string",
             "metadata": {
-                "description": "Root Domain Name FQDN"
+                "description": "External domain FQDN"
             }
-        },
+        }, 
         "IssuingCAName": {
             "type": "string",
             "metadata": {
@@ -90,7 +90,7 @@
                         "Properties": {
                             "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                        
                             "ADFSServerIP": "[parameters('ADFSServerIP')]",                            
-                            "RootDomainFQDN": "[parameters('RootDomainFQDN')]",
+                            "ExternalDomainName": "[parameters('ExternalDomainName')]",                            
                             "IssuingCAName": "[parameters('IssuingCAName')]",
                             "RootCAName": "[parameters('RootCAName')]",                                                        
                             "AdminCreds": {
