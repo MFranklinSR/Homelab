@@ -148,7 +148,7 @@
             SetScript =
             {
                 $RulesFile = Get-ChildItem -Path C:\MachineConfig\IssuanceAuthorizationRules.txt -ErrorAction 0
-                ($RulesFile -eq $null)
+                IF ($RulesFile -eq $null)
                 {
                 # Create Issuance Authorization Rules File
                 Set-Content -Path C:\MachineConfig\IssuanceAuthorizationRules.txt -Value '@RuleTemplate = "AllowAllAuthzRule"'
