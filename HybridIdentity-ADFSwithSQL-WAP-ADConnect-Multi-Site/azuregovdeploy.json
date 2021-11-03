@@ -1401,7 +1401,7 @@
                   "value": "[parameters('NetBiosDomain')]"
               },                            
               "ADFSServerIP": {
-                  "value": "[variables('adfs1IP')]"
+                  "value": "[variables('adfs2IP')]"
               },          
               "ExternalDomainName": {
                   "value": "[variables('ExternaldomainName')]"

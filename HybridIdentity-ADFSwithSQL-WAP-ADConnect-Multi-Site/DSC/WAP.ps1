@@ -86,7 +86,7 @@ Configuration WAP
                 Add-Content C:\Windows\System32\Drivers\Etc\Hosts "$using:ADFSServerIP adfs.$using:ExternalDomainName"
 
                 #Check if ADFS Service Communication Certificate already exists if NOT Create
-                $adfsthumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like 'CN=adfs*'}).Thumbprint
+                $adfsthumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
                 IF ($adfsthumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password}
 
                 #Check if Certificate Chain Certs already exists if NOT Create
@@ -108,7 +108,7 @@ Configuration WAP
                 [System.Management.Automation.PSCredential ]$Creds = New-Object System.Management.Automation.PSCredential ($using:DomainCreds.UserName), $using:DomainCreds.Password
 
                 # Get ADFS Service Communication Certificate
-                $servicethumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like 'CN=adfs*'}).Thumbprint
+                $servicethumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
                 
                 # Configure ADFS/WAP Trust
                 $waphealth = Get-WebApplicationProxyHealth

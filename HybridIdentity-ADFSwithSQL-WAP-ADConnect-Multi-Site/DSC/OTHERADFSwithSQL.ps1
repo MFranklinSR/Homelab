@@ -142,8 +142,8 @@
         {
             SetScript =
             {
-                $ThumbCheck1 = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
-                IF ($ThumbCheck1 -eq $null) {
+                $ADFSService = Get-Service adfssrv -ErrorAction 0
+                IF ($ADFSService.Status -ne 'Stopped'){
                 # Get Service Communication Certificate
                 $thumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
 
