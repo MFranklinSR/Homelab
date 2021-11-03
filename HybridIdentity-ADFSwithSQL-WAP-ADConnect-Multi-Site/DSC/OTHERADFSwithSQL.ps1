@@ -59,6 +59,7 @@
             Recurse = $true
             SourcePath = "\\$PrimaryADFSServerIP\c$\Certificates"
             DestinationPath = "C:\Certificates\"
+            Credential = $DomainCreds
             DependsOn = '[File]Certificates'
         }
 
