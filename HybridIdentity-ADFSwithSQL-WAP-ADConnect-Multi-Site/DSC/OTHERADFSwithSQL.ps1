@@ -87,9 +87,6 @@
                 $adfsthumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
                 IF ($adfsthumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password}
 
-                # Check if Service Communication Certificate Exists
-                $thumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
-
                 # Grant FsGmsa Full Access to Service Communication Certificate Private Keys
                 Start-Sleep -s 60
                 $account = "$using:NetBiosDomain\$fsgmsa"
@@ -113,9 +110,6 @@
                 # Check if ADFS Token Signing Certificate already exists if NOT Import
                 $signthumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs-signing.$using:ExternalDomainName"}).Thumbprint
                 IF ($signthumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password}
-
-                # Check if Token Signing Certificate Exists
-                $signthumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs-signing.$using:ExternalDomainName"}).Thumbprint
 
                 # Grant FsGmsa Full Access to Signing Certificate Private Keys
                 Start-Sleep -s 60

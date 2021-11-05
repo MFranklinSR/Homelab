@@ -62,8 +62,6 @@
                 gpupdate /force
 
                 # Create Credentials
-                $Load = "$using:DomainCreds"
-                $Password = $DomainCreds.Password
                 $fsgmsa = 'FsGmsa$'
 
                 # Move Crypto Keys
@@ -77,9 +75,6 @@
 
                 # Get Service Communication Certificate
                 IF ($thumbprint -eq $null) {Get-Certificate -Template WebServer1 -SubjectName "CN=adfs.$using:ExternalDomainName" -DNSName "adfs.$using:ExternalDomainName" -CertStoreLocation "cert:\LocalMachine\My"}
-
-                # Get Service Communication Certificate
-                $thumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
 
                 # Grant FsGmsa Full Access to Service Communication Certificate Private Keys
                 Start-Sleep -s 60
@@ -95,15 +90,6 @@
                 # Move Crypto Keys
                 Get-ChildItem $dest2 | Move-Item -Destination $dest1
                 Remove-Item $dest2 -Force -ErrorAction 0
-
-                # Export Service Communication Certificate
-                Get-ChildItem -Path cert:\LocalMachine\my\$thumbprint | Export-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -Password $Password
-
-                $RootExport = Get-ChildItem -Path cert:\Localmachine\Root\ | Where-Object {$_.Subject -like "CN=$using:RootCAName*"}
-                Export-Certificate -Cert $RootExport -FilePath "C:\Certificates\$using:RootCAName.cer" -Type CER
-
-                $IssuingExport = Get-ChildItem -Path cert:\Localmachine\CA\ | Where-Object {$_.Subject -like "CN=$using:IssuingCAName*"}
-                Export-Certificate -Cert $IssuingExport -FilePath "C:\Certificates\$using:IssuingCAName.cer" -Type CER
 
                 # Move Crypto Keys
                 $dest2 = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys\Temp\"
@@ -130,13 +116,6 @@
                 # Move Crypto Keys
                 Get-ChildItem $dest2 | Move-Item -Destination $dest1
                 Remove-Item $dest2 -Force -ErrorAction 0
-
-                # Check if Token Signing Certificate Exists
-                $signthumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs-signing.$using:ExternalDomainName"}).Thumbprint
-
-                # Export Token Signing Certificate
-                Get-ChildItem -Path cert:\LocalMachine\my\$signthumbprint | Export-PfxCertificate -FilePath "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -Password $Password
-
                 }
             }
             GetScript =  { @{} }
@@ -156,7 +135,9 @@
                 Add-Content -Path C:\MachineConfig\IssuanceAuthorizationRules.txt -Value '=> issue(Type = "http://schemas.microsoft.com/authorization/claims/permit",'
                 Add-Content -Path C:\MachineConfig\IssuanceAuthorizationRules.txt -Value 'Value = "true");'
 
-                # Create Issuance Transform Rules File                Set-Content -Path C:\MachineConfig\IssuanceTransformRules.txt -Value '@RuleName = "ActiveDirectoryUserSID"'                Add-Content -Path C:\MachineConfig\IssuanceTransformRules.txt -Value 'c:[Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname", Issuer == "AD AUTHORITY"]'
+                # Create Issuance Transform Rules File
+                Set-Content -Path C:\MachineConfig\IssuanceTransformRules.txt -Value '@RuleName = "ActiveDirectoryUserSID"'
+                Add-Content -Path C:\MachineConfig\IssuanceTransformRules.txt -Value 'c:[Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname", Issuer == "AD AUTHORITY"]'
                 Add-Content -Path C:\MachineConfig\IssuanceTransformRules.txt -Value '=> issue(store = "Active Directory", types = ("http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"), query = ";objectSID;{0}", param = c.Value);'
                 Add-Content -Path C:\MachineConfig\IssuanceTransformRules.txt -Value '@RuleName = "ActiveDirectoryUPN"'
                 Add-Content -Path C:\MachineConfig\IssuanceTransformRules.txt -Value 'c:[Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname", Issuer == "AD AUTHORITY"]'
@@ -203,6 +184,39 @@
             TestScript = { $false}
             PsDscRunAsCredential = $DomainCreds
             DependsOn = '[Script]GetADFSCertificates'
+        }
+        Script ConfigureADFS
+        {
+            SetScript =
+            {
+                # Create Credentials
+                $Load = "$using:DomainCreds"
+                $Password = $DomainCreds.Password
+
+                # Export Service Communication Certificate
+                $ServiceCert = Get-ChildItem -Path "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -ErrorAction 0
+                IF ($ServiceCert -eq $null)
+                {
+                    Get-ChildItem -Path cert:\LocalMachine\my\$thumbprint | Export-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -Password $Password
+                }
+
+                # Export Root CA
+                $RootCert = Get-ChildItem -Path "C:\Certificates\$using:RootCAName.cer" -ErrorAction 0
+                IF ($RootCert -eq $null)
+                {
+                    Export-Certificate -Cert $RootExport -FilePath "C:\Certificates\$using:RootCAName.cer" -Type CER
+                }
+
+                # Export Issuing CA
+                $IssueCert = Get-ChildItem -Path "C:\Certificates\$using:IssuingCAName.cer" -ErrorAction 0
+                IF ($IssueCert -eq $null)
+                {
+                    Export-Certificate -Cert $IssuingExport -FilePath "C:\Certificates\$using:IssuingCAName.cer" -Type CER
+                }
+            }
+            GetScript =  { @{} }
+            TestScript = { $false}
+            DependsOn = '[Script]ConfigureADFS'
         }
     }
 }
