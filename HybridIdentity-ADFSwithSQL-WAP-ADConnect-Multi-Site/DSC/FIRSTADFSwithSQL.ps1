@@ -185,7 +185,7 @@
             PsDscRunAsCredential = $DomainCreds
             DependsOn = '[Script]GetADFSCertificates'
         }
-        Script ConfigureADFS
+        Script ExportCerts
         {
             SetScript =
             {
