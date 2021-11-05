@@ -78,9 +78,6 @@
                 # Get Service Communication Certificate
                 IF ($thumbprint -eq $null) {Get-Certificate -Template WebServer1 -SubjectName "CN=adfs.$using:ExternalDomainName" -DNSName "adfs.$using:ExternalDomainName" -CertStoreLocation "cert:\LocalMachine\My"}
 
-                # Export Service Communication Certificate
-                Get-ChildItem -Path cert:\LocalMachine\my\$thumbprint | Export-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -Password $Password
-
                 # Get Service Communication Certificate
                 $thumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
 
@@ -99,6 +96,9 @@
                 Get-ChildItem $dest2 | Move-Item -Destination $dest1
                 Remove-Item $dest2 -Force -ErrorAction 0
 
+                # Export Service Communication Certificate
+                Get-ChildItem -Path cert:\LocalMachine\my\$thumbprint | Export-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -Password $Password
+
                 $RootExport = Get-ChildItem -Path cert:\Localmachine\Root\ | Where-Object {$_.Subject -like "CN=$using:RootCAName*"}
                 Export-Certificate -Cert $RootExport -FilePath "C:\Certificates\$using:RootCAName.cer" -Type CER
 
@@ -115,9 +115,6 @@
 
                 # Get Token Signing Certificate
                 IF ($signthumbprint -eq $null) {Get-Certificate -Template WebServer1 -SubjectName "CN=adfs-signing.$using:ExternalDomainName" -DNSName "adfs-signing.$using:ExternalDomainName" -CertStoreLocation "cert:\LocalMachine\My"}
-
-                # Export Token Signing Certificate
-                Get-ChildItem -Path cert:\LocalMachine\my\$signthumbprint | Export-PfxCertificate -FilePath "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -Password $Password
 
                 # Grant FsGmsa Full Access to Signing Certificate Private Keys
                 Start-Sleep -s 60
@@ -136,6 +133,9 @@
 
                 # Check if Token Signing Certificate Exists
                 $signthumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs-signing.$using:ExternalDomainName"}).Thumbprint
+
+                # Export Token Signing Certificate
+                Get-ChildItem -Path cert:\LocalMachine\my\$signthumbprint | Export-PfxCertificate -FilePath "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -Password $Password
 
                 }
             }
