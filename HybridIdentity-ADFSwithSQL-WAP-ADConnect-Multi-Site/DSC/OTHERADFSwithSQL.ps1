@@ -73,8 +73,6 @@
                 gpupdate /force
 
                 # Create Credentials
-                $Load = "$using:DomainCreds"
-                $Password = $DomainCreds.Password
                 $fsgmsa = 'FsGmsa$'
 
                 # Move Crypto Keys
@@ -85,7 +83,7 @@
 
                 # Check if ADFS Service Communication Certificate already exists if NOT Import
                 $ServiceThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
-                IF ($ServiceThumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password}
+                IF ($ServiceThumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My}
 
                 # Grant FsGmsa Full Access to Service Communication Certificate Private Keys
                 Start-Sleep -s 60
@@ -109,7 +107,7 @@
 
                 # Check if ADFS Token Signing Certificate already exists if NOT Import
                 $SigningThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs-signing.$using:ExternalDomainName"}).Thumbprint
-                IF ($SigningThumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password}
+                IF ($SigningThumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My}
 
                 # Grant FsGmsa Full Access to Signing Certificate Private Keys
                 Start-Sleep -s 60
@@ -129,6 +127,7 @@
             }
             GetScript =  { @{} }
             TestScript = { $false}
+            PsDscRunAsCredential = $Admincreds
             DependsOn = '[File]CopyCertsFromADFS'
         }
 

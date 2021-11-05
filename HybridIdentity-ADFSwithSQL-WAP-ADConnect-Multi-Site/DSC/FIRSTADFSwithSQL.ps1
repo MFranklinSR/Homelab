@@ -120,6 +120,7 @@
             }
             GetScript =  { @{} }
             TestScript = { $false}
+            PsDscRunAsCredential = $DomainCreds
             DependsOn = '[File]Certificates'
         }
 
@@ -190,22 +191,23 @@
             SetScript =
             {
                 # Create Credentials
-                $Load = "$using:DomainCreds"
-                $Password = $DomainCreds.Password
+                $Load = "$using:AdminCreds"
+                $UserName = $AdminCreds.UserName
+
 
                 # Export Service Communication Certificate
                 $ServiceCert = Get-ChildItem -Path "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -ErrorAction 0
                 IF ($ServiceCert -eq $null)
                 {
                     $ServiceThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint                 
-                    Get-ChildItem -Path cert:\LocalMachine\my\$ServiceThumbprint | Export-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -Password $Password
+                    Get-ChildItem -Path cert:\LocalMachine\my\$ServiceThumbprint | Export-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -ProtectTo $UserName
                 }
 
                 $SigningCert = Get-ChildItem -Path "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -ErrorAction 0
                 IF ($SigningCert -eq $null)
                 {
                     $SigningThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs-signing.$using:ExternalDomainName"}).Thumbprint                 
-                    Get-ChildItem -Path cert:\LocalMachine\my\$SigningThumbprint | Export-PfxCertificate -FilePath "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -Password $Password
+                    Get-ChildItem -Path cert:\LocalMachine\my\$SigningThumbprint | Export-PfxCertificate -FilePath "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -ProtectTo $UserName
                 }
 
                 # Export Root CA
@@ -226,6 +228,7 @@
             }
             GetScript =  { @{} }
             TestScript = { $false}
+            PsDscRunAsCredential = $AdminCreds
             DependsOn = '[Script]ConfigureADFS'
         }
     }
