@@ -52,6 +52,54 @@
             DependsOn = '[File]MachineConfig'
         }
 
+        Script CreateADFSCertExport
+        {
+            SetScript =
+            {
+                # Create Credentials
+                $Load = "$using:DomainCreds"
+                $Password = $DomainCreds.Password
+
+                # Export Service Communication Certificate
+                $ServiceCert = Get-ChildItem -Path "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -ErrorAction 0
+                IF ($ServiceCert -eq $null)
+                {
+                    Get-Certificate -Template WebServer1 -SubjectName "CN=adfs.$using:ExternalDomainName" -DNSName "adfs.$using:ExternalDomainName" -CertStoreLocation "cert:\LocalMachine\My"
+                    $ServiceThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint                 
+                    Get-ChildItem -Path cert:\LocalMachine\my\$ServiceThumbprint | Export-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -Password $Password
+                    Get-ChildItem -Path cert:\LocalMachine\my\$ServiceThumbprint | Remove-Item
+                }
+
+                $SigningCert = Get-ChildItem -Path "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -ErrorAction 0
+                IF ($SigningCert -eq $null)
+                {
+                    Get-Certificate -Template WebServer1 -SubjectName "CN=adfs-signing.$using:ExternalDomainName" -DNSName "adfs-signing.$using:ExternalDomainName" -CertStoreLocation "cert:\LocalMachine\My"
+                    $SigningThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs-signing.$using:ExternalDomainName"}).Thumbprint                 
+                    Get-ChildItem -Path cert:\LocalMachine\my\$SigningThumbprint | Export-PfxCertificate -FilePath "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -ProtectTo $UserName
+                    Get-ChildItem -Path cert:\LocalMachine\my\$SigningThumbprint | Remove-Item
+                }
+
+                # Export Root CA
+                $RootCert = Get-ChildItem -Path "C:\Certificates\$using:RootCAName.cer" -ErrorAction 0
+                IF ($RootCert -eq $null)
+                {
+                    $RootExport = Get-ChildItem -Path cert:\Localmachine\Root\ | Where-Object {$_.Subject -like "CN=$using:RootCAName*"}
+                    Export-Certificate -Cert $RootExport -FilePath "C:\Certificates\$using:RootCAName.cer" -Type CER
+                }
+
+                # Export Issuing CA
+                $IssueCert = Get-ChildItem -Path "C:\Certificates\$using:IssuingCAName.cer" -ErrorAction 0
+                IF ($IssueCert -eq $null)
+                {
+                    $IssuingExport = Get-ChildItem -Path cert:\Localmachine\CA\ | Where-Object {$_.Subject -like "CN=$using:IssuingCAName*"}
+                    Export-Certificate -Cert $IssuingExport -FilePath "C:\Certificates\$using:IssuingCAName.cer" -Type CER
+                }
+            }
+            GetScript =  { @{} }
+            TestScript = { $false}
+            DependsOn = '[File]Certificates'
+        }
+
         Script GetADFSCertificates
         {
             SetScript =
@@ -62,6 +110,8 @@
                 gpupdate /force
 
                 # Create Credentials
+                $Load = "$using:DomainCreds"
+                $Password = $DomainCreds.Password
                 $fsgmsa = 'FsGmsa$'
 
                 # Move Crypto Keys
@@ -70,11 +120,9 @@
                 New-Item -Path $Dest2 -ItemType directory
                 Get-ChildItem $dest1 -exclude "Temp" | Move-Item -Destination $dest2
 
-                # Check if Service Communication Certificate Exists
+                # Check if ADFS Service Communication Certificate already exists if NOT Import
                 $ServiceThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
-
-                # Get Service Communication Certificate
-                IF ($ServiceThumbprint -eq $null) {Get-Certificate -Template WebServer1 -SubjectName "CN=adfs.$using:ExternalDomainName" -DNSName "adfs.$using:ExternalDomainName" -CertStoreLocation "cert:\LocalMachine\My"}
+                IF ($ServiceThumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $pA}
 
                 # Grant FsGmsa Full Access to Service Communication Certificate Private Keys
                 Start-Sleep -s 60
@@ -96,11 +144,9 @@
                 New-Item -Path $Dest2 -ItemType directory
                 Get-ChildItem $dest1 -exclude "Temp" | Move-Item -Destination $dest2
 
-                # Check if Token Signing Certificate Exists
+                # Check if ADFS Token Signing Certificate already exists if NOT Import
                 $SigningThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs-signing.$using:ExternalDomainName"}).Thumbprint
-
-                # Get Token Signing Certificate
-                IF ($SigningThumbprint -eq $null) {Get-Certificate -Template WebServer1 -SubjectName "CN=adfs-signing.$using:ExternalDomainName" -DNSName "adfs-signing.$using:ExternalDomainName" -CertStoreLocation "cert:\LocalMachine\My"}
+                IF ($SigningThumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password}
 
                 # Grant FsGmsa Full Access to Signing Certificate Private Keys
                 Start-Sleep -s 60
@@ -120,8 +166,7 @@
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            PsDscRunAsCredential = $DomainCreds
-            DependsOn = '[File]Certificates'
+            DependsOn = '[Script]CreateADFSCertExport'
         }
 
         Script ConfigureADFS
@@ -185,50 +230,6 @@
             TestScript = { $false}
             PsDscRunAsCredential = $DomainCreds
             DependsOn = '[Script]GetADFSCertificates'
-        }
-        Script ExportCerts
-        {
-            SetScript =
-            {
-                # Create Credentials
-                $Load = "$using:AdminCreds"
-                $UserName = $AdminCreds.UserName
-
-
-                # Export Service Communication Certificate
-                $ServiceCert = Get-ChildItem -Path "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -ErrorAction 0
-                IF ($ServiceCert -eq $null)
-                {
-                    $ServiceThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint                 
-                    Get-ChildItem -Path cert:\LocalMachine\my\$ServiceThumbprint | Export-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -ProtectTo $UserName
-                }
-
-                $SigningCert = Get-ChildItem -Path "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -ErrorAction 0
-                IF ($SigningCert -eq $null)
-                {
-                    $SigningThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs-signing.$using:ExternalDomainName"}).Thumbprint                 
-                    Get-ChildItem -Path cert:\LocalMachine\my\$SigningThumbprint | Export-PfxCertificate -FilePath "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -ProtectTo $UserName
-                }
-
-                # Export Root CA
-                $RootCert = Get-ChildItem -Path "C:\Certificates\$using:RootCAName.cer" -ErrorAction 0
-                IF ($RootCert -eq $null)
-                {
-                    $RootExport = Get-ChildItem -Path cert:\Localmachine\Root\ | Where-Object {$_.Subject -like "CN=$using:RootCAName*"}
-                    Export-Certificate -Cert $RootExport -FilePath "C:\Certificates\$using:RootCAName.cer" -Type CER
-                }
-
-                # Export Issuing CA
-                $IssueCert = Get-ChildItem -Path "C:\Certificates\$using:IssuingCAName.cer" -ErrorAction 0
-                IF ($IssueCert -eq $null)
-                {
-                    $IssuingExport = Get-ChildItem -Path cert:\Localmachine\CA\ | Where-Object {$_.Subject -like "CN=$using:IssuingCAName*"}
-                    Export-Certificate -Cert $IssuingExport -FilePath "C:\Certificates\$using:IssuingCAName.cer" -Type CER
-                }
-            }
-            GetScript =  { @{} }
-            TestScript = { $false}
-            DependsOn = '[Script]ConfigureADFS'
         }
     }
 }
