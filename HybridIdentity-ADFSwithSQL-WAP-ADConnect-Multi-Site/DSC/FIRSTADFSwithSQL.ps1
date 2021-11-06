@@ -59,6 +59,7 @@
                 # Create Credentials
                 $Load = "$using:DomainCreds"
                 $Password = $DomainCreds.Password
+                $fsgmsa = 'FsGmsa$'
 
                 # Export Service Communication Certificate
                 $ServiceCert = Get-ChildItem -Path "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -ErrorAction 0
