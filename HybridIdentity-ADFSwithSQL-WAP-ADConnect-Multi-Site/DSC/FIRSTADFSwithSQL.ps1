@@ -228,7 +228,6 @@
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            PsDscRunAsCredential = $AdminCreds
             DependsOn = '[Script]ConfigureADFS'
         }
     }
