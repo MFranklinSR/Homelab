@@ -61,89 +61,93 @@
                 $Password = $DomainCreds.Password
                 $fsgmsa = 'FsGmsa$'
 
-                # Export Service Communication Certificate
-                $ServiceCert = Get-ChildItem -Path "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -ErrorAction 0
-                IF ($ServiceCert -eq $null)
+                $CertCheck = Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}
+                (IF $CertCheck -eq $null)
                 {
-                    Get-Certificate -Template WebServer1 -SubjectName "CN=adfs.$using:ExternalDomainName" -DNSName "adfs.$using:ExternalDomainName" -CertStoreLocation "cert:\LocalMachine\My"
-                    $ServiceThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint                 
-                    Get-ChildItem -Path cert:\LocalMachine\my\$ServiceThumbprint | Export-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -Password $Password
-                    Get-ChildItem -Path cert:\LocalMachine\my\$ServiceThumbprint | Remove-Item
+                    # Export Service Communication Certificate
+                    $ServiceCert = Get-ChildItem -Path "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -ErrorAction 0
+                    IF ($ServiceCert -eq $null)
+                    {
+                        Get-Certificate -Template WebServer1 -SubjectName "CN=adfs.$using:ExternalDomainName" -DNSName "adfs.$using:ExternalDomainName" -CertStoreLocation "cert:\LocalMachine\My"
+                        $ServiceThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint                 
+                        Get-ChildItem -Path cert:\LocalMachine\my\$ServiceThumbprint | Export-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -Password $Password
+                        Get-ChildItem -Path cert:\LocalMachine\my\$ServiceThumbprint | Remove-Item
+                    }
+
+                    $SigningCert = Get-ChildItem -Path "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -ErrorAction 0
+                    IF ($SigningCert -eq $null)
+                    {
+                        Get-Certificate -Template WebServer1 -SubjectName "CN=adfs-signing.$using:ExternalDomainName" -DNSName "adfs-signing.$using:ExternalDomainName" -CertStoreLocation "cert:\LocalMachine\My"
+                        $SigningThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs-signing.$using:ExternalDomainName"}).Thumbprint                 
+                        Get-ChildItem -Path cert:\LocalMachine\my\$SigningThumbprint | Export-PfxCertificate -FilePath "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -Password $Password
+                        Get-ChildItem -Path cert:\LocalMachine\my\$SigningThumbprint | Remove-Item
+                    }
+
+                    # Export Root CA
+                    $RootCert = Get-ChildItem -Path "C:\Certificates\$using:RootCAName.cer" -ErrorAction 0
+                    IF ($RootCert -eq $null)
+                    {
+                        $RootExport = Get-ChildItem -Path cert:\Localmachine\Root\ | Where-Object {$_.Subject -like "CN=$using:RootCAName*"}
+                        Export-Certificate -Cert $RootExport -FilePath "C:\Certificates\$using:RootCAName.cer" -Type CER
+                    }
+
+                    # Export Issuing CA
+                    $IssueCert = Get-ChildItem -Path "C:\Certificates\$using:IssuingCAName.cer" -ErrorAction 0
+                    IF ($IssueCert -eq $null)
+                    {
+                        $IssuingExport = Get-ChildItem -Path cert:\Localmachine\CA\ | Where-Object {$_.Subject -like "CN=$using:IssuingCAName*"}
+                        Export-Certificate -Cert $IssuingExport -FilePath "C:\Certificates\$using:IssuingCAName.cer" -Type CER
+                    }
+
+                    # Move Crypto Keys
+                    $dest1 = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys"
+                    $dest2 = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys\Temp\"
+                    New-Item -Path $Dest2 -ItemType directory
+                    Get-ChildItem $dest1 -exclude "Temp" | Move-Item -Destination $dest2
+
+                    # Check if ADFS Service Communication Certificate already exists if NOT Import
+                    $ServiceThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
+                    IF ($ServiceThumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password}
+
+                    # Grant FsGmsa Full Access to Service Communication Certificate Private Keys
+                    Start-Sleep -s 60
+                    $account = "$using:NetBiosDomain\$fsgmsa"
+                    $file = Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys -Exclude "Temp"
+                    $fullPath=$file.FullName
+                    $acl=(Get-Item $fullPath).GetAccessControl('Access')
+                    $permission=$account,"Full","Allow"
+                    $accessRule=new-object System.Security.AccessControl.FileSystemAccessRule $permission
+                    $acl.AddAccessRule($accessRule)
+                    Set-Acl $fullPath $acl
+
+                    # Move Crypto Keys
+                    Get-ChildItem $dest2 | Move-Item -Destination $dest1
+                    Remove-Item $dest2 -Force -ErrorAction 0
+
+                    # Move Crypto Keys
+                    $dest2 = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys\Temp\"
+                    New-Item -Path $Dest2 -ItemType directory
+                    Get-ChildItem $dest1 -exclude "Temp" | Move-Item -Destination $dest2
+
+                    # Check if ADFS Token Signing Certificate already exists if NOT Import
+                    $SigningThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs-signing.$using:ExternalDomainName"}).Thumbprint
+                    IF ($SigningThumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password}
+
+                    # Grant FsGmsa Full Access to Signing Certificate Private Keys
+                    Start-Sleep -s 60
+                    $account = "$using:NetBiosDomain\$fsgmsa"
+                    $file = Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys -Exclude "Temp"
+                    $fullPath=$file.FullName
+                    $acl=(Get-Item $fullPath).GetAccessControl('Access')
+                    $permission=$account,"Full","Allow"
+                    $accessRule=new-object System.Security.AccessControl.FileSystemAccessRule $permission
+                    $acl.AddAccessRule($accessRule)
+                    Set-Acl $fullPath $acl
+
+                    # Move Crypto Keys
+                    Get-ChildItem $dest2 | Move-Item -Destination $dest1
+                    Remove-Item $dest2 -Force -ErrorAction 0
                 }
-
-                $SigningCert = Get-ChildItem -Path "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -ErrorAction 0
-                IF ($SigningCert -eq $null)
-                {
-                    Get-Certificate -Template WebServer1 -SubjectName "CN=adfs-signing.$using:ExternalDomainName" -DNSName "adfs-signing.$using:ExternalDomainName" -CertStoreLocation "cert:\LocalMachine\My"
-                    $SigningThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs-signing.$using:ExternalDomainName"}).Thumbprint                 
-                    Get-ChildItem -Path cert:\LocalMachine\my\$SigningThumbprint | Export-PfxCertificate -FilePath "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -Password $Password
-                    Get-ChildItem -Path cert:\LocalMachine\my\$SigningThumbprint | Remove-Item
-                }
-
-                # Export Root CA
-                $RootCert = Get-ChildItem -Path "C:\Certificates\$using:RootCAName.cer" -ErrorAction 0
-                IF ($RootCert -eq $null)
-                {
-                    $RootExport = Get-ChildItem -Path cert:\Localmachine\Root\ | Where-Object {$_.Subject -like "CN=$using:RootCAName*"}
-                    Export-Certificate -Cert $RootExport -FilePath "C:\Certificates\$using:RootCAName.cer" -Type CER
-                }
-
-                # Export Issuing CA
-                $IssueCert = Get-ChildItem -Path "C:\Certificates\$using:IssuingCAName.cer" -ErrorAction 0
-                IF ($IssueCert -eq $null)
-                {
-                    $IssuingExport = Get-ChildItem -Path cert:\Localmachine\CA\ | Where-Object {$_.Subject -like "CN=$using:IssuingCAName*"}
-                    Export-Certificate -Cert $IssuingExport -FilePath "C:\Certificates\$using:IssuingCAName.cer" -Type CER
-                }
-
-                # Move Crypto Keys
-                $dest1 = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys"
-                $dest2 = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys\Temp\"
-                New-Item -Path $Dest2 -ItemType directory
-                Get-ChildItem $dest1 -exclude "Temp" | Move-Item -Destination $dest2
-
-                # Check if ADFS Service Communication Certificate already exists if NOT Import
-                $ServiceThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
-                IF ($ServiceThumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password}
-
-                # Grant FsGmsa Full Access to Service Communication Certificate Private Keys
-                Start-Sleep -s 60
-                $account = "$using:NetBiosDomain\$fsgmsa"
-                $file = Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys -Exclude "Temp"
-                $fullPath=$file.FullName
-                $acl=(Get-Item $fullPath).GetAccessControl('Access')
-                $permission=$account,"Full","Allow"
-                $accessRule=new-object System.Security.AccessControl.FileSystemAccessRule $permission
-                $acl.AddAccessRule($accessRule)
-                Set-Acl $fullPath $acl
-
-                # Move Crypto Keys
-                Get-ChildItem $dest2 | Move-Item -Destination $dest1
-                Remove-Item $dest2 -Force -ErrorAction 0
-
-                # Move Crypto Keys
-                $dest2 = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys\Temp\"
-                New-Item -Path $Dest2 -ItemType directory
-                Get-ChildItem $dest1 -exclude "Temp" | Move-Item -Destination $dest2
-
-                # Check if ADFS Token Signing Certificate already exists if NOT Import
-                $SigningThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs-signing.$using:ExternalDomainName"}).Thumbprint
-                IF ($SigningThumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password}
-
-                # Grant FsGmsa Full Access to Signing Certificate Private Keys
-                Start-Sleep -s 60
-                $account = "$using:NetBiosDomain\$fsgmsa"
-                $file = Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys -Exclude "Temp"
-                $fullPath=$file.FullName
-                $acl=(Get-Item $fullPath).GetAccessControl('Access')
-                $permission=$account,"Full","Allow"
-                $accessRule=new-object System.Security.AccessControl.FileSystemAccessRule $permission
-                $acl.AddAccessRule($accessRule)
-                Set-Acl $fullPath $acl
-
-                # Move Crypto Keys
-                Get-ChildItem $dest2 | Move-Item -Destination $dest1
-                Remove-Item $dest2 -Force -ErrorAction 0
             }
             GetScript =  { @{} }
             TestScript = { $false}
