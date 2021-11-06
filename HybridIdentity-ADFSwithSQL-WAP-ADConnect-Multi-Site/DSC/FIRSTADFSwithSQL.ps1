@@ -62,7 +62,7 @@
                 $fsgmsa = 'FsGmsa$'
 
                 $CertCheck = Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}
-                (IF $CertCheck -eq $null)
+                IF ($CertCheck -eq $null)
                 {
                     # Export Service Communication Certificate
                     $ServiceCert = Get-ChildItem -Path "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -ErrorAction 0
