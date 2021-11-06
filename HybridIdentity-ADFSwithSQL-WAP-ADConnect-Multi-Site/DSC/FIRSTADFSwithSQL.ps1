@@ -94,25 +94,6 @@
                     $IssuingExport = Get-ChildItem -Path cert:\Localmachine\CA\ | Where-Object {$_.Subject -like "CN=$using:IssuingCAName*"}
                     Export-Certificate -Cert $IssuingExport -FilePath "C:\Certificates\$using:IssuingCAName.cer" -Type CER
                 }
-            }
-            GetScript =  { @{} }
-            TestScript = { $false}
-            DependsOn = '[File]Certificates'
-        }
-
-        Script GetADFSCertificates
-        {
-            SetScript =
-            {
-                $ThumbCheck = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
-                IF ($ThumbCheck -eq $null) {
-                # Update GPO's
-                gpupdate /force
-
-                # Create Credentials
-                $Load = "$using:DomainCreds"
-                $Password = $DomainCreds.Password
-                $fsgmsa = 'FsGmsa$'
 
                 # Move Crypto Keys
                 $dest1 = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys"
@@ -162,11 +143,10 @@
                 # Move Crypto Keys
                 Get-ChildItem $dest2 | Move-Item -Destination $dest1
                 Remove-Item $dest2 -Force -ErrorAction 0
-                }
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            DependsOn = '[Script]CreateADFSCertExport'
+            DependsOn = '[File]Certificates'
         }
 
         Script ConfigureADFS
@@ -229,7 +209,7 @@
             GetScript =  { @{} }
             TestScript = { $false}
             PsDscRunAsCredential = $DomainCreds
-            DependsOn = '[Script]GetADFSCertificates'
+            DependsOn = '[Script]CreateADFSCertExport'
         }
     }
 }
