@@ -1315,8 +1315,7 @@
       "apiVersion": "2019-10-01",
       "name": "createpublicdns-2019",
       "dependsOn": [
-        "deployWAP1VM",
-        "deployWAP2VM"
+        "deployWAP1VM"
       ],            
       "properties": {
           "mode": "Incremental",
@@ -1358,8 +1357,7 @@
       "apiVersion": "2019-10-01",
       "name": "createpublicdns-2016",
       "dependsOn": [
-        "deployWAP1VM",
-        "deployWAP2VM"
+        "deployWAP1VM"
       ],            
       "properties": {
           "mode": "Incremental",
