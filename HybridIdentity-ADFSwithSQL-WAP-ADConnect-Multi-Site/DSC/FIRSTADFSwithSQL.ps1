@@ -92,7 +92,7 @@
 
                         # Add Private Key Permissions
                         $account = "$using:NetBiosDomain\$fsgmsa"
-                        $FullPath = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys"+"/"+$DeltaFile.InputObject                    
+                        $FullPath = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys"+"\"+$DeltaFile.InputObject                    
                         $acl=(Get-Item $fullPath).GetAccessControl('Access')
                         $permission=$account,"Full","Allow"
                         $accessRule=new-object System.Security.AccessControl.FileSystemAccessRule $permission
@@ -127,7 +127,7 @@
 
                         # Add Private Key Permissions
                         $account = "$using:NetBiosDomain\$fsgmsa"
-                        $FullPath = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys"+"/"+$DeltaFile.InputObject                    
+                        $FullPath = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys"+"\"+$DeltaFile.InputObject                    
                         $acl=(Get-Item $fullPath).GetAccessControl('Access')
                         $permission=$account,"Full","Allow"
                         $accessRule=new-object System.Security.AccessControl.FileSystemAccessRule $permission
