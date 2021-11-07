@@ -121,7 +121,7 @@
                     Set-Acl $fullPath $acl
 
                     # Move Crypto Keys
-                    Get-ChildItem $dest2 -Exclude $file.Name | Move-Item -Destination $dest1 -Force
+                    Get-ChildItem $dest2 -Exclude $file.Name | Move-Item -Destination $dest1
                     Remove-Item $dest2 -Recurse -Force
 
                     # Move Crypto Keys
@@ -145,7 +145,7 @@
                     Set-Acl $fullPath $acl
 
                     # Move Crypto Keys
-                    Get-ChildItem $dest2 -Exclude $file.Name | Move-Item -Destination $dest1 -Force
+                    Get-ChildItem $dest2 -Exclude $file.Name | Move-Item -Destination $dest1
                     Remove-Item $dest2 -Recurse -Force
                 }
             }
