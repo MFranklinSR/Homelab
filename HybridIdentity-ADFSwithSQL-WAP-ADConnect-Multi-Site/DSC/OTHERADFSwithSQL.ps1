@@ -72,77 +72,71 @@
                 $Password = $DomainCreds.Password
                 $fsgmsa = 'FsGmsa$'
 
-                $CertCheck = Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}
-                IF ($CertCheck -eq $null)
+                $ServiceCert = Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}
+                IF ($ServiceCert -eq $null)
                 {
-                    # Export Service Communication Certificate
-                    $ServiceCert = Get-ChildItem -Path "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -ErrorAction 0
-                    IF ($ServiceCert -eq $null)
-                    {
-                        # Get Old Files
-                        $Oldfiles = Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys
-                        $OldFileNames = @()
-                        foreach ($OldFile in $OldFiles){
-                            $OldFileNames += Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys -Name $OldFile.Name
-                        }
-
-                        # Check if ADFS Service Communication Certificate already exists if NOT Import
-                        $ServiceThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
-                        IF ($ServiceThumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password}
-
-                        # Get New Files
-                        $Newfiles = Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys
-                        $NewFileNames = @()
-                        foreach ($NewFile in $NewFiles){
-                            $NewFileNames += Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys -Name $NewFile.Name
-                        }
-
-                        # Get New Cert Hash
-                        $DeltaFile = Compare-Object $OldFileNames $NewFileNames
-
-                        # Add Private Key Permissions
-                        $account = "$using:NetBiosDomain\$fsgmsa"
-                        $FullPath = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys"+"/"+$DeltaFile.InputObject                    
-                        $acl=(Get-Item $fullPath).GetAccessControl('Access')
-                        $permission=$account,"Full","Allow"
-                        $accessRule=new-object System.Security.AccessControl.FileSystemAccessRule $permission
-                        $acl.AddAccessRule($accessRule)
-                        Set-Acl $fullPath $acl
+                    # Get Old Files
+                    $Oldfiles = Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys
+                    $OldFileNames = @()
+                    foreach ($OldFile in $OldFiles){
+                        $OldFileNames += Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys -Name $OldFile.Name
                     }
 
-                    $SigningCert = Get-ChildItem -Path "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -ErrorAction 0
-                    IF ($SigningCert -eq $null)
-                    {
-                        # Get Old Files
-                        $Oldfiles = Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys
-                        $OldFileNames = @()
-                        foreach ($OldFile in $OldFiles){
-                            $OldFileNames += Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys -Name $OldFile.Name
-                        }
+                    # Import Service Communications Certificate
+                    Import-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password
 
-                        # Check if ADFS Token Signing Certificate already exists if NOT Import
-                        $SigningThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs-signing.$using:ExternalDomainName"}).Thumbprint
-                        IF ($SigningThumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password}
-
-                        # Get New Files
-                        $Newfiles = Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys
-                        $NewFileNames = @()
-                        foreach ($NewFile in $NewFiles){
-                            $NewFileNames += Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys -Name $NewFile.Name
-                        }
-
-                        # Get New Cert Hash
-                        $DeltaFile = Compare-Object $OldFileNames $NewFileNames
-
-                        # Add Private Key Permissions
-                        $account = "$using:NetBiosDomain\$fsgmsa"
-                        $FullPath = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys"+"/"+$DeltaFile.InputObject                    
-                        $acl=(Get-Item $fullPath).GetAccessControl('Access')
-                        $permission=$account,"Full","Allow"
-                        $accessRule=new-object System.Security.AccessControl.FileSystemAccessRule $permission
-                        $acl.AddAccessRule($accessRule)
-                        Set-Acl $fullPath $acl
+                    # Get New Files
+                    $Newfiles = Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys
+                    $NewFileNames = @()
+                    foreach ($NewFile in $NewFiles){
+                        $NewFileNames += Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys -Name $NewFile.Name
                     }
+
+                    # Get New Cert Hash
+                    $DeltaFile = Compare-Object $OldFileNames $NewFileNames
+
+                    # Add Private Key Permissions
+                    $account = "$using:NetBiosDomain\$fsgmsa"
+                    $FullPath = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys"+"/"+$DeltaFile.InputObject                    
+                    $acl=(Get-Item $fullPath).GetAccessControl('Access')
+                    $permission=$account,"Full","Allow"
+                    $accessRule=new-object System.Security.AccessControl.FileSystemAccessRule $permission
+                    $acl.AddAccessRule($accessRule)
+                    Set-Acl $fullPath $acl
+                }                  
+
+                $SigningCert = Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs-signing.$using:ExternalDomainName"}
+                IF ($SigningCert -eq $null)
+                {
+
+                    # Get Old Files
+                    $Oldfiles = Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys
+                    $OldFileNames = @()
+                    foreach ($OldFile in $OldFiles){
+                        $OldFileNames += Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys -Name $OldFile.Name
+                    }
+
+                    # Import Signing Certificate
+                    Import-PfxCertificate -FilePath "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password
+
+                    # Get New Files
+                    $Newfiles = Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys
+                    $NewFileNames = @()
+                    foreach ($NewFile in $NewFiles){
+                        $NewFileNames += Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys -Name $NewFile.Name
+                    }
+
+                    # Get New Cert Hash
+                    $DeltaFile = Compare-Object $OldFileNames $NewFileNames
+
+                    # Add Private Key Permissions
+                    $account = "$using:NetBiosDomain\$fsgmsa"
+                    $FullPath = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys"+"/"+$DeltaFile.InputObject                    
+                    $acl=(Get-Item $fullPath).GetAccessControl('Access')
+                    $permission=$account,"Full","Allow"
+                    $accessRule=new-object System.Security.AccessControl.FileSystemAccessRule $permission
+                    $acl.AddAccessRule($accessRule)
+                    Set-Acl $fullPath $acl
                 }
             }
             GetScript =  { @{} }
