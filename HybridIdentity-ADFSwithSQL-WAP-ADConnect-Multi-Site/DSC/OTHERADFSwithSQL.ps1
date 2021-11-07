@@ -99,8 +99,8 @@
                 Set-Acl $fullPath $acl
 
                 # Move Crypto Keys
-                Get-ChildItem $dest2 | Move-Item -Destination $dest1 -Force
-                Remove-Item $dest2 -Force -ErrorAction 0
+                Get-ChildItem $dest2 -Exclude $file.Name | Move-Item -Destination $dest1
+                Remove-Item $dest2 -Recurse -Force
 
                 # Move Crypto Keys
                 $dest2 = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys\Temp\"
@@ -123,8 +123,8 @@
                 Set-Acl $fullPath $acl
 
                 # Move Crypto Keys
-                Get-ChildItem $dest2 | Move-Item -Destination $dest1 -Force
-                Remove-Item $dest2 -Force -ErrorAction 0
+                Get-ChildItem $dest2 -Exclude $file.Name | Move-Item -Destination $dest1
+                Remove-Item $dest2 -Recurse -Force
                 }
             }
             GetScript =  { @{} }
