@@ -1118,6 +1118,122 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
+      "name": "deployWAP2VM",
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/1nic-1disk-vm-pip.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "computerName": {
+                  "value": "[variables('wap2name')]"
+              },
+              "computerIP": {
+                  "value": "[variables('wap2IP')]"
+              },
+              "Publisher": {
+                  "value": "MicrosoftWindowsServer"
+              },
+              "Offer": {
+                  "value": "WindowsServer"
+              },
+              "OSVersion": {
+                "value": "[parameters('WAPOSVersion')]"
+              },              
+              "LicenseType": {
+                "value": "[parameters('WindowsServerLicenseType')]"
+              },            
+              "VMSize": {
+                "value": "[parameters('WAP2VMSize')]"
+              },
+              "vnetName": {
+                "value": "[variables('vnet2Name')]"
+              },            
+              "subnetName": {
+                "value": "[variables('vnet2subnet1Name')]"
+              },            
+              "adminUsername": {
+                "value": "[parameters('adminUsername')]"
+              },                                                                                                            
+              "adminPassword": {
+                "value": "[parameters('adminPassword')]"
+              },  
+              "TimeZone": {
+                  "value": "[parameters('TimeZone')]"
+              }, 
+              "AutoShutdownEnabled": {
+                  "value": "[parameters('AutoShutdownEnabled')]"
+              },                            
+              "AutoShutdownTime": {
+                  "value": "[parameters('AutoShutdownTime')]"
+              },              
+              "AutoShutdownEmail": {
+                  "value": "[parameters('AutoShutdownEmail')]"
+              },                                                                                                                                                                                                                                                                                                         
+              "location": {
+                  "value": "[parameters('Location2')]"
+              }
+          }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "configureotherwap",
+      "dependsOn": [
+        "configurefirstwap",        
+        "deployWAP2VM"
+      ],      
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/wap.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "computerName": {
+                  "value": "[variables('wap2name')]"
+              },
+              "TimeZone": {
+                  "value": "[parameters('TimeZone')]"
+              },              
+              "NetBiosDomain": {
+                  "value": "[parameters('NetBiosDomain')]"
+              },                            
+              "ADFSServerIP": {
+                  "value": "[variables('adfs2IP')]"
+              },          
+              "ExternalDomainName": {
+                  "value": "[variables('ExternaldomainName')]"
+              },          
+              "IssuingCAName": {
+                  "value": "[parameters('IssuingCAName')]"
+              },              
+              "RootCAName": {
+                  "value": "[parameters('RootCAName')]"
+              },
+              "location": {
+                  "value": "[parameters('Location2')]"
+              },                                          
+              "adminUsername": {
+                "value": "[parameters('adminUsername')]"
+              },                                                                                                            
+              "adminPassword": {
+                "value": "[parameters('adminPassword')]"
+              },
+              "_artifactsLocation": {
+                "value": "[parameters('_artifactsLocation')]"
+              },                                                                                                            
+              "_artifactsLocationSasToken": {
+                "value": "[parameters('_artifactsLocationSasToken')]"
+              }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+          }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
       "name": "configdns",
       "dependsOn": [
         "createFSGMSA"
@@ -1158,7 +1274,7 @@
       "apiVersion": "2019-10-01",
       "name": "deploynsg1",
       "dependsOn": [
-        "configurefirstwap"       
+        "configureotherwap"       
       ],      
       "properties": {
           "mode": "Incremental",
@@ -1187,7 +1303,7 @@
       "apiVersion": "2019-10-01",
       "name": "deploynsg2",
       "dependsOn": [
-        "configurefirstwap"
+        "configureotherwap"
       ],      
       "properties": {
           "mode": "Incremental",
@@ -1315,7 +1431,8 @@
       "apiVersion": "2019-10-01",
       "name": "createpublicdns-2019",
       "dependsOn": [
-        "deployWAP1VM"
+        "deployWAP1VM",
+        "deployWAP2VM"
       ],            
       "properties": {
           "mode": "Incremental",
@@ -1357,7 +1474,8 @@
       "apiVersion": "2019-10-01",
       "name": "createpublicdns-2016",
       "dependsOn": [
-        "deployWAP1VM"
+        "deployWAP1VM",
+        "deployWAP2VM"
       ],            
       "properties": {
           "mode": "Incremental",
