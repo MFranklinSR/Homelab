@@ -55,7 +55,7 @@
         {
             Type = 'Directory'
             DestinationPath = 'C:\WAP-Certificates'
-            Ensure = "Present"0
+            Ensure = "Present"
         }
 
         Script CreateADFSCertExport
