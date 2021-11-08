@@ -106,34 +106,28 @@
                 $Load = "$using:DomainCreds"
                 $Password = $DomainCreds.Password
 
-                $CertCheck = Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}
-                IF ($CertCheck -eq $null)
+                # Export Service Communication Certificate
+                $ServiceCert = Get-ChildItem -Path "C:\WAP-Certificates\adfs.$using:ExternalDomainName.pfx" -ErrorAction 0
+                IF ($ServiceCert -eq $null)
                 {
-                    # Export Service Communication Certificate
-                    $ServiceCert = Get-ChildItem -Path "C:\WAP-Certificates\adfs.$using:ExternalDomainName.pfx" -ErrorAction 0
-                    IF ($ServiceCert -eq $null)
-                    {
-                        # Get Service Communication Certificate and Export it
-                        Get-Certificate -Template WebServer1 -SubjectName "CN=adfs.$using:ExternalDomainName" -DNSName "adfs.$using:ExternalDomainName" -CertStoreLocation "cert:\LocalMachine\My"
-                        $ServiceThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint                 
-                        Get-ChildItem -Path cert:\LocalMachine\my\$ServiceThumbprint | Export-PfxCertificate -FilePath "C:\WAP-Certificates\adfs.$using:ExternalDomainName.pfx" -Password $Password
-                    }
+                    $ServiceThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint                 
+                    Get-ChildItem -Path cert:\LocalMachine\my\$ServiceThumbprint | Export-PfxCertificate -FilePath "C:\WAP-Certificates\adfs.$using:ExternalDomainName.pfx" -Password $Password
+                }
 
-                    # Export Root CA
-                    $RootCert = Get-ChildItem -Path "C:\WAP-Certificates\$using:RootCAName.cer" -ErrorAction 0
-                    IF ($RootCert -eq $null)
-                    {
-                        $RootExport = Get-ChildItem -Path cert:\Localmachine\Root\ | Where-Object {$_.Subject -like "CN=$using:RootCAName*"}
-                        Export-Certificate -Cert $RootExport -FilePath "C:\WAP-Certificates\$using:RootCAName.cer" -Type CER
-                    }
+                # Export Root CA
+                $RootCert = Get-ChildItem -Path "C:\WAP-Certificates\$using:RootCAName.cer" -ErrorAction 0
+                IF ($RootCert -eq $null)
+                {
+                    $RootExport = Get-ChildItem -Path cert:\Localmachine\Root\ | Where-Object {$_.Subject -like "CN=$using:RootCAName*"}
+                    Export-Certificate -Cert $RootExport -FilePath "C:\WAP-Certificates\$using:RootCAName.cer" -Type CER
+                }
 
-                    # Export Issuing CA
-                    $IssueCert = Get-ChildItem -Path "C:\WAP-Certificates\$using:IssuingCAName.cer" -ErrorAction 0
-                    IF ($IssueCert -eq $null)
-                    {
-                        $IssuingExport = Get-ChildItem -Path cert:\Localmachine\CA\ | Where-Object {$_.Subject -like "CN=$using:IssuingCAName*"}
-                        Export-Certificate -Cert $IssuingExport -FilePath "C:\WAP-Certificates\$using:IssuingCAName.cer" -Type CER
-                    }
+                # Export Issuing CA
+                $IssueCert = Get-ChildItem -Path "C:\WAP-Certificates\$using:IssuingCAName.cer" -ErrorAction 0
+                IF ($IssueCert -eq $null)
+                {
+                    $IssuingExport = Get-ChildItem -Path cert:\Localmachine\CA\ | Where-Object {$_.Subject -like "CN=$using:IssuingCAName*"}
+                    Export-Certificate -Cert $IssuingExport -FilePath "C:\WAP-Certificates\$using:IssuingCAName.cer" -Type CER
                 }
             }
             GetScript =  { @{} }
