@@ -13,7 +13,7 @@
         "metadata": {
           "description": "The address range of the new VNET in CIDR format"
         }
-      },
+      },      
       "subnet1Name": {
         "type": "string",
         "metadata": {
@@ -37,7 +37,7 @@
         "metadata": {
           "description": "The address range of the subnet2 created in the new VNET"
         }
-      }, 
+      },   
       "subnet3Name": {
         "type": "string",
         "metadata": {
@@ -49,7 +49,7 @@
         "metadata": {
           "description": "The address range of the subnet3 created in the new VNET"
         }
-      },            
+      },         
       "BastionsubnetPrefix": {
         "type": "string",
         "metadata": {
@@ -61,13 +61,7 @@
         "metadata": {
           "description": "The DNS address(es) of the DNS Server(s) used by the VNET"
         }
-      },
-      "NetworkSecurityGroupName": {
-        "type": "string",
-        "metadata": {
-          "description": "Network Security Group Name"
-        }
-      },      
+      },  
       "location": {
         "type": "string",
         "metadata": {
@@ -75,9 +69,6 @@
         }
       }
     },
-  "variables": {
-      "NetworkSecurityGroupID": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', parameters('NetworkSecurityGroupName'))]"
-  },    
     "resources": [
       {
         "type": "Microsoft.Network/virtualNetworks",
@@ -97,28 +88,19 @@
             {
               "name": "[parameters('subnet1Name')]",
               "properties": {
-                "addressPrefix": "[parameters('subnet1Prefix')]",
-                "networkSecurityGroup": {
-                  "id": "[variables('NetworkSecurityGroupID')]"
-                }                
+                "addressPrefix": "[parameters('subnet1Prefix')]"
               }
             },
             {
               "name": "[parameters('subnet2Name')]",
               "properties": {
-                "addressPrefix": "[parameters('subnet2Prefix')]",
-                "networkSecurityGroup": {
-                  "id": "[variables('NetworkSecurityGroupID')]"
-                }                                
+                "addressPrefix": "[parameters('subnet2Prefix')]"
               }
             },            
             {
               "name": "[parameters('subnet3Name')]",
               "properties": {
-                "addressPrefix": "[parameters('subnet3Prefix')]",
-                "networkSecurityGroup": {
-                  "id": "[variables('NetworkSecurityGroupID')]"
-                }                                
+                "addressPrefix": "[parameters('subnet3Prefix')]"
               }
             },                        
             {

@@ -426,6 +426,8 @@
     "vnet1subnet1Prefix": "[concat(parameters('vnet1ID'),'.1.0/24')]",    
     "vnet1subnet2Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet2')]",    
     "vnet1subnet2Prefix": "[concat(parameters('vnet1ID'),'.2.0/24')]",    
+    "vnet1subnet3Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet3')]",    
+    "vnet1subnet3Prefix": "[concat(parameters('vnet1ID'),'.3.0/24')]",    
     "vnet1BastionsubnetPrefix": "[concat(parameters('vnet1ID'),'.253.0/24')]",        
     "vnet2Name": "[concat(parameters('NamingConvention'),'-VNet2')]",
     "vnet2Prefix": "[concat(parameters('vnet2ID'),'.0.0/16')]",
@@ -433,6 +435,8 @@
     "vnet2subnet1Prefix": "[concat(parameters('vnet2ID'),'.1.0/24')]",    
     "vnet2subnet2Name": "[concat(parameters('NamingConvention'),'-VNet2-Subnet2')]",    
     "vnet2subnet2Prefix": "[concat(parameters('vnet2ID'),'.2.0/24')]",    
+    "vnet2subnet3Name": "[concat(parameters('NamingConvention'),'-VNet2-Subnet3')]",    
+    "vnet2subnet3Prefix": "[concat(parameters('vnet2ID'),'.3.0/24')]",    
     "vnet2BastionsubnetPrefix": "[concat(parameters('vnet2ID'),'.253.0/24')]",        
     "dc1name": "[concat(parameters('NamingConvention'),'-dc-01')]",
     "dc1IP": "[concat(parameters('vnet1ID'),'.1.',variables('dc1lastoctet'))]",   
@@ -455,11 +459,11 @@
     "adfs2IP": "[concat(parameters('vnet2ID'),'.1.',variables('adfs2lastoctet'))]",       
     "adfs2lastoctet": "121",                                
     "wap1name": "[concat(parameters('NamingConvention'),'-wap-01')]",           
-    "wap1IP": "[concat(parameters('vnet1ID'),'.1.',variables('wap1lastoctet'))]",            
-    "wap1lastoctet": "122",
+    "wap1IP": "[concat(parameters('vnet1ID'),'.3.',variables('wap1lastoctet'))]",            
+    "wap1lastoctet": "121",
     "wap2name": "[concat(parameters('NamingConvention'),'-wap-02')]",           
-    "wap2IP": "[concat(parameters('vnet2ID'),'.1.',variables('wap2lastoctet'))]",            
-    "wap2lastoctet": "122",
+    "wap2IP": "[concat(parameters('vnet2ID'),'.3.',variables('wap2lastoctet'))]",            
+    "wap2lastoctet": "121",
     "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",
     "ExternaldomainName": "[concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))]",     
     "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
@@ -470,6 +474,107 @@
     "NSG2Name": "[concat(parameters('NamingConvention'),'-nsg02')]"    
   },  
   "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "AddSubnet3VNet1",
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/addsubnet.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "vnetName": {
+                  "value": "[variables('vnet1Name')]"
+              },
+              "vnetprefix": {
+                  "value": "[variables('vnet1Prefix')]"
+              },
+              "subnet1Name": {
+                "value": "[variables('vnet1subnet1Name')]"
+              },                                                                                                            
+              "subnet1Prefix": {
+                "value": "[variables('vnet1subnet1Prefix')]"
+              }, 
+              "subnet2Name": {
+                "value": "[variables('vnet1subnet2Name')]"
+              },                                                                                                            
+              "subnet2Prefix": {
+                "value": "[variables('vnet1subnet2Prefix')]"
+              },               
+              "subnet3Name": {
+                "value": "[variables('vnet1subnet3Name')]"
+              },                                                                                                            
+              "subnet3Prefix": {
+                "value": "[variables('vnet1subnet3Prefix')]"
+              },                             
+              "BastionsubnetPrefix": {
+                "value": "[variables('vnet1BastionsubnetPrefix')]"
+              },                         
+              "DNSServerIP": {
+                "value": [
+                  "[variables('dc1IP')]"
+                ]
+              },  
+              "location": {
+                  "value": "[resourceGroup().location]"
+              }
+          }
+      }
+    },                                                                                                                                                                                                                                
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "AddSubnet3VNet2",
+      "dependsOn": [
+        "AddSubnet3VNet1"
+      ],            
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/addsubnet.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "vnetName": {
+                  "value": "[variables('vnet2Name')]"
+              },
+              "vnetprefix": {
+                  "value": "[variables('vnet2Prefix')]"
+              },
+              "subnet1Name": {
+                "value": "[variables('vnet2subnet1Name')]"
+              },                                                                                                            
+              "subnet1Prefix": {
+                "value": "[variables('vnet2subnet1Prefix')]"
+              }, 
+              "subnet2Name": {
+                "value": "[variables('vnet2subnet2Name')]"
+              },                                                                                                            
+              "subnet2Prefix": {
+                "value": "[variables('vnet2subnet2Prefix')]"
+              },               
+              "subnet3Name": {
+                "value": "[variables('vnet2subnet3Name')]"
+              },                                                                                                            
+              "subnet3Prefix": {
+                "value": "[variables('vnet2subnet3Prefix')]"
+              },                             
+              "BastionsubnetPrefix": {
+                "value": "[variables('vnet2BastionsubnetPrefix')]"
+              },                         
+              "DNSServerIP": {
+                "value": [
+                  "[variables('dc2IP')]"
+                ]
+              },  
+              "location": {
+                  "value": "[parameters('Location2')]"
+              }
+          }
+      }
+    },                                                                                                                                                                                                                                    
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
@@ -543,7 +648,11 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "deployADCVM",    
+      "name": "deployADCVM", 
+      "dependsOn": [
+        "AddSubnet3VNet1",
+        "AddSubnet3VNet2"        
+      ],                          
       "properties": {
           "mode": "Incremental",
           "templateLink": {
@@ -762,7 +871,11 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "deployADFS1VM",   
+      "name": "deployADFS1VM",
+      "dependsOn": [
+        "AddSubnet3VNet1",
+        "AddSubnet3VNet2"        
+      ],                                  
       "properties": {
           "mode": "Incremental",
           "templateLink": {
@@ -1000,7 +1113,11 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "deployADFS2VM",   
+      "name": "deployADFS2VM",
+      "dependsOn": [
+        "AddSubnet3VNet1",
+        "AddSubnet3VNet2"        
+      ],                                  
       "properties": {
           "mode": "Incremental",
           "templateLink": {
@@ -1241,7 +1358,8 @@
       "apiVersion": "2019-10-01",
       "name": "deployWAP1VM",
       "dependsOn": [
-        "configureotheradfs"
+        "AddSubnet3VNet1",
+        "AddSubnet3VNet2"
       ],            
       "properties": {
           "mode": "Incremental",
@@ -1275,7 +1393,7 @@
                 "value": "[variables('vnet1Name')]"
               },            
               "subnetName": {
-                "value": "[variables('vnet1subnet1Name')]"
+                "value": "[variables('vnet1subnet3Name')]"
               },            
               "adminUsername": {
                 "value": "[parameters('adminUsername')]"
@@ -1306,7 +1424,8 @@
       "apiVersion": "2019-10-01",
       "name": "configurefirstwap",
       "dependsOn": [
-        "deployWAP1VM"
+        "deployWAP1VM",
+        "configureotheradfs"
       ],      
       "properties": {
           "mode": "Incremental",
@@ -1358,6 +1477,10 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
       "name": "deployWAP2VM",
+      "dependsOn": [
+        "AddSubnet3VNet1",
+        "AddSubnet3VNet2"
+      ],  
       "properties": {
           "mode": "Incremental",
           "templateLink": {
@@ -1390,7 +1513,7 @@
                 "value": "[variables('vnet2Name')]"
               },            
               "subnetName": {
-                "value": "[variables('vnet2subnet1Name')]"
+                "value": "[variables('vnet2subnet3Name')]"
               },            
               "adminUsername": {
                 "value": "[parameters('adminUsername')]"
@@ -1598,6 +1721,12 @@
               "subnet2Prefix": {
                 "value": "[variables('vnet1subnet2Prefix')]"
               },               
+              "subnet3Name": {
+                "value": "[variables('vnet1subnet3Name')]"
+              },                                                                                                            
+              "subnet3Prefix": {
+                "value": "[variables('vnet1subnet3Prefix')]"
+              },                             
               "BastionsubnetPrefix": {
                 "value": "[variables('vnet1BastionsubnetPrefix')]"
               },                         
@@ -1647,6 +1776,12 @@
               "subnet2Prefix": {
                 "value": "[variables('vnet2subnet2Prefix')]"
               },               
+              "subnet3Name": {
+                "value": "[variables('vnet1subnet3Name')]"
+              },                                                                                                            
+              "subnet3Prefix": {
+                "value": "[variables('vnet2subnet3Prefix')]"
+              },                             
               "BastionsubnetPrefix": {
                 "value": "[variables('vnet2BastionsubnetPrefix')]"
               },                         

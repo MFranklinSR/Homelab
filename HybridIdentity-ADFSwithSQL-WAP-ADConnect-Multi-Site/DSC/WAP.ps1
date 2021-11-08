@@ -36,10 +36,10 @@ Configuration WAP
             TestScript = { $false}
         }
 
-        File Certificates
+        File WAPCertificates
         {
             Type = 'Directory'
-            DestinationPath = 'C:\Certificates'
+            DestinationPath = 'C:\WAP-Certificates'
             Ensure = "Present"
             DependsOn = '[Script]AllowRemoteCopy'
         }
@@ -68,10 +68,10 @@ Configuration WAP
             Ensure = "Present"
             Type = "Directory"
             Recurse = $true
-            SourcePath = "\\$ADFSServerIP\c$\Certificates"
-            DestinationPath = "C:\Certificates\"
+            SourcePath = "\\$ADFSServerIP\c$\WAP-Certificates"
+            DestinationPath = "C:\WAP-Certificates\"
             Credential = $Admincreds
-            DependsOn = '[File]Certificates'
+            DependsOn = '[File]WAPCertificates'
         }
 
         Script ConfigureWAPCertificates
@@ -93,14 +93,14 @@ Configuration WAP
 
                 #Check if ADFS Service Communication Certificate already exists if NOT Create
                 $adfsthumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
-                IF ($adfsthumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password}
+                IF ($adfsthumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\WAP-Certificates\adfs.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password}
 
                 #Check if Certificate Chain Certs already exists if NOT Create
                 $importrootca = (Get-ChildItem -Path Cert:\LocalMachine\Root | Where-Object {$_.Subject -like "CN=$using:RootCAName*"}).Thumbprint
-                IF ($importrootca -eq $null) {Import-Certificate -FilePath "C:\Certificates\$using:RootCAName.cer" -CertStoreLocation Cert:\LocalMachine\Root}
+                IF ($importrootca -eq $null) {Import-Certificate -FilePath "C:\WAP-Certificates\$using:RootCAName.cer" -CertStoreLocation Cert:\LocalMachine\Root}
 
                 $importissuingca = (Get-ChildItem -Path Cert:\LocalMachine\CA | Where-Object {$_.Subject -like "CN=$using:IssuingCAName*"}).Thumbprint
-                IF ($importissuingca -eq $null) {Import-Certificate -FilePath "C:\Certificates\$using:IssuingCAName.cer" -CertStoreLocation Cert:\LocalMachine\CA}
+                IF ($importissuingca -eq $null) {Import-Certificate -FilePath "C:\WAP-Certificates\$using:IssuingCAName.cer" -CertStoreLocation Cert:\LocalMachine\CA}
             }
             GetScript =  { @{} }
             TestScript = { $false}

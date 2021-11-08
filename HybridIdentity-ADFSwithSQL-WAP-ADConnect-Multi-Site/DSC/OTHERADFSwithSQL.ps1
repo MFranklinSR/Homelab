@@ -44,10 +44,10 @@
             Ensure = "Present"
         }
 
-        File Certificates
+        File ADFSCertificates
         {
             Type = 'Directory'
-            DestinationPath = 'C:\Certificates'
+            DestinationPath = 'C:\ADFS-Certificates'
             Ensure = "Present"
             DependsOn = '[File]MachineConfig'
         }
@@ -57,10 +57,10 @@
             Ensure = "Present"
             Type = "Directory"
             Recurse = $true
-            SourcePath = "\\$PrimaryADFSServerIP\c$\Certificates"
-            DestinationPath = "C:\Certificates\"
+            SourcePath = "\\$PrimaryADFSServerIP\c$\ADFS-Certificates"
+            DestinationPath = "C:\ADFS-Certificates\"
             Credential = $DomainCreds
-            DependsOn = '[File]Certificates'
+            DependsOn = '[File]ADFSCertificates'
         }
 
         Script ADFSCertImport
@@ -68,26 +68,24 @@
             SetScript =
             {
                 # Create Credentials
-                $Load = "$using:DomainCreds"
-                $Password = $DomainCreds.Password
-
                 $ServiceCert = Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}
                 IF ($ServiceCert -eq $null)
                 {
                     # Import Service Communications Certificate
-                    Import-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password -Exportable
+                    Import-PfxCertificate -FilePath "C:\ADFS-Certificates\adfs.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Exportable
                 }                  
 
                 $SigningCert = Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs-signing.$using:ExternalDomainName"}
                 IF ($SigningCert -eq $null)
                 {
                     # Import Signing Certificate
-                    Import-PfxCertificate -FilePath "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password -Exportable
+                    Import-PfxCertificate -FilePath "C:\ADFS-Certificates\adfs-signing.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Exportable
                 }
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            DependsOn = '[File]Certificates'
+            PsDscRunAsCredential = $DomainCreds
+            DependsOn = '[File]ADFSCertificates'
         }
 
         Script ConfigureADFS
