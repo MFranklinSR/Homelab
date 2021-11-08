@@ -70,19 +70,73 @@
                 # Create Credentials
                 $Load = "$using:DomainCreds"
                 $Password = $DomainCreds.Password
+                $fsgmsa = 'FsGmsa$'
 
                 $ServiceCert = Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}
                 IF ($ServiceCert -eq $null)
                 {
+                    # Get Old Files
+                    $Oldfiles = Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys
+                    $OldFileNames = @()
+                    foreach ($OldFile in $OldFiles){
+                        $OldFileNames += Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys -Name $OldFile.Name
+                    }
+
                     # Import Service Communications Certificate
                     Import-PfxCertificate -FilePath "C:\Certificates\adfs.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password -Exportable
+
+                    # Get New Files
+                    $Newfiles = Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys
+                    $NewFileNames = @()
+                    foreach ($NewFile in $NewFiles){
+                        $NewFileNames += Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys -Name $NewFile.Name
+                    }
+
+                    # Get New Cert Hash
+                    $DeltaFile = Compare-Object $OldFileNames $NewFileNames
+
+                    # Add Private Key Permissions
+                    $account = "$using:NetBiosDomain\$fsgmsa"
+                    $FullPath = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys"+"\"+$DeltaFile.InputObject                    
+                    $acl=(Get-Item $fullPath).GetAccessControl('Access')
+                    $permission=$account,"Full","Allow"
+                    $accessRule=new-object System.Security.AccessControl.FileSystemAccessRule $permission
+                    $acl.AddAccessRule($accessRule)
+                    Set-Acl $fullPath $acl
                 }                  
 
                 $SigningCert = Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs-signing.$using:ExternalDomainName"}
                 IF ($SigningCert -eq $null)
                 {
+
+                    # Get Old Files
+                    $Oldfiles = Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys
+                    $OldFileNames = @()
+                    foreach ($OldFile in $OldFiles){
+                        $OldFileNames += Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys -Name $OldFile.Name
+                    }
+
                     # Import Signing Certificate
                     Import-PfxCertificate -FilePath "C:\Certificates\adfs-signing.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password -Exportable
+
+                    # Get New Files
+                    $Newfiles = Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys
+                    $NewFileNames = @()
+                    foreach ($NewFile in $NewFiles){
+                        $NewFileNames += Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys -Name $NewFile.Name
+                    }
+
+                    # Get New Cert Hash
+                    $DeltaFile = Compare-Object $OldFileNames $NewFileNames
+
+                    # Add Private Key Permissions
+                    $account = "$using:NetBiosDomain\$fsgmsa"
+                    $FullPath = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys"+"\"+$DeltaFile.InputObject                    
+                    $acl=(Get-Item $fullPath).GetAccessControl('Access')
+                    $permission=$account,"Full","Allow"
+                    $accessRule=new-object System.Security.AccessControl.FileSystemAccessRule $permission
+                    $acl.AddAccessRule($accessRule)
+                    Set-Acl $fullPath $acl
                 }
             }
             GetScript =  { @{} }
