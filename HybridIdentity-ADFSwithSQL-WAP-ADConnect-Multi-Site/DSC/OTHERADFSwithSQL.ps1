@@ -49,10 +49,16 @@
             Type = 'Directory'
             DestinationPath = 'C:\ADFS-Certificates'
             Ensure = "Present"
-            DependsOn = '[File]MachineConfig'
         }
 
-        File CopyCertsFromADFS
+        File WAPCertificates
+        {
+            Type = 'Directory'
+            DestinationPath = 'C:\WAP-Certificates'
+            Ensure = "Present"
+        }
+
+        File CopyADFSCertsFromADFS
         {
             Ensure = "Present"
             Type = "Directory"
@@ -61,6 +67,17 @@
             DestinationPath = "C:\ADFS-Certificates\"
             Credential = $DomainCreds
             DependsOn = '[File]ADFSCertificates'
+        }
+
+        File CopyWAPCertsFromADFS
+        {
+            Ensure = "Present"
+            Type = "Directory"
+            Recurse = $true
+            SourcePath = "\\$PrimaryADFSServerIP\c$\WAP-Certificates"
+            DestinationPath = "C:\WAP-Certificates\"
+            Credential = $DomainCreds
+            DependsOn = '[File]WAPCertificates'
         }
 
         Script ADFSCertImport
@@ -85,7 +102,7 @@
             GetScript =  { @{} }
             TestScript = { $false}
             PsDscRunAsCredential = $DomainCreds
-            DependsOn = '[File]ADFSCertificates'
+            DependsOn = '[File]CopyWAPCertsFromADFS'
         }
 
         Script ConfigureADFS

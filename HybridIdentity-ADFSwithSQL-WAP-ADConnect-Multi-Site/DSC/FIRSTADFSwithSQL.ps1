@@ -49,15 +49,13 @@
             Type = 'Directory'
             DestinationPath = 'C:\ADFS-Certificates'
             Ensure = "Present"
-            DependsOn = '[File]MachineConfig'
         }
 
         File WAPCertificates
         {
             Type = 'Directory'
             DestinationPath = 'C:\WAP-Certificates'
-            Ensure = "Present"
-            DependsOn = '[File]MachineConfig'
+            Ensure = "Present"0
         }
 
         Script CreateADFSCertExport
