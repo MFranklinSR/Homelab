@@ -308,7 +308,7 @@
                 }
             },                        
             {
-                "name": "Allow-Bastion-LocalServer",
+                "name": "Allow-Bastion-LocalWAP",
                 "properties": {
                   "description": "Allow Traffic from Bastion to Local Server",
                   "protocol": "Tcp",
