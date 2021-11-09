@@ -126,7 +126,7 @@
                 }
             },            
             {
-                "name": "SMTP",
+                "name": "SMTP-Inbound",
                 "properties": {
                   "description": "Opens Port SMTP (Port 25/TCP)",
                   "protocol": "Tcp",
@@ -135,10 +135,24 @@
                   "sourceAddressPrefix": "*",
                   "destinationAddressPrefix": "[parameters('EXPrivateIP')]",
                   "access": "Allow",
-                  "priority": 204,
+                  "priority": 300,
                   "direction": "Inbound"
                 }
             },
+            {
+                "name": "SMTP-Outbound",
+                "properties": {
+                  "description": "Opens Port SMTP (Port 25/TCP)",
+                  "protocol": "Tcp",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "25",
+                  "sourceAddressPrefix": "[parameters('EXPrivateIP')]",
+                  "destinationAddressPrefix": "*",
+                  "access": "Allow",
+                  "priority": 300,
+                  "direction": "Outbound"
+                }
+            },            
             {
                 "name": "LocalWAP-to-LocalADFS",
                 "properties": {
@@ -149,7 +163,7 @@
                   "sourceAddressPrefix": "[parameters('LocalWAPPrivateIP')]",
                   "destinationAddressPrefix": "[parameters('LocalADFSPrivateIP')]",
                   "access": "Allow",
-                  "priority": 301,
+                  "priority": 401,
                   "direction": "Inbound"
                 }
             },            
@@ -163,7 +177,7 @@
                   "sourceAddressPrefix": "[parameters('RemoteWAPPrivateIP')]",
                   "destinationAddressPrefix": "[parameters('LocalADFSPrivateIP')]",
                   "access": "Allow",
-                  "priority": 302,
+                  "priority": 402,
                   "direction": "Inbound"
                 }
             },                        
@@ -177,7 +191,7 @@
                   "sourceAddressPrefix": "[parameters('LocalSubnet1') ]",
                   "destinationAddressPrefix": "[parameters('LocalSubnet2')]",
                   "access": "Allow",
-                  "priority": 400,
+                  "priority": 500,
                   "direction": "Inbound"
                 }
             },            
@@ -191,7 +205,7 @@
                   "sourceAddressPrefix": "[parameters('LocalSubnet2')]",
                   "destinationAddressPrefix": "[parameters('LocalSubnet1')]",
                   "access": "Allow",
-                  "priority": 400,
+                  "priority": 500,
                   "direction": "Outbound"
                 }
             },                        
@@ -205,7 +219,7 @@
                   "sourceAddressPrefix": "[parameters('RemoteSubnet2') ]",
                   "destinationAddressPrefix": "[parameters('LocalSubnet1')]",
                   "access": "Allow",
-                  "priority": 500,
+                  "priority": 600,
                   "direction": "Inbound"
                 }
             },            
@@ -219,7 +233,7 @@
                   "sourceAddressPrefix": "[parameters('LocalSubnet1')]",
                   "destinationAddressPrefix": "[parameters('RemoteSubnet2')]",
                   "access": "Allow",
-                  "priority": 500,
+                  "priority": 600,
                   "direction": "Outbound"
                 }
             },                        
@@ -233,7 +247,7 @@
                   "sourceAddressPrefix": "[parameters('RemoteSubnet1') ]",
                   "destinationAddressPrefix": "[parameters('LocalSubnet2')]",
                   "access": "Allow",
-                  "priority": 600,
+                  "priority": 700,
                   "direction": "Inbound"
                 }
             },            
@@ -247,7 +261,7 @@
                   "sourceAddressPrefix": "[parameters('LocalSubnet2')]",
                   "destinationAddressPrefix": "[parameters('RemoteSubnet1')]",
                   "access": "Allow",
-                  "priority": 600,
+                  "priority": 700,
                   "direction": "Outbound"
                 }
             },                        
@@ -261,7 +275,7 @@
                   "sourceAddressPrefix": "[parameters('RemoteSubnet1')]",
                   "destinationAddressPrefix": "[parameters('LocalSubnet1')]",
                   "access": "Allow",
-                  "priority": 700,
+                  "priority": 800,
                   "direction": "Inbound"
                 }
             },            
@@ -275,7 +289,7 @@
                   "sourceAddressPrefix": "[parameters('LocalSubnet1')]",
                   "destinationAddressPrefix": "[parameters('RemoteSubnet1')]",
                   "access": "Allow",
-                  "priority": 700,
+                  "priority": 800,
                   "direction": "Outbound"
                 }
             },                        
@@ -289,7 +303,7 @@
                   "sourceAddressPrefix": "[parameters('BastionSubnet')]",
                   "destinationAddressPrefix": "[parameters('LocalSubnet1')]",
                   "access": "Allow",
-                  "priority": 801,
+                  "priority": 901,
                   "direction": "Inbound"
                 }
             },                        
@@ -303,7 +317,7 @@
                   "sourceAddressPrefix": "[parameters('BastionSubnet')]",
                   "destinationAddressPrefix": "[parameters('LocalSubnet2')]",
                   "access": "Allow",
-                  "priority": 802,
+                  "priority": 902,
                   "direction": "Inbound"
                 }
             },                        
@@ -317,7 +331,7 @@
                   "sourceAddressPrefix": "[parameters('BastionSubnet')]",
                   "destinationAddressPrefix": "[parameters('LocalWAPPrivateIP')]",
                   "access": "Allow",
-                  "priority": 803,
+                  "priority": 903,
                   "direction": "Inbound"
                 }
             },                                                
