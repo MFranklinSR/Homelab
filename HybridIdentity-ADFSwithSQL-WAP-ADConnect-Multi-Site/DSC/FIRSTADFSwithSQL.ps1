@@ -65,7 +65,8 @@
                 # Create Credentials
                 $User = Get-ChildItem Env:\USERNAME
                 $Domain = "$using:NetBiosDomain"
-                $Account = $Domain + "\" + $User.Value
+                $ProtectAccount = $Domain + "\" + $User.Value
+                $fsgmsa = 'FsGmsa$'
 
                 $CertCheck = Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}
                 IF ($CertCheck -eq $null)
@@ -74,19 +75,72 @@
                     $ServiceCert = Get-ChildItem -Path "C:\ADFS-Certificates\adfs.$using:ExternalDomainName.pfx" -ErrorAction 0
                     IF ($ServiceCert -eq $null)
                     {
+
+                        # Get Old Files
+                        $Oldfiles = Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys
+                        $OldFileNames = @()
+                        foreach ($OldFile in $OldFiles){
+                            $OldFileNames += Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys -Name $OldFile.Name
+                        }
+
                         # Get Service Communication Certificate and Export it
                         Get-Certificate -Template WebServer1 -SubjectName "CN=adfs.$using:ExternalDomainName" -DNSName "adfs.$using:ExternalDomainName" -CertStoreLocation "cert:\LocalMachine\My"
                         $ServiceThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint                 
-                        Get-ChildItem -Path cert:\LocalMachine\my\$ServiceThumbprint | Export-PfxCertificate -FilePath "C:\ADFS-Certificates\adfs.$using:ExternalDomainName.pfx" -ProtectTo $Account
+                        Get-ChildItem -Path cert:\LocalMachine\my\$ServiceThumbprint | Export-PfxCertificate -FilePath "C:\ADFS-Certificates\adfs.$using:ExternalDomainName.pfx" -ProtectTo $ProtectAccount
+
+                        # Get New Files
+                        $Newfiles = Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys
+                        $NewFileNames = @()
+                        foreach ($NewFile in $NewFiles){
+                            $NewFileNames += Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys -Name $NewFile.Name
+                        }
+
+                        # Get New Cert Hash
+                        $DeltaFile = Compare-Object $OldFileNames $NewFileNames
+
+                        # Add Private Key Permissions
+                        $account = "$Domain\$fsgmsa"
+                        $FullPath = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys"+"\"+$DeltaFile.InputObject                    
+                        $acl=(Get-Item $fullPath).GetAccessControl('Access')
+                        $permission=$account,"Full","Allow"
+                        $accessRule=new-object System.Security.AccessControl.FileSystemAccessRule $permission
+                        $acl.AddAccessRule($accessRule)
+                        Set-Acl $fullPath $acl
                     }
 
                     $SigningCert = Get-ChildItem -Path "C:\ADFS-Certificates\adfs-signing.$using:ExternalDomainName.pfx" -ErrorAction 0
                     IF ($SigningCert -eq $null)
                     {
+                        # Get Old Files
+                        $Oldfiles = Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys
+                        $OldFileNames = @()
+                        foreach ($OldFile in $OldFiles){
+                            $OldFileNames += Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys -Name $OldFile.Name
+                        }
+
                         # Get Signing Certificate and Export it
                         Get-Certificate -Template WebServer1 -SubjectName "CN=adfs-signing.$using:ExternalDomainName" -DNSName "adfs-signing.$using:ExternalDomainName" -CertStoreLocation "cert:\LocalMachine\My"
                         $SigningThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs-signing.$using:ExternalDomainName"}).Thumbprint                 
-                        Get-ChildItem -Path cert:\LocalMachine\my\$SigningThumbprint | Export-PfxCertificate -FilePath "C:\ADFS-Certificates\adfs-signing.$using:ExternalDomainName.pfx" -ProtectTo $Account
+                        Get-ChildItem -Path cert:\LocalMachine\my\$SigningThumbprint | Export-PfxCertificate -FilePath "C:\ADFS-Certificates\adfs-signing.$using:ExternalDomainName.pfx" -ProtectTo $ProtectAccount
+
+                        # Get New Files
+                        $Newfiles = Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys
+                        $NewFileNames = @()
+                        foreach ($NewFile in $NewFiles){
+                            $NewFileNames += Get-ChildItem C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys -Name $NewFile.Name
+                        }
+
+                        # Get New Cert Hash
+                        $DeltaFile = Compare-Object $OldFileNames $NewFileNames
+
+                        # Add Private Key Permissions
+                        $account = "$Domain\$fsgmsa"
+                        $FullPath = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys"+"\"+$DeltaFile.InputObject                    
+                        $acl=(Get-Item $fullPath).GetAccessControl('Access')
+                        $permission=$account,"Full","Allow"
+                        $accessRule=new-object System.Security.AccessControl.FileSystemAccessRule $permission
+                        $acl.AddAccessRule($accessRule)
+                        Set-Acl $fullPath $acl
                     }
                 }
             }
