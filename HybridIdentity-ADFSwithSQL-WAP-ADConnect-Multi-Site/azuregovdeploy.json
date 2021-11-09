@@ -1641,7 +1641,7 @@
       "properties": {
           "mode": "Incremental",
           "templateLink": {
-              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/NetworkSecurityGroup.json', parameters('_artifactsLocationSasToken')))]",
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/UpdateNetworkSecurityGroup.json', parameters('_artifactsLocationSasToken')))]",
               "contentVersion": "1.0.0.0"
           },
           "parameters": {
@@ -1654,6 +1654,9 @@
               "EXPrivateIP": {
                   "value": "[variables('ex1IP')]"
               },                                                                                                                                  
+              "WAPPrivateIP": {
+                  "value": "[variables('wap1IP')]"
+              },                                                                                                                                                
               "location": {
                   "value": "[resourceGroup().location]"
               }
@@ -1670,7 +1673,7 @@
       "properties": {
           "mode": "Incremental",
           "templateLink": {
-              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/NetworkSecurityGroup.json', parameters('_artifactsLocationSasToken')))]",
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/UpdateNetworkSecurityGroup.json', parameters('_artifactsLocationSasToken')))]",
               "contentVersion": "1.0.0.0"
           },
           "parameters": {
@@ -1682,7 +1685,10 @@
               },                                                                                                      
               "EXPrivateIP": {
                   "value": "[variables('ex2IP')]"
-              },                                                                                                                                  
+              },
+              "WAPPrivateIP": {
+                  "value": "[variables('wap2IP')]"
+              },                                                                                                                                                
               "location": {
                   "value": "[parameters('Location2')]"
               }
@@ -1777,7 +1783,7 @@
                 "value": "[variables('vnet2subnet2Prefix')]"
               },               
               "subnet3Name": {
-                "value": "[variables('vnet1subnet3Name')]"
+                "value": "[variables('vnet2subnet3Name')]"
               },                                                                                                            
               "subnet3Prefix": {
                 "value": "[variables('vnet2subnet3Prefix')]"
