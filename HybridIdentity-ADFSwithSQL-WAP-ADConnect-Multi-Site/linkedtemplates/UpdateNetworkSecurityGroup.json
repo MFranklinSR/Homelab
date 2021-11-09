@@ -154,7 +154,7 @@
                 }
             },            
             {
-                "name": "LocalWAP-to-LocalADFS",
+                "name": "LocalWAP-to-LocalADFS-Inbound",
                 "properties": {
                   "description": "Allow Traffic from Local WAP to Local ADFS",
                   "protocol": "Tcp",
@@ -167,6 +167,20 @@
                   "direction": "Inbound"
                 }
             },            
+            {
+                "name": "LocalWAP-to-LocalADFS-Outbound",
+                "properties": {
+                  "description": "Allow Traffic from Local WAP to Local ADFS",
+                  "protocol": "Tcp",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "443",
+                  "sourceAddressPrefix": "[parameters('LocalWAPPrivateIP')]",
+                  "destinationAddressPrefix": "[parameters('LocalADFSPrivateIP')]",
+                  "access": "Allow",
+                  "priority": 401,
+                  "direction": "Outbound"
+                }
+            },                        
             {
                 "name": "RemoteWAP-to-LocalADFS",
                 "properties": {
