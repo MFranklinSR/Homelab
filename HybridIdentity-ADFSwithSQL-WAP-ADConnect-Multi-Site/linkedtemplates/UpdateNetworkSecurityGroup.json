@@ -20,6 +20,12 @@
         "description": "Local Client Subnet"
       }
     },    
+    "BastionSubnet": {
+      "type": "string",
+      "metadata": {
+        "description": "Bastion Subnet"
+      }
+    },        
     "RemoteSubnet1": {
       "type": "string",
       "metadata": {
@@ -87,7 +93,7 @@
                 "sourceAddressPrefix": "*",
                 "destinationAddressPrefix": "[parameters('OCSPPrivateIP')]",
                 "access": "Allow",
-                "priority": 100,
+                "priority": 201,
                 "direction": "Inbound"
               }
             },
@@ -101,7 +107,7 @@
                   "sourceAddressPrefix": "*",
                   "destinationAddressPrefix": "[parameters('LocalWAPPrivateIP')]",
                   "access": "Allow",
-                  "priority": 200,
+                  "priority": 202,
                   "direction": "Inbound"
                 }
             },
@@ -115,7 +121,7 @@
                   "sourceAddressPrefix": "*",
                   "destinationAddressPrefix": "[parameters('LocalWAPPrivateIP')]",
                   "access": "Allow",
-                  "priority": 250,
+                  "priority": 203,
                   "direction": "Inbound"
                 }
             },            
@@ -129,7 +135,7 @@
                   "sourceAddressPrefix": "*",
                   "destinationAddressPrefix": "[parameters('EXPrivateIP')]",
                   "access": "Allow",
-                  "priority": 300,
+                  "priority": 204,
                   "direction": "Inbound"
                 }
             },
@@ -143,7 +149,7 @@
                   "sourceAddressPrefix": "[parameters('LocalWAPPrivateIP')]",
                   "destinationAddressPrefix": "[parameters('LocalADFSPrivateIP')]",
                   "access": "Allow",
-                  "priority": 401,
+                  "priority": 301,
                   "direction": "Inbound"
                 }
             },            
@@ -157,7 +163,7 @@
                   "sourceAddressPrefix": "[parameters('RemoteWAPPrivateIP')]",
                   "destinationAddressPrefix": "[parameters('LocalADFSPrivateIP')]",
                   "access": "Allow",
-                  "priority": 402,
+                  "priority": 302,
                   "direction": "Inbound"
                 }
             },                        
@@ -171,7 +177,7 @@
                   "sourceAddressPrefix": "[parameters('LocalSubnet1') ]",
                   "destinationAddressPrefix": "[parameters('LocalSubnet2')]",
                   "access": "Allow",
-                  "priority": 500,
+                  "priority": 400,
                   "direction": "Inbound"
                 }
             },            
@@ -185,7 +191,7 @@
                   "sourceAddressPrefix": "[parameters('LocalSubnet2')]",
                   "destinationAddressPrefix": "[parameters('LocalSubnet1')]",
                   "access": "Allow",
-                  "priority": 500,
+                  "priority": 400,
                   "direction": "Outbound"
                 }
             },                        
@@ -199,7 +205,7 @@
                   "sourceAddressPrefix": "[parameters('RemoteSubnet2') ]",
                   "destinationAddressPrefix": "[parameters('LocalSubnet1')]",
                   "access": "Allow",
-                  "priority": 600,
+                  "priority": 500,
                   "direction": "Inbound"
                 }
             },            
@@ -213,7 +219,7 @@
                   "sourceAddressPrefix": "[parameters('LocalSubnet1')]",
                   "destinationAddressPrefix": "[parameters('RemoteSubnet2')]",
                   "access": "Allow",
-                  "priority": 600,
+                  "priority": 500,
                   "direction": "Outbound"
                 }
             },                        
@@ -227,7 +233,7 @@
                   "sourceAddressPrefix": "[parameters('RemoteSubnet1') ]",
                   "destinationAddressPrefix": "[parameters('LocalSubnet2')]",
                   "access": "Allow",
-                  "priority": 700,
+                  "priority": 600,
                   "direction": "Inbound"
                 }
             },            
@@ -241,7 +247,7 @@
                   "sourceAddressPrefix": "[parameters('LocalSubnet2')]",
                   "destinationAddressPrefix": "[parameters('RemoteSubnet1')]",
                   "access": "Allow",
-                  "priority": 700,
+                  "priority": 600,
                   "direction": "Outbound"
                 }
             },                        
@@ -255,7 +261,7 @@
                   "sourceAddressPrefix": "[parameters('RemoteSubnet1')]",
                   "destinationAddressPrefix": "[parameters('LocalSubnet1')]",
                   "access": "Allow",
-                  "priority": 800,
+                  "priority": 700,
                   "direction": "Inbound"
                 }
             },            
@@ -269,10 +275,52 @@
                   "sourceAddressPrefix": "[parameters('LocalSubnet1')]",
                   "destinationAddressPrefix": "[parameters('RemoteSubnet1')]",
                   "access": "Allow",
-                  "priority": 800,
+                  "priority": 700,
                   "direction": "Outbound"
                 }
             },                        
+            {
+                "name": "Allow-Bastion-LocalServer",
+                "properties": {
+                  "description": "Allow Traffic from Bastion to Local Server",
+                  "protocol": "Tcp",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "3389",
+                  "sourceAddressPrefix": "[parameters('BastionSubnet')]",
+                  "destinationAddressPrefix": "[parameters('LocalSubnet1')]",
+                  "access": "Allow",
+                  "priority": 801,
+                  "direction": "Inbound"
+                }
+            },                        
+            {
+                "name": "Allow-Bastion-LocalClient",
+                "properties": {
+                  "description": "Allow Traffic from Bastion to Local Client",
+                  "protocol": "Tcp",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "3389",
+                  "sourceAddressPrefix": "[parameters('BastionSubnet')]",
+                  "destinationAddressPrefix": "[parameters('LocalSubnet2')]",
+                  "access": "Allow",
+                  "priority": 802,
+                  "direction": "Inbound"
+                }
+            },                        
+            {
+                "name": "Allow-Bastion-LocalServer",
+                "properties": {
+                  "description": "Allow Traffic from Bastion to Local Server",
+                  "protocol": "Tcp",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "3390",
+                  "sourceAddressPrefix": "[parameters('BastionSubnet')]",
+                  "destinationAddressPrefix": "[parameters('LocalWAPPrivateIP')]",
+                  "access": "Allow",
+                  "priority": 803,
+                  "direction": "Inbound"
+                }
+            },                                                
             {
                 "name": "Deny-All-Inbound",
                 "properties": {

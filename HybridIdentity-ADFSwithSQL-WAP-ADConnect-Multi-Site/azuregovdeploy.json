@@ -1669,6 +1669,9 @@
               "LocalSubnet2": {
                   "value": "[variables('vnet1subnet2Prefix')]"
               },                                    
+              "BastionSubnet": {
+                  "value": "[variables('vnet1BastionsubnetPrefix')]"
+              },                                                  
               "RemoteSubnet1": {
                   "value": "[variables('vnet2subnet1Prefix')]"
               },                                                                                                                                                              
@@ -1719,6 +1722,9 @@
               "LocalSubnet2": {
                   "value": "[variables('vnet2subnet2Prefix')]"
               },                                    
+              "BastionSubnet": {
+                  "value": "[variables('vnet1BastionsubnetPrefix')]"
+              },                                                                
               "RemoteSubnet1": {
                   "value": "[variables('vnet1subnet1Prefix')]"
               },                                                                                                                                                              
