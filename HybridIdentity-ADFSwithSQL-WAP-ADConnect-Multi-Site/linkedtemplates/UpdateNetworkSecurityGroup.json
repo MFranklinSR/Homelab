@@ -7,25 +7,61 @@
       "metadata": {
         "description": "VNet name"
       }
+    }, 
+    "LocalSubnet1": {
+      "type": "string",
+      "metadata": {
+        "description": "Local Server Subnet"
+      }
     },
+    "LocalSubnet2": {
+      "type": "string",
+      "metadata": {
+        "description": "Local Client Subnet"
+      }
+    },    
+    "RemoteSubnet1": {
+      "type": "string",
+      "metadata": {
+        "description": "Remote Server Subnet"
+      }
+    },    
+    "RemoteSubnet2": {
+      "type": "string",
+      "metadata": {
+        "description": "Remote Client Subnet"
+      }
+    },             
     "OCSPPrivateIP": {
       "type": "string",
       "metadata": {
         "description": "OCSP Private IP Address"
       }
-    },    
+    },        
     "EXPrivateIP": {
       "type": "string",
       "metadata": {
         "description": "Exchange Private IP Address"
       }
     },
-    "WAPPrivateIP": {
+    "LocalWAPPrivateIP": {
       "type": "string",
       "metadata": {
         "description": "Web Application Proxy Private IP Address"
       }
     },     
+    "RemoteWAPPrivateIP": {
+      "type": "string",
+      "metadata": {
+        "description": "Remote WAP Private IP Address"
+      }
+    },                 
+    "LocalADFSPrivateIP": {
+      "type": "string",
+      "metadata": {
+        "description": "Local ADFS Private IP Address"
+      }
+    },         
     "location": {
         "type": "string",
         "metadata": {
@@ -63,12 +99,26 @@
                   "sourcePortRange": "*",
                   "destinationPortRange": "443",
                   "sourceAddressPrefix": "*",
-                  "destinationAddressPrefix": "[parameters('WAPPrivateIP')]",
+                  "destinationAddressPrefix": "[parameters('LocalWAPPrivateIP')]",
                   "access": "Allow",
                   "priority": 200,
                   "direction": "Inbound"
                 }
             },
+            {
+                "name": "CERTAUTH",
+                "properties": {
+                  "description": "Opens Port CERTAUTH (Port 49443/TCP)",
+                  "protocol": "Tcp",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "49443",
+                  "sourceAddressPrefix": "*",
+                  "destinationAddressPrefix": "[parameters('LocalWAPPrivateIP')]",
+                  "access": "Allow",
+                  "priority": 250,
+                  "direction": "Inbound"
+                }
+            },            
             {
                 "name": "SMTP",
                 "properties": {
@@ -82,7 +132,175 @@
                   "priority": 300,
                   "direction": "Inbound"
                 }
-            }                                    
+            },
+            {
+                "name": "LocalWAP-to-LocalADFS",
+                "properties": {
+                  "description": "Allow Traffic from Local WAP to Local ADFS",
+                  "protocol": "Tcp",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "443",
+                  "sourceAddressPrefix": "[parameters('LocalWAPPrivateIP')]",
+                  "destinationAddressPrefix": "[parameters('LocalADFSPrivateIP')]",
+                  "access": "Allow",
+                  "priority": 401,
+                  "direction": "Inbound"
+                }
+            },            
+            {
+                "name": "RemoteWAP-to-LocalADFS",
+                "properties": {
+                  "description": "Allow Traffic from WAP to Remote ADFS",
+                  "protocol": "Tcp",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "443",
+                  "sourceAddressPrefix": "[parameters('RemoteWAPPrivateIP')]",
+                  "destinationAddressPrefix": "[parameters('LocalADFSPrivateIP')]",
+                  "access": "Allow",
+                  "priority": 402,
+                  "direction": "Inbound"
+                }
+            },                        
+            {
+                "name": "Allow-LocalServer-to-LocalClient",
+                "properties": {
+                  "description": "Allow Traffic from Local Server to Local Client",
+                  "protocol": "*",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "*",
+                  "sourceAddressPrefix": "[parameters('LocalSubnet1') ]",
+                  "destinationAddressPrefix": "[parameters('LocalSubnet2')]",
+                  "access": "Allow",
+                  "priority": 500,
+                  "direction": "Inbound"
+                }
+            },            
+            {
+                "name": "Allow-LocalClient-to-LocalServer",
+                "properties": {
+                  "description": "Allow Traffic from Local Client to Local Server",
+                  "protocol": "*",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "*",
+                  "sourceAddressPrefix": "[parameters('LocalSubnet2')]",
+                  "destinationAddressPrefix": "[parameters('LocalSubnet1')]",
+                  "access": "Allow",
+                  "priority": 500,
+                  "direction": "Outbound"
+                }
+            },                        
+            {
+                "name": "Allow-RemoteClient-to-LocalServer",
+                "properties": {
+                  "description": "Allow Traffic from Remote Client to Local Server",
+                  "protocol": "*",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "*",
+                  "sourceAddressPrefix": "[parameters('RemoteSubnet2') ]",
+                  "destinationAddressPrefix": "[parameters('LocalSubnet1')]",
+                  "access": "Allow",
+                  "priority": 600,
+                  "direction": "Inbound"
+                }
+            },            
+            {
+                "name": "Allow-LocalServer-to-RemoteClient",
+                "properties": {
+                  "description": "Allow Traffic from Local Server to Remote Client",
+                  "protocol": "*",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "*",
+                  "sourceAddressPrefix": "[parameters('LocalSubnet1')]",
+                  "destinationAddressPrefix": "[parameters('RemoteSubnet2')]",
+                  "access": "Allow",
+                  "priority": 600,
+                  "direction": "Outbound"
+                }
+            },                        
+            {
+                "name": "Allow-RemoteServer-to-LocalClient",
+                "properties": {
+                  "description": "Allow Traffic from Remote Server to Local Client",
+                  "protocol": "*",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "*",
+                  "sourceAddressPrefix": "[parameters('RemoteSubnet1') ]",
+                  "destinationAddressPrefix": "[parameters('LocalSubnet2')]",
+                  "access": "Allow",
+                  "priority": 700,
+                  "direction": "Inbound"
+                }
+            },            
+            {
+                "name": "Allow-LocalClient-to-RemoteServer",
+                "properties": {
+                  "description": "Allow Traffic from Local Client to Remote Server",
+                  "protocol": "*",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "*",
+                  "sourceAddressPrefix": "[parameters('LocalSubnet2')]",
+                  "destinationAddressPrefix": "[parameters('RemoteSubnet1')]",
+                  "access": "Allow",
+                  "priority": 700,
+                  "direction": "Outbound"
+                }
+            },                        
+            {
+                "name": "Allow-RemoteServer-to-LocalServer",
+                "properties": {
+                  "description": "Allow Traffic from Remote Server to Local Server",
+                  "protocol": "*",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "*",
+                  "sourceAddressPrefix": "[parameters('RemoteSubnet1')]",
+                  "destinationAddressPrefix": "[parameters('LocalSubnet1')]",
+                  "access": "Allow",
+                  "priority": 800,
+                  "direction": "Inbound"
+                }
+            },            
+            {
+                "name": "Allow-LocalServer-to-RemoteServer",
+                "properties": {
+                  "description": "Allow Traffic from Local Server to Remote Server",
+                  "protocol": "*",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "*",
+                  "sourceAddressPrefix": "[parameters('LocalSubnet1')]",
+                  "destinationAddressPrefix": "[parameters('RemoteSubnet1')]",
+                  "access": "Allow",
+                  "priority": 800,
+                  "direction": "Outbound"
+                }
+            },                        
+            {
+                "name": "Deny-All-Inbound",
+                "properties": {
+                  "description": "Deny All Inbound Traffic",
+                  "protocol": "*",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "*",
+                  "sourceAddressPrefix": "*",
+                  "destinationAddressPrefix": "*",
+                  "access": "Deny",
+                  "priority": 4000,
+                  "direction": "Inbound"
+                }
+            },
+            {
+                "name": "Deny-All-Outbound",
+                "properties": {
+                  "description": "Deny All Outbound Traffic",
+                  "protocol": "*",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "*",
+                  "sourceAddressPrefix": "*",
+                  "destinationAddressPrefix": "*",
+                  "access": "Deny",
+                  "priority": 4000,
+                  "direction": "Outbound"
+                }
+            }            
           ]
         }
       }

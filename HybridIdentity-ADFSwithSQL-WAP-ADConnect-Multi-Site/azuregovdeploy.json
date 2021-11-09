@@ -1654,9 +1654,27 @@
               "EXPrivateIP": {
                   "value": "[variables('ex1IP')]"
               },                                                                                                                                  
-              "WAPPrivateIP": {
+              "LocalWAPPrivateIP": {
                   "value": "[variables('wap1IP')]"
               },                                                                                                                                                
+              "RemoteWAPPrivateIP": {
+                  "value": "[variables('wap2IP')]"
+              },                                                                                                                                                                                          
+              "LocalADFSPrivateIP": {
+                  "value": "[variables('adfs1IP')]"
+              },                                                                                                                                                                                                                                                                                                                                          
+              "LocalSubnet1": {
+                  "value": "[variables('vnet1subnet1Prefix')]"
+              },                                                                                                                                                              
+              "LocalSubnet2": {
+                  "value": "[variables('vnet1subnet2Prefix')]"
+              },                                    
+              "RemoteSubnet1": {
+                  "value": "[variables('vnet2subnet1Prefix')]"
+              },                                                                                                                                                              
+              "RemoteSubnet2": {
+                  "value": "[variables('vnet2subnet2Prefix')]"
+              },                                    
               "location": {
                   "value": "[resourceGroup().location]"
               }
@@ -1686,9 +1704,27 @@
               "EXPrivateIP": {
                   "value": "[variables('ex2IP')]"
               },
-              "WAPPrivateIP": {
+              "LocalWAPPrivateIP": {
                   "value": "[variables('wap2IP')]"
               },                                                                                                                                                
+              "RemoteWAPPrivateIP": {
+                  "value": "[variables('wap1IP')]"
+              },                                                                                                                                                                                          
+              "LocalADFSPrivateIP": {
+                  "value": "[variables('adfs2IP')]"
+              },                                                                                                                                                                                                                                                                                                                                          
+              "LocalSubnet1": {
+                  "value": "[variables('vnet2subnet1Prefix')]"
+              },                                                                                                                                                              
+              "LocalSubnet2": {
+                  "value": "[variables('vnet2subnet2Prefix')]"
+              },                                    
+              "RemoteSubnet1": {
+                  "value": "[variables('vnet1subnet1Prefix')]"
+              },                                                                                                                                                              
+              "RemoteSubnet2": {
+                  "value": "[variables('vnet1subnet2Prefix')]"
+              },                                                                                                               
               "location": {
                   "value": "[parameters('Location2')]"
               }
