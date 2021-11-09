@@ -1648,6 +1648,9 @@
               "NetworkSecurityGroupname": {
                   "value": "[variables('NSG1Name')]"
               },                                                                                                      
+              "DCPrivateIP": {
+                  "value": "[variables('dc1IP')]"
+              },                           
               "OCSPPrivateIP": {
                   "value": "[variables('ocspIP')]"
               },                                                                                                      
@@ -1663,6 +1666,9 @@
               "LocalADFSPrivateIP": {
                   "value": "[variables('adfs1IP')]"
               },                                                                                                                                                                                                                                                                                                                                          
+              "RemoteADFSPrivateIP": {
+                  "value": "[variables('adfs2IP')]"
+              },                                                                                                                                                                                                                                                                                                                                                        
               "LocalSubnet1": {
                   "value": "[variables('vnet1subnet1Prefix')]"
               },                                                                                                                                                              
@@ -1701,6 +1707,9 @@
               "NetworkSecurityGroupname": {
                   "value": "[variables('NSG2Name')]"
               },                                                                                                      
+              "DCPrivateIP": {
+                  "value": "[variables('dc2IP')]"
+              },                                                                                                                    
               "OCSPPrivateIP": {
                   "value": "[variables('ocspIP')]"
               },                                                                                                      
@@ -1716,6 +1725,9 @@
               "LocalADFSPrivateIP": {
                   "value": "[variables('adfs2IP')]"
               },                                                                                                                                                                                                                                                                                                                                          
+              "RemoteADFSPrivateIP": {
+                  "value": "[variables('adfs1IP')]"
+              },                                                                                                                                                                                                                                                                                                                                                                      
               "LocalSubnet1": {
                   "value": "[variables('vnet2subnet1Prefix')]"
               },                                                                                                                                                              
