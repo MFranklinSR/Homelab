@@ -237,7 +237,7 @@
                 Get-AdfsCertificate | Where-Object {$_.CertificateType -eq 'Token-Signing'} | Where-Object {$_.IsPrimary -ne 'True'} | Remove-AdfsCertificate
 
                 # Export ADFS Signing Thumbprint
-                Get-AdfsCertificate | Where {$_.CertificateType -like "Token-Signing"} | ft Thumbprint C:\ADFS-Certificates\ADFSSigningThumb.txt -HideTableHeaders
+                Get-AdfsCertificate | Where {$_.CertificateType -like "Token-Signing"} | ft Thumbprint "C:\ADFS-Certificates\ADFSSigningThumb.txt" -HideTableHeaders
 
                 # Enable Certificate Copy
                 $EnableSMB = Get-NetFirewallRule "FPS-SMB-In-TCP" -ErrorAction 0
