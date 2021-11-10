@@ -178,8 +178,8 @@
                   "protocol": "Udp",
                   "sourcePortRange": "*",
                   "destinationPortRange": "53",
-                  "sourceAddressPrefix": "168.63.129.16",
-                  "destinationAddressPrefix": "*",
+                  "sourceAddressPrefix": "[parameters('LocalWAPPrivateIP')]",
+                  "destinationAddressPrefix": "168.63.129.16",
                   "access": "Allow",
                   "priority": 204,
                   "direction": "Outbound"

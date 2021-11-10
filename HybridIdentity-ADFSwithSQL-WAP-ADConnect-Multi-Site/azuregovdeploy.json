@@ -1766,7 +1766,9 @@
       "apiVersion": "2019-10-01",
       "name": "deploynsg1",
       "dependsOn": [
-        "configureotherwap"       
+        "configureotherwap",
+        "restartwap1",
+        "restartwap2"     
       ],      
       "properties": {
           "mode": "Incremental",
@@ -1825,7 +1827,9 @@
       "apiVersion": "2019-10-01",
       "name": "deploynsg2",
       "dependsOn": [
-        "configureotherwap"
+        "configureotherwap",
+        "restartwap1",
+        "restartwap2"             
       ],      
       "properties": {
           "mode": "Incremental",
