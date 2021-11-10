@@ -8,6 +8,18 @@
                 "description": "Computer Name"
             }
         },
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Existing VNET Name that contains the domain controller"
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Existing subnet name that contains the domain controller"
+          }
+        },        
         "location": {
             "type": "string",
             "metadata": {
@@ -16,7 +28,8 @@
         }
     },
     "variables": {
-        "NicName": "[concat(parameters('computerName'),'-nic')]"
+        "NicName": "[concat(parameters('computerName'),'-nic')]",
+        "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"      
     },
     "resources": [
         {
@@ -29,6 +42,9 @@
                     {
                         "name": "ipconfig1",
                         "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetId')]"
+                            }                            
                         }
                     }
                 ],

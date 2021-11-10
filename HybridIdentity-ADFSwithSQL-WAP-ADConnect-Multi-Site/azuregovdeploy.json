@@ -1622,7 +1622,13 @@
           "parameters": {
               "computerName": {
                   "value": "[variables('wap1name')]"
-              },     
+              }, 
+              "vnetName": {
+                "value": "[variables('vnet1Name')]"
+              },            
+              "subnetName": {
+                "value": "[variables('vnet1subnet3Name')]"
+              },                              
               "location": {
                   "value": "[resourceGroup().location]"
               }
@@ -1676,6 +1682,12 @@
               "computerName": {
                   "value": "[variables('wap2name')]"
               },     
+              "vnetName": {
+                "value": "[variables('vnet2Name')]"
+              },            
+              "subnetName": {
+                "value": "[variables('vnet2subnet3Name')]"
+              },                                            
               "location": {
                   "value": "[parameters('Location2')]"
               }
