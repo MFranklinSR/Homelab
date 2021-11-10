@@ -1422,10 +1422,40 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
+      "name": "restartwap1-1",
+      "dependsOn": [
+        "deployWAP1VM"
+      ],            
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/restartvm.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "computerName": {
+                  "value": "[variables('wap1name')]"
+              },
+              "_artifactsLocation": {
+                "value": "[parameters('_artifactsLocation')]"
+              },                                                                                                            
+              "_artifactsLocationSasToken": {
+                "value": "[parameters('_artifactsLocationSasToken')]"
+              },                                                                                                                                                                                                                                                                                                                         
+              "location": {
+                  "value": "[resourceGroup().location]"
+              }
+          }
+      }
+    },        
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
       "name": "configurefirstwap",
       "dependsOn": [
         "deployWAP1VM",
-        "configureotheradfs"
+        "configureotheradfs",
+        "restartwap1-1"
       ],      
       "properties": {
           "mode": "Incremental",
@@ -1548,10 +1578,40 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
+      "name": "restartwap2-1",
+      "dependsOn": [
+        "deployWAP2VM"
+      ],            
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/restartvm.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "computerName": {
+                  "value": "[variables('wap2name')]"
+              },
+              "_artifactsLocation": {
+                "value": "[parameters('_artifactsLocation')]"
+              },                                                                                                            
+              "_artifactsLocationSasToken": {
+                "value": "[parameters('_artifactsLocationSasToken')]"
+              },                                                                                                                                                                                                                                                                                                                         
+              "location": {
+                  "value": "[parameters('Location2')]"
+              }
+          }
+      }
+    },                  
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
       "name": "configureotherwap",
       "dependsOn": [
         "configurefirstwap",        
-        "deployWAP2VM"
+        "deployWAP2VM",
+        "restartwap2-1"
       ],      
       "properties": {
           "mode": "Incremental",
@@ -1610,7 +1670,9 @@
       "apiVersion": "2019-10-01",
       "name": "Update-WAP1-DNS",
       "dependsOn": [
+        "restartwap1-1",
         "configurefirstwap",
+        "restartwap2-1",
         "configureotherwap"
       ],            
       "properties": {
@@ -1638,7 +1700,7 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "restartwap1",
+      "name": "restartwap1-2",
       "dependsOn": [
         "Update-WAP1-DNS"
       ],            
@@ -1697,7 +1759,7 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "restartwap2",
+      "name": "restartwap2-2",
       "dependsOn": [
         "Update-WAP2-DNS"
       ],            
@@ -1767,8 +1829,8 @@
       "name": "deploynsg1",
       "dependsOn": [
         "configureotherwap",
-        "restartwap1",
-        "restartwap2"     
+        "restartwap1-2",
+        "restartwap2-2"     
       ],      
       "properties": {
           "mode": "Incremental",
@@ -1828,8 +1890,8 @@
       "name": "deploynsg2",
       "dependsOn": [
         "configureotherwap",
-        "restartwap1",
-        "restartwap2"             
+        "restartwap1-2",
+        "restartwap2-2"             
       ],      
       "properties": {
           "mode": "Incremental",
