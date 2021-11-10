@@ -5,6 +5,8 @@ Configuration WAP
         [String]$TimeZone,
         [String]$NetBiosDomain,
         [String]$ADFSServerIP,
+        [String]$ExchangeVersion,
+        [String]$EXServerIP,
         [String]$ExternalDomainName,
         [String]$IssuingCAName,
         [String]$RootCAName,     
@@ -44,6 +46,14 @@ Configuration WAP
             DependsOn = '[Script]AllowRemoteCopy'
         }
 
+        File EXCertificates
+        {
+            Type = 'Directory'
+            DestinationPath = 'C:\EX-Certificates'
+            Ensure = "Present"
+            DependsOn = '[File]WAPCertificates'
+        }
+
         TimeZone SetTimeZone
         {
             IsSingleInstance = 'Yes'
@@ -74,6 +84,17 @@ Configuration WAP
             DependsOn = '[File]WAPCertificates'
         }
 
+        File CopyEXCertFromExchange
+        {
+            Ensure = "Present"
+            Type = "Directory"
+            Recurse = $true
+            SourcePath = "\\$EXServerIP\c$\Certificates"
+            DestinationPath = "C:\EX-Certificates\"
+            Credential = $Admincreds
+            DependsOn = '[File]EXCertificates'
+        }
+
         Script ConfigureWAPCertificates
         {
             SetScript =
@@ -91,11 +112,15 @@ Configuration WAP
 
                 }
 
-                #Check if ADFS Service Communication Certificate already exists if NOT Create
+                #Check if ADFS Service Communication Certificate already exists if NOT Import
                 $adfsthumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
                 IF ($adfsthumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\WAP-Certificates\adfs.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password}
 
-                #Check if Certificate Chain Certs already exists if NOT Create
+                #Check if Exchange Certificate already exists if NOT Import
+                $exthumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=owa$using:ExchangeVersion.$using:ExternalDomainName"}).Thumbprint
+                IF ($exthumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\EX-Certificates\owa$using:ExchangeVersion.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password}
+
+                #Check if Certificate Chain Certs already exists if NOT Import
                 $importrootca = (Get-ChildItem -Path Cert:\LocalMachine\Root | Where-Object {$_.Subject -like "CN=$using:RootCAName*"}).Thumbprint
                 IF ($importrootca -eq $null) {Import-Certificate -FilePath "C:\WAP-Certificates\$using:RootCAName.cer" -CertStoreLocation Cert:\LocalMachine\Root}
 
@@ -107,7 +132,7 @@ Configuration WAP
             DependsOn = '[File]CopyServiceCommunicationCertFromADFS'
         }
 
-        Script ConfigureWAPADFSTrust
+        Script ConfigureWAPADFS
         {
             SetScript =
             {
@@ -130,6 +155,21 @@ Configuration WAP
                 # Configure ADFS/WAP Trust
                 $waphealth = Get-WebApplicationProxyHealth
                 IF ($waphealth[0].HealthState -eq "Error") {Install-WebApplicationProxy –CertificateThumbprint $servicethumbprint -FederationServiceName "adfs.$using:ExternalDomainName" -FederationServiceTrustCredential $Creds}
+
+                # Get Exchange Certificate
+                $exthumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=owa$using:ExchangeVersion.$using:ExternalDomainName"}).Thumbprint
+
+                # Configure Publishing Rules
+                $OWAWPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "Outlook Web App $ExchangeVersion"}
+                IF ($OWAWPR -eq $Null){
+                    Add-WebApplicationProxyApplication -BackendServerUrl "https://owa$ExchangeVersion.$ExternalDomainName/owa/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://owa$ExchangeVersion.$ExternalDomainName/owa/" -Name "Outlook Web App $ExchangeVersion" -ExternalPreAuthentication ADFS -ADFSRelyingPartyName "Outlook Web App $ExchangeVersion"
+                }
+
+                $ECPWPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "Exchange Admin Center (EAC) $ExchangeVersion"}
+                IF ($ECPWPR -eq $Null){
+                    Add-WebApplicationProxyApplication -BackendServerUrl "https://owa$ExchangeVersion.$ExternalDomainName/ecp/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://owa$ExchangeVersion.$ExternalDomainName/ecp/" -Name "Exchange Admin Center (EAC) $ExchangeVersion" -ExternalPreAuthentication ADFS -ADFSRelyingPartyName "Exchange Admin Center (EAC) $ExchangeVersion"
+                }
+
             }
             GetScript =  { @{} }
             TestScript = { $false}

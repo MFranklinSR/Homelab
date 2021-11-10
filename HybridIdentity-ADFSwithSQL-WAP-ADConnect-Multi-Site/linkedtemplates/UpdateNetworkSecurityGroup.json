@@ -156,7 +156,7 @@
                   "priority": 202,
                   "direction": "Inbound"
                 }
-            },
+            },            
             {
                 "name": "WAP-CERTAUTH",
                 "properties": {
@@ -170,7 +170,61 @@
                   "priority": 203,
                   "direction": "Inbound"
                 }
-            },            
+            },  
+            {
+                "name": "Allow-AzureDNS-Outbound",
+                "properties": {
+                  "description": "Allow Azure DNS",
+                  "protocol": "Udp",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "53",
+                  "sourceAddressPrefix": "168.63.129.16",
+                  "destinationAddressPrefix": "*",
+                  "access": "Allow",
+                  "priority": 204,
+                  "direction": "Outbound"
+                }
+            },  
+            {
+                "name": "Allow-CIFS-Transfer-Inbound",
+                "properties": {
+                  "description": "Allow Temporary CIFS Transfer",
+                  "protocol": "Tcp",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "445",
+                  "sourceAddressPrefixes": [
+                      "[parameters('LocalWAPPrivateIP')]",
+                      "[parameters('EXPrivateIP')]"
+                  ],                  
+                  "destinationAddressPrefixes": [
+                      "[parameters('LocalWAPPrivateIP')]",
+                      "[parameters('EXPrivateIP')]"
+                  ],
+                  "access": "Allow",
+                  "priority": 205,
+                  "direction": "Inbound"
+                }
+            },                                                        
+            {
+                "name": "Allow-CIFS-Transfer-Outbound",
+                "properties": {
+                  "description": "Allow Temporary CIFS Transfer",
+                  "protocol": "Tcp",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "445",
+                  "sourceAddressPrefixes": [
+                      "[parameters('LocalWAPPrivateIP')]",
+                      "[parameters('EXPrivateIP')]"
+                  ],                  
+                  "destinationAddressPrefixes": [
+                      "[parameters('LocalWAPPrivateIP')]",
+                      "[parameters('EXPrivateIP')]"
+                  ],
+                  "access": "Allow",
+                  "priority": 205,
+                  "direction": "Outbound"
+                }
+            },                                                                    
             {
                 "name": "SMTP-Inbound",
                 "properties": {
@@ -211,11 +265,13 @@
                   ],                                  
                   "sourceAddressPrefixes": [
                       "[parameters('LocalADFSPrivateIP')]",
-                      "[parameters('RemoteADFSPrivateIP')]"
+                      "[parameters('LocalWAPPrivateIP')]",                      
+                      "[parameters('RemoteADFSPrivateIP')]",
+                      "[parameters('RemoteWAPPrivateIP')]"                      
                   ],                  
                   "destinationAddressPrefixes": [
-                      "[parameters('LocalWAPPrivateIP')]",
-                      "[parameters('RemoteWAPPrivateIP')]"                      
+                      "[parameters('LocalADFSPrivateIP')]",
+                      "[parameters('LocalWAPPrivateIP')]"                      
                   ],
                   "access": "Allow",
                   "priority": 401,
@@ -233,12 +289,14 @@
                       "443"
                   ],                                  
                   "sourceAddressPrefixes": [
-                      "[parameters('LocalWAPPrivateIP')]",
-                      "[parameters('RemoteWAPPrivateIP')]"                      
+                      "[parameters('LocalADFSPrivateIP')]",
+                      "[parameters('LocalWAPPrivateIP')]"                      
                   ],                  
                   "destinationAddressPrefixes": [
                       "[parameters('LocalADFSPrivateIP')]",
-                      "[parameters('RemoteADFSPrivateIP')]"                      
+                      "[parameters('LocalWAPPrivateIP')]",
+                      "[parameters('RemoteADFSPrivateIP')]",
+                      "[parameters('RemoteWAPPrivateIP')]"                                                                                        
                   ],
                   "access": "Allow",
                   "priority": 401,

@@ -1446,6 +1446,12 @@
               "ADFSServerIP": {
                   "value": "[variables('adfs1IP')]"
               },          
+              "EXServerIP": {
+                  "value": "[variables('ex1IP')]"
+              },                            
+              "ExchangeVersion": {
+                  "value": "[parameters('ExchangeVersion')]"
+              },                                                    
               "ExternalDomainName": {
                   "value": "[variables('ExternaldomainName')]"
               },          
@@ -1566,6 +1572,12 @@
               "ADFSServerIP": {
                   "value": "[variables('adfs2IP')]"
               },          
+              "EXServerIP": {
+                  "value": "[variables('ex2IP')]"
+              },                        
+              "ExchangeVersion": {
+                  "value": "[parameters('ExchangeVersion')]"
+              },                                          
               "ExternalDomainName": {
                   "value": "[variables('ExternaldomainName')]"
               },          
@@ -1593,6 +1605,112 @@
           }
       }
     },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "Update-WAP1-DNS",
+      "dependsOn": [
+        "configurefirstwap",
+        "configureotherwap"
+      ],            
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/updatenicdns.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "computerName": {
+                  "value": "[variables('wap1name')]"
+              },     
+              "location": {
+                  "value": "[resourceGroup().location]"
+              }
+          }
+      }
+    },      
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "restartwap1",
+      "dependsOn": [
+        "Update-WAP1-DNS"
+      ],            
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/restartvm.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "computerName": {
+                  "value": "[variables('wap1name')]"
+              },
+              "_artifactsLocation": {
+                "value": "[parameters('_artifactsLocation')]"
+              },                                                                                                            
+              "_artifactsLocationSasToken": {
+                "value": "[parameters('_artifactsLocationSasToken')]"
+              },                                                                                                                                                                                                                                                                                                                         
+              "location": {
+                  "value": "[resourceGroup().location]"
+              }
+          }
+      }
+    },    
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "Update-WAP2-DNS",
+      "dependsOn": [
+        "configurefirstwap",
+        "configureotherwap"
+      ],            
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/updatenicdns.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "computerName": {
+                  "value": "[variables('wap2name')]"
+              },     
+              "location": {
+                  "value": "[parameters('Location2')]"
+              }
+          }
+      }
+    },    
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "restartwap2",
+      "dependsOn": [
+        "Update-WAP2-DNS"
+      ],            
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/restartvm.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "computerName": {
+                  "value": "[variables('wap2name')]"
+              },
+              "_artifactsLocation": {
+                "value": "[parameters('_artifactsLocation')]"
+              },                                                                                                            
+              "_artifactsLocationSasToken": {
+                "value": "[parameters('_artifactsLocationSasToken')]"
+              },                                                                                                                                                                                                                                                                                                                         
+              "location": {
+                  "value": "[parameters('Location2')]"
+              }
+          }
+      }
+    },              
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",

@@ -1,0 +1,43 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "computerName": {
+            "type": "string",
+            "metadata": {
+                "description": "Computer Name"
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Region of Resources"
+            }
+        }
+    },
+    "variables": {
+        "NicName": "[concat(parameters('computerName'),'-nic')]"
+    },
+    "resources": [
+        {
+            "name": "[variables('NicName')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2018-11-01",
+            "location": "[parameters('location')]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": [
+                        "168.63.129.16"
+                    ]
+                }                
+            }
+        }
+    ]
+}
