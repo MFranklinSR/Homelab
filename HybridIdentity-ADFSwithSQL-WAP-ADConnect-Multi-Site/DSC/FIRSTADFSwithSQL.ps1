@@ -221,8 +221,8 @@
                 [string]$IssuanceTransformRules=Get-Content -Path C:\MachineConfig\IssuanceTransformRules.txt
 
                 # Create Relying Party Trusts
-                Add-ADFSRelyingPartyTrust -Name "Outlook Web App $using:ExchangeVersion" -Enabled $true -Notes "This is a trust for https://owa$using:ExchangeVersion.$using:ExternalDomainName/owa" -WSFedEndpoint "https://owa$using:ExchangeVersion.$using:ExternalDomainName/owa" -Identifier "https://owa$using:ExchangeVersion.$using:ExternalDomainName/owa" -IssuanceTransformRules $IssuanceTransformRules -IssuanceAuthorizationRules $IssuanceAuthorizationRules
-                Add-ADFSRelyingPartyTrust -Name "Exchange Admin Center (EAC) $using:ExchangeVersion" -Enabled $true -Notes "This is a trust for https://owa$using:ExchangeVersion.$using:ExternalDomainName/ecp" -WSFedEndpoint "https://owa$using:ExchangeVersion.$using:ExternalDomainName/ecp" -Identifier "https://owa$using:ExchangeVersion.$using:ExternalDomainName/ecp" -IssuanceTransformRules $IssuanceTransformRules -IssuanceAuthorizationRules $IssuanceAuthorizationRules
+                Add-ADFSRelyingPartyTrust -Name "Outlook Web App $using:ExchangeVersion" -Enabled $true -Notes "This is a trust for https://owa$using:ExchangeVersion.$using:ExternalDomainName/owa/" -WSFedEndpoint "https://owa$using:ExchangeVersion.$using:ExternalDomainName/owa/" -Identifier "https://owa$using:ExchangeVersion.$using:ExternalDomainName/owa/" -IssuanceTransformRules $IssuanceTransformRules -IssuanceAuthorizationRules $IssuanceAuthorizationRules
+                Add-ADFSRelyingPartyTrust -Name "Exchange Admin Center (EAC) $using:ExchangeVersion" -Enabled $true -Notes "This is a trust for https://owa$using:ExchangeVersion.$using:ExternalDomainName/ecp/" -WSFedEndpoint "https://owa$using:ExchangeVersion.$using:ExternalDomainName/ecp/" -Identifier "https://owa$using:ExchangeVersion.$using:ExternalDomainName/ecp/" -IssuanceTransformRules $IssuanceTransformRules -IssuanceAuthorizationRules $IssuanceAuthorizationRules
 
                 # Turn off Certificate Auto Certificate Rollover
                 Set-ADFSProperties -AutoCertificateRollover $False
