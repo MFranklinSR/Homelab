@@ -13,7 +13,7 @@ This Template IS MEANT TO BE USED AS AN ADD-ON to the following labs which must 
 
 The Template deploys the folowing:
 
-- 2 - Azure AD Connect Servers
+- 2 - Azure AD Connect Servers (AD Connect Downloaded)
 - 2 - ADFS Servers
 - 2 - WAP Servers
 
