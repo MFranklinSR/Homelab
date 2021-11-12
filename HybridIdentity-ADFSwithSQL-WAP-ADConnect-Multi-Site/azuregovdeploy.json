@@ -610,7 +610,7 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "ReplicateAD",
+      "name": "ReplicateAD-1",
       "dependsOn": [
         "createFSGMSA"
       ],      
@@ -1057,6 +1057,7 @@
       "name": "configurefirstadfs",
       "dependsOn": [
         "createFSGMSA",
+        "ReplicateAD-1",
         "DomainJoinADFS1-22",
         "DomainJoinADFS1-19",
         "DomainJoinADFS1-16"                
@@ -1113,7 +1114,7 @@
         {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "ReplicateAD",
+      "name": "ReplicateAD-2",
       "dependsOn": [
         "configurefirstadfs"
       ],      
@@ -1338,6 +1339,7 @@
       "dependsOn": [
         "createFSGMSA",
         "configurefirstadfs",
+        "ReplicateAD-2",
         "DomainJoinADFS2-22",
         "DomainJoinADFS2-19",
         "DomainJoinADFS2-16"                
