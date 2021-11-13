@@ -88,8 +88,8 @@
         }                
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/ADFSCERT.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "ADFSCERT.ps1\\ADFSCERT"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/ADFSAUTH.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "ADFSAUTH.ps1\\ADFSAUTH"
     },
     "resources": [
         {
