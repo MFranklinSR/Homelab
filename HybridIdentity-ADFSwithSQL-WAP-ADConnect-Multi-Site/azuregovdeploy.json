@@ -613,9 +613,48 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "ReplicateAD-1",
+      "name": "configdns",
       "dependsOn": [
         "createFSGMSA"
+      ],            
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/configdnsext.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "computerName": {
+                  "value": "[variables('dc1name')]"
+              },     
+              "ExternalDomainName": {
+                "value": "[variables('ExternaldomainName')]"
+              },              
+              "ADFSServer1IP": {
+                "value": "[variables('adfs1IP')]"
+              },              
+              "ADFSServer2IP": {
+                "value": "[variables('adfs2IP')]"
+              },              
+              "_artifactsLocation": {
+                "value": "[parameters('_artifactsLocation')]"
+              },                                                                                                            
+              "_artifactsLocationSasToken": {
+                "value": "[parameters('_artifactsLocationSasToken')]"
+              },                                                                                                                                                                                                                                                                                                           
+              "location": {
+                  "value": "[resourceGroup().location]"
+              }
+          }
+      }
+    },      
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "ReplicateAD-1",
+      "dependsOn": [
+        "createFSGMSA",
+        "configdns"
       ],      
       "properties": {
           "mode": "Incremental",
@@ -1828,44 +1867,6 @@
           }
       }
     },              
-    {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2019-10-01",
-      "name": "configdns",
-      "dependsOn": [
-        "createFSGMSA"
-      ],            
-      "properties": {
-          "mode": "Incremental",
-          "templateLink": {
-              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/configdnsext.json', parameters('_artifactsLocationSasToken')))]",
-              "contentVersion": "1.0.0.0"
-          },
-          "parameters": {
-              "computerName": {
-                  "value": "[variables('dc1name')]"
-              },     
-              "ExternalDomainName": {
-                "value": "[variables('ExternaldomainName')]"
-              },              
-              "ADFSServer1IP": {
-                "value": "[variables('adfs1IP')]"
-              },              
-              "ADFSServer2IP": {
-                "value": "[variables('adfs2IP')]"
-              },              
-              "_artifactsLocation": {
-                "value": "[parameters('_artifactsLocation')]"
-              },                                                                                                            
-              "_artifactsLocationSasToken": {
-                "value": "[parameters('_artifactsLocationSasToken')]"
-              },                                                                                                                                                                                                                                                                                                           
-              "location": {
-                  "value": "[resourceGroup().location]"
-              }
-          }
-      }
-    },  
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
