@@ -33,7 +33,7 @@
             Credential = $DomainCreds
         }
 
-        Script ConfigureExchange2019
+        Script ConfigureExchangeADFSCert
         {
             SetScript =
             {
@@ -45,7 +45,7 @@
                 Import-PSSession $Session
 
                 $OrgConfig = Get-OrganizationConfig
-                IF ($OrgConfig.AdfsAudienceUris -eq $Null){
+                IF ($OrgConfig.AdfsIssuer -eq $Null){
                     
                     $ADFSThumbprint = Get-Content -Path C:\Certificates\ADFSThumbprint.txt
                     
