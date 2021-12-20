@@ -209,7 +209,7 @@
     },    
     "NamingConvention": {
       "type": "string",
-      "defaultValue": "khl",
+      "defaultValue": "Lab",
       "maxLength": 4,            
       "metadata": {
         "description": "VNet1 Name"
@@ -231,7 +231,7 @@
     },          
     "NetBiosDomain": {
       "type": "string",
-      "defaultValue": "killerhomelab",
+      "defaultValue": "MattDemo",
       "maxLength": 15,            
       "metadata": {
           "description": "NetBios Parent Domain Name"
@@ -239,14 +239,14 @@
     },          
     "InternalDomain": {
       "type": "string",
-      "defaultValue": "killerhomelab",
+      "defaultValue": "MattDemo",
       "metadata": {
           "description": "NetBios Parent Domain Name"
       }
     },              
     "InternalTLD": {
       "type": "string",
-      "defaultValue": "com",
+      "defaultValue": "tk",
       "allowedValues": [
         "com",
         "net",
@@ -263,14 +263,14 @@
     },    
     "ExternalDomain": {
       "type": "string",
-      "defaultValue": "killerhomelab",
+      "defaultValue": "MattDemo",
       "metadata": {
           "description": "External DNS Domain"
       }
     },    
     "ExternalTLD": {
       "type": "string",
-      "defaultValue": "com",
+      "defaultValue": "tk",
       "allowedValues": [
         "com",
         "net",
@@ -358,7 +358,7 @@
     },        
     "DC1OSVersion": {
       "type": "string",
-      "defaultValue": "2022-Datacenter",
+      "defaultValue": "2019-Datacenter",
       "allowedValues": [
         "2022-Datacenter",
         "2019-Datacenter",
@@ -371,7 +371,7 @@
     },
     "RCAOSVersion": {
       "type": "string",
-      "defaultValue": "2022-Datacenter",
+      "defaultValue": "2019-Datacenter",
       "allowedValues": [
         "2022-Datacenter",
         "2019-Datacenter",
@@ -384,7 +384,7 @@
     },            
     "ICAOSVersion": {
       "type": "string",
-      "defaultValue": "2022-Datacenter",
+      "defaultValue": "2019-Datacenter",
       "allowedValues": [
         "2022-Datacenter",        
         "2019-Datacenter",
@@ -397,7 +397,7 @@
     },            
     "OCSPOSVersion": {
       "type": "string",
-      "defaultValue": "2022-Datacenter",
+      "defaultValue": "2019-Datacenter",
       "allowedValues": [
         "2022-Datacenter",        
         "2019-Datacenter",
@@ -410,7 +410,7 @@
     }, 
     "WK1OSVersion": {
       "type": "string",
-      "defaultValue": "Windows-11",
+      "defaultValue": "Windows-10",
       "allowedValues": [
         "Windows-11",
         "Windows-10",
