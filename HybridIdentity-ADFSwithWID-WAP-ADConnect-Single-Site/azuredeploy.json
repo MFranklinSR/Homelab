@@ -180,7 +180,7 @@
     },                   
     "NamingConvention": {
       "type": "string",
-      "defaultValue": "khl",
+      "defaultValue": "Lab",
       "metadata": {
         "description": "Environment Naming Convention"
       }
@@ -208,7 +208,7 @@
     },          
     "InternalDomain": {
       "type": "string",
-      "defaultValue": "killerhomelab",
+      "defaultValue": "MattDemo",
       "metadata": {
           "description": "NetBios Parent Domain Name"
       }
@@ -230,7 +230,7 @@
     },    
     "ExternalDomain": {
       "type": "string",
-      "defaultValue": "MattLab",
+      "defaultValue": "MattDemo",
       "metadata": {
           "description": "External DNS Domain"
       }
