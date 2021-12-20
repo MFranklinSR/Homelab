@@ -215,14 +215,14 @@
     },                 
     "InternalTLD": {
       "type": "string",
-      "defaultValue": "com",
+      "defaultValue": "tk",
       "allowedValues": [
         "com",
         "net",
         "org",
         "edu",
         "gov",
-        "mil"
+        "tk"
       ],      
       "metadata": {
           "description": "Internal Top-Level Domain Name"
@@ -230,21 +230,21 @@
     },    
     "ExternalDomain": {
       "type": "string",
-      "defaultValue": "killerhomelab",
+      "defaultValue": "MattLab",
       "metadata": {
           "description": "External DNS Domain"
       }
     },    
     "ExternalTLD": {
       "type": "string",
-      "defaultValue": "com",
+      "defaultValue": "tk",
       "allowedValues": [
         "com",
         "net",
         "org",
         "edu",
         "gov",
-        "mil"
+        "tk"
       ],      
       "metadata": {
           "description": "External Top-Level Domain Name"
