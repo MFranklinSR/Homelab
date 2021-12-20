@@ -2,7 +2,7 @@
 
 Click the button below to deploy
 
-[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMFranklinSR%2FHomeLab%2FDevelopment%2FHybridIdentity-ADFSwithWID-WAP-ADConnect-Single-Site%2Fazuredeploy.json)
+[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMFranklinSR%2FHomeLab%2Fmaster%2FHybridIdentity-ADFSwithWID-WAP-ADConnect-Single-Site%2Fazuredeploy.json)
 
 
 This Templates IS MEANT TO BE USED AS AN ADD-ON to the following labs:
