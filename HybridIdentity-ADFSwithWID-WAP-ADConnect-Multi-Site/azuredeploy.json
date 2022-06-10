@@ -228,8 +228,8 @@
         "net",
         "org",
         "edu",
-        "gov",
-        "mil"
+        "TK",
+        "ml"
       ],      
       "metadata": {
           "description": "Internal Top-Level Domain Name"
@@ -250,8 +250,8 @@
         "net",
         "org",
         "edu",
-        "gov",
-        "mil"
+        "TK",
+        "ml"
       ],      
       "metadata": {
           "description": "External Top-Level Domain Name"
