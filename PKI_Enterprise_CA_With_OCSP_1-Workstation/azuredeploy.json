@@ -1068,7 +1068,7 @@
                   "value": "MicrosoftWindowsDesktop"
               },
               "Offer": {
-                  "value": "Windows-10"
+                  "value": "Windows-11"
               },
               "OSVersion": {
                 "value": "[parameters('WK1OSVersion')]"
