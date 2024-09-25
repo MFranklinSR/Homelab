@@ -303,6 +303,7 @@
         "type": "string",
         "defaultValue": "2019-Datacenter",
         "allowedValues": [
+          "2022-Datacenter",
           "2019-Datacenter",
           "2016-Datacenter"
         ],
@@ -314,6 +315,7 @@
         "type": "string",
         "defaultValue": "2019-Datacenter",
         "allowedValues": [
+          "2022-Datacenter",
           "2019-Datacenter",
           "2016-Datacenter",
           "2012-R2-Datacenter"          
@@ -326,6 +328,7 @@
         "type": "string",
         "defaultValue": "2019-Datacenter",
         "allowedValues": [
+          "2022-Datacenter",
           "2019-Datacenter",
           "2016-Datacenter",
           "2012-R2-Datacenter"          
@@ -336,8 +339,9 @@
     },         
     "WK1OSVersion": {
       "type": "string",
-      "defaultValue": "19h1-pro",
+      "defaultValue": "22h2-pro",
       "allowedValues": [
+        "22h2-pro",
         "19h1-pro"
       ],
       "metadata": {
