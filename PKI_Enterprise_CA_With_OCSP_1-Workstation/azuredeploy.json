@@ -342,6 +342,7 @@
       "defaultValue": "22h2-pro",
       "allowedValues": [
         "22h2-pro",
+        "win11-22h2-pro",
         "19h1-pro"
       ],
       "metadata": {
