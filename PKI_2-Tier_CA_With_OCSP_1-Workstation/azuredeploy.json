@@ -1701,7 +1701,7 @@
                   "value": "Windows-11"
               },
               "OSVersion": {
-                "value": "win11-21h2-pro"
+                "value": "win11-25h2-pro"
               },              
               "LicenseType": {
                 "value": "[parameters('WindowsClientLicenseType')]"
